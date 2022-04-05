@@ -31,17 +31,6 @@ const track_component = Vue.extend({
     }
 })
 
-//特效组件
-const affect_component = Vue.extend({
-    template: `
-        <h1> affect </h1>
-        `,
-    data() {
-        return {
-
-        }
-    }
-})
 
 //模板开发组件
 const temdev_component = Vue.extend({
@@ -72,17 +61,18 @@ new Vue({
     el: "#vt",
     data: {
         vt_main_nav_activename: 'metfile',
-        vt_header_card_title: '项目名'
+        vt_header_card_title: ''
     },
     methods: {
-        vt_main_nav_click(tab, event) {
-            console.log(tab, event);
-        }
+        
+    },
+    mounted(){
+        // 生命周期函数，当组件挂载后调用
+        this.vt_header_card_title='hi'
     },
     components: {
         metfile_component,
         track_component,
-        affect_component,
         temdev_component,
         setting_component
     }

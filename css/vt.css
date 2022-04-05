@@ -8,7 +8,7 @@ body {
 #vt {
     width: 99vw;
     height: 99vh;
-    background-color: rgb(255, 250, 245);
+    background-color: white;
     border: solid 1px rgb(248, 204, 146);
 }
 
@@ -45,13 +45,6 @@ body {
     font-size:4vh;
     margin:1vh 0% 0% 40%;
 }
-/*页面头部卡片项目加载*/
-.vt-header-card-load {
-    float: left;
-    font-size: 2vh;
-    margin: 3vh 0% 0% 1%;
-    color:rgb(36, 105, 253);
-}
 /*页面内容区*/
 .vt-main {
     width: 100%;
@@ -66,13 +59,13 @@ body {
 
 /*页面内容区导航栏左侧*/
 .vt-main-nav>.el-tabs__header.is-left {
-    width: 15%;
+    width: 10%;
     border-bottom-width: 0px;
 }
 
 /*页面内容区导航栏右侧*/
 .vt-main-nav>.el-tabs__content {
-    width: 83%;
+    width: 88%;
     height: 100%;
 }
 

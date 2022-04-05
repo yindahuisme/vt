@@ -21,21 +21,16 @@
             <el-card class="box-card vt-header-card">
                 <img class="vt-header-card-logo" src="./imgs/header_ico.png">
                 <div class="vt-header-card-title">{{vt_header_card_title}}</div>
-                <el-link class="vt-header-card-load" type="primary">加载</el-link>
             </el-card>
 
         </div>
         <div class="vt-main">
-            <el-tabs tab-position="left" class="vt-main-nav" v-model="vt_main_nav_activename" type="card"
-                @tab-click="vt_main_nav_click">
+            <el-tabs tab-position="left" class="vt-main-nav" v-model="vt_main_nav_activename" type="card">
                 <el-tab-pane label="素材文件" name="metfile">
                     <metfile_component></metfile_component>
                 </el-tab-pane>
                 <el-tab-pane label="轨道" name="track">
                     <track_component></track_component>
-                </el-tab-pane>
-                <el-tab-pane label="特效" name="affect">
-                    <affect_component></affect_component>
                 </el-tab-pane>
                 <el-tab-pane label="模板开发" name="temdev">
                     <temdev_component></temdev_component>
