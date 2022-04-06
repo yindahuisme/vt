@@ -64,11 +64,12 @@ new Vue({
         vt_header_card_title: ''
     },
     methods: {
-        
+
     },
     mounted(){
         // 生命周期函数，当组件挂载后调用
-        this.vt_header_card_title='hi'
+        this.vt_header_card_title = 'hi'
+        jsx_invoke("get_project_name",'jsx args')
     },
     components: {
         metfile_component,
