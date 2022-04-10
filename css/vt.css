@@ -1,6 +1,6 @@
 /*窗口*/
 body {
-    margin: 0px;
+    margin: 0%;
     background-color: white;
 }
 
@@ -88,7 +88,6 @@ body {
     width: 40%;
     height: 60%;
     float: left;
-    border:solid 1px rgb(248, 204, 146);
 }
 
 /*页面内容区素材文件预览区*/
@@ -96,7 +95,6 @@ body {
     width: 59%;
     height: 60%;
     float: left;
-    border: solid 1px rgb(248, 204, 146);
 }
 
 /*页面内容区素材文件信息区*/
@@ -104,7 +102,6 @@ body {
     width: 40%;
     height: 40%;
     float: left;
-    border: solid 1px rgb(248, 204, 146);
 }
 
 /*页面内容区素材文件素材区*/
@@ -112,5 +109,4 @@ body {
     width: 59%;
     height: 40%;
     float: left;
-    border: solid 1px rgb(248, 204, 146);
 }
