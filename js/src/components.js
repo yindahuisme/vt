@@ -2,15 +2,16 @@
 const metfile_component = Vue.extend({
     template: `
     <div>
-    <div class="vt-main-metfile-list">
+    <div class='vt-main-metfile-list'>
     </div>
-    <div class="vt-main-metfile-preview">
+    <div class='vt-main-metfile-preview'>
     </div>
-    <div class="vt-main-metfile-info">
+    <div class='vt-main-metfile-info'>
     </div>
-    <div class="vt-main-metfile-met">
+    <div class='vt-main-metfile-met'>
     </div>
     </div>`,
+    // 这里必须用函数，防止多组件共用数据，下同
     data(){
         return {
             
@@ -58,7 +59,7 @@ const setting_component = Vue.extend({
 
 // app组件
 new Vue({
-    el: "#vt",
+    el: '#vt',
     data: {
         vt_main_nav_activename: 'metfile',
         vt_header_card_title: ''
@@ -68,8 +69,9 @@ new Vue({
     },
     mounted(){
         // 生命周期函数，当组件挂载后调用
-        this.vt_header_card_title = 'hi'
-        jsx_invoke("get_project_name",'jsx args')
+        this.vt_header_card_title='hi'
+        csInterface.evalScript('get_project_name()', (data) => this.vt_header_card_title = data)
+        
     },
     components: {
         metfile_component,

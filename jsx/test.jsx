@@ -24,7 +24,7 @@
 //当前player光标位置
 //qe.project.getActiveSequence().CTI.ticks
 //测试时，允许快速加载
-// app.setExtensionPersistent("com.adobe.PProPanel", 0);
+// app.setExtensionPersistent('com.adobe.PProPanel', 0);
 
 
 

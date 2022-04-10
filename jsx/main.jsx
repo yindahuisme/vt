@@ -1,6 +1,5 @@
 // 获取当前项目名
-function get_project_name(args_str){
+function get_project_name(){
     var app_name = app.project.name
-    alert(args_str + '##' + app_name)
-    return app_name
+    return app_name.split('.')[0]
 }

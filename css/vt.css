@@ -59,13 +59,20 @@ body {
 
 /*页面内容区导航栏左侧*/
 .vt-main-nav>.el-tabs__header.is-left {
-    width: 10%;
+    width: 9%;
     border-bottom-width: 0px;
+    margin-right: 0%;
+    padding-right: 1%;
+}
+
+/*页面内容区导航栏左侧菜单文字*/
+.vt-main-nav>.el-tabs__header.is-left .el-tabs__item {
+    padding: 0%;
 }
 
 /*页面内容区导航栏右侧*/
 .vt-main-nav>.el-tabs__content {
-    width: 88%;
+    width: 90%;
     height: 100%;
 }
 
