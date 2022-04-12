@@ -3,7 +3,7 @@ const metfile_component = Vue.extend({
     template: `
     <div>
     <div class='vt-main-metfile-list'>
-        
+
     </div>
     <div class='vt-main-metfile-preview'>
     </div>
@@ -50,8 +50,7 @@ const temdev_component = Vue.extend({
 const setting_component = Vue.extend({
     template: `
     <div>
-        <el-divider content-position="center"> 素材文件搜索模板 </el-divider>
-        <el-divider content-position="center"> 常规</el-divider>
+        <el-divider content-position="center">常规</el-divider>
     </div>
         `,
     data() {
@@ -73,9 +72,10 @@ new Vue({
     },
     mounted() {
         // 生命周期函数，当组件挂载后调用
-        this.vt_header_card_title = 'hi'
+        // 获取项目名
+        this.vt_header_card_title = ''
         csInterface.evalScript('get_project_name()', (data) => this.vt_header_card_title = data)
-
+        // 
     },
     components: {
         metfile_component,
