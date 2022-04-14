@@ -8,8 +8,7 @@ body {
 #vt {
     width: 99vw;
     height: 99vh;
-    background-color: white;
-    border: solid 1px rgb(248, 204, 146);
+    border: solid 1px rgb(187, 187, 187);
 }
 
 /*页面头部*/
@@ -18,28 +17,27 @@ body {
     height: 10%;
 }
 
-/*页面头部卡片*/
+/*页面头部-卡片*/
 .vt-header-card {
     width: 100%;
     height: 80%;
-    background-color: rgb(255, 250, 245);
     border-radius: 10px;
 }
 
-/*页面头部卡片内容区*/
-.el-card__body {
+/*页面头部-卡片-内容区*/
+.vt-header-card .el-card__body {
     padding: 0%;
     height: 100%;
 }
 
-/*页面头部卡片logo*/
+/*页面头部-卡片-logo*/
 .vt-header-card-logo {
     width: auto;
     height: 100%;
     float: left;
 }
 
-/*页面头部卡片项目标题*/
+/*页面头部-卡片-项目标题*/
 .vt-header-card-title {
     float:left;
     font-size:4vh;
@@ -51,13 +49,13 @@ body {
     height: 90%;
 }
 
-/*页面内容区导航栏*/
+/*页面内容区-导航栏*/
 .vt-main-nav {
     width: 100%;
     height: 100%;
 }
 
-/*页面内容区导航栏左侧*/
+/*页面内容区-导航栏-左侧*/
 .vt-main-nav>.el-tabs__header.is-left {
     width: 9%;
     border-bottom-width: 0px;
@@ -65,48 +63,100 @@ body {
     padding-right: 1%;
 }
 
-/*页面内容区导航栏左侧菜单文字*/
+/*页面内容区-导航栏-左侧-菜单文字*/
 .vt-main-nav>.el-tabs__header.is-left .el-tabs__item {
     padding: 0%;
 }
 
-/*页面内容区导航栏右侧*/
+/*页面内容区-导航栏-右侧*/
 .vt-main-nav>.el-tabs__content {
     width: 90%;
     height: 100%;
 }
 
-/*页面内容区导航栏右侧初始化各组件根元素*/
+/*页面内容区-导航栏-右侧-组件根元素*/
 .vt-main-nav>.el-tabs__content>[role=tabpanel],
 .vt-main-nav>.el-tabs__content>[role=tabpanel]>div {
     width: 100%;
     height: 100%;
 }
 
-/*页面内容区素材文件列表区*/
+/*页面内容区-素材文件-列表区*/
 .vt-main-metfile-list {
     width: 40%;
     height: 60%;
     float: left;
 }
 
-/*页面内容区素材文件预览区*/
+/*页面内容区-素材文件-列表区-卡片*/
+.vt-main-metfile-list>.el-card {
+    height: 100%;
+}
+
+/*页面内容区-素材文件-列表区-卡片-卡片头*/
+.vt-main-metfile-list>.el-card>.el-card__header {
+    height: 6vh;
+    padding: 1vh 2% 0vh 2%;
+    overflow: hidden;
+}
+
+/*页面内容区-素材文件-列表区-卡片-卡片头-下拉框*/
+.vt-main-metfile-list-header-menu {
+    float:left;
+}
+
+/*页面内容区-素材文件-列表区-卡片-卡片头-编辑*/
+.vt-main-metfile-list-header-edit.is-circle {
+    width:20px;
+    height: 20px;
+    float:right;
+    padding:0%;
+}
+
+/*页面内容区-素材文件-预览区*/
 .vt-main-metfile-preview {
-    width: 59%;
+    width: 60%;
     height: 60%;
     float: left;
 }
 
-/*页面内容区素材文件信息区*/
+/*页面内容区-素材文件-预览区-卡片*/
+.vt-main-metfile-preview>.el-card {
+    height: 100%;
+}
+
+/*页面内容区-素材文件-信息区*/
 .vt-main-metfile-info {
     width: 40%;
-    height: 40%;
+    height: 38%;
     float: left;
 }
 
-/*页面内容区素材文件素材区*/
+/*页面内容区-素材文件-信息区-卡片*/
+.vt-main-metfile-info>.el-card {
+    height: 100%;
+}
+
+/*页面内容区-素材文件-素材区*/
 .vt-main-metfile-met {
-    width: 59%;
-    height: 40%;
+    width: 60%;
+    height: 38%;
     float: left;
+}
+
+/*页面内容区-素材文件-素材区-卡片*/
+.vt-main-metfile-met>.el-card {
+    height: 100%;
+}
+
+/*页面内容区-设置-根卡片*/
+.vt-main-setting-root_card {
+    height: 98%;
+}
+
+/*页面内容区-设置-根卡片-常规分割线*/
+.vt-main-setting-root_card>.el-card__body {
+    padding-top: 0%;
+    padding-bottom: 0%;
+    height: 100%;
 }

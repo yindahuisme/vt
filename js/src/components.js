@@ -3,13 +3,42 @@ const metfile_component = Vue.extend({
     template: `
     <div>
     <div class='vt-main-metfile-list'>
-
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <el-dropdown>
+              <span class="el-dropdown-link vt-main-metfile-list-header-menu">
+                下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>黄金糕</el-dropdown-item>
+                <el-dropdown-item>狮子头</el-dropdown-item>
+                <el-dropdown-item>螺蛳粉</el-dropdown-item>
+                <el-dropdown-item disabled>双皮奶</el-dropdown-item>
+                <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            
+            <el-button icon="el-icon-edit" class="vt-main-metfile-list-header-edit" circle></el-button>
+          </div>
+          <div>
+            test
+          </div>
+        </el-card>
     </div>
     <div class='vt-main-metfile-preview'>
+        <el-card class="box-card ">
+
+        </el-card>
     </div>
     <div class='vt-main-metfile-info'>
+        <el-card class="box-card ">
+
+        </el-card>
     </div>
     <div class='vt-main-metfile-met'>
+        <el-card class="box-card ">
+
+        </el-card>
     </div>
     </div>`,
     // 这里必须用函数，防止多组件共用数据，下同
@@ -37,7 +66,7 @@ const track_component = Vue.extend({
 //模板开发组件
 const temdev_component = Vue.extend({
     template: `
-        <h1> temDev </h1>
+        <h1> tem_dev </h1>
         `,
     data() {
         return {
@@ -50,7 +79,10 @@ const temdev_component = Vue.extend({
 const setting_component = Vue.extend({
     template: `
     <div>
+        <el-card class="box-card vt-main-setting-root_card">
         <el-divider content-position="center">常规</el-divider>
+        <span>hi</span>
+        </el-card>
     </div>
         `,
     data() {
