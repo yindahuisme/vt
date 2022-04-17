@@ -1,4 +1,4 @@
-// adobe api实例
+// adobe cep实例
 var csInterface = new CSInterface()
 
 // axios 实例

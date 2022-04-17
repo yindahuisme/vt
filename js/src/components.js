@@ -82,7 +82,7 @@ new Vue({
     mounted() {
         // 生命周期函数，当组件挂载后调用
         // 获取项目名
-        // csInterface.evalScript('get_project_name()', (data) => this.vt_header_card_title = data)
+        csInterface.evalScript('get_project_name()', (data) => {this.vt_header_card_title = data})
         // 
     },
     components: {

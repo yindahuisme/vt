@@ -2,7 +2,7 @@ create databases vt;
 
 
 -- 项目配置表
-CREATE TABLE IF NOT EXISTS vt.`vt_settings`(
+CREATE TABLE IF NOT EXISTS vt.`vt_setting`(
    `type` VARCHAR(32) NOT NULL,-- 配置所属类别
    `key` VARCHAR(32) NOT NULL,-- 配置项唯一id
    `value` VARCHAR(32) NOT NULL,-- 值
