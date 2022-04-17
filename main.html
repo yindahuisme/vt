@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <!-- 自定义css -->
     <link type="text/css" rel="styleSheet" href="./css/vt.css" />
+    <!-- axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- adobe cep 桥接 -->
     <script src="./js/adobe/CSInterface.js"></script>
     <!-- vue -->
@@ -62,22 +64,32 @@
 <template id="vt-main-metfile-template">
     <div>
         <div class='vt-main-metfile-list'>
+            <!-- 素材文件组件-卡片 -->
             <el-card class="box-card">
+                <!-- 卡片头 -->
                 <div slot="header" class="clearfix">
+                    <!-- sql筛选下拉框 -->
                     <el-dropdown>
                         <span class="el-dropdown-link vt-main-metfile-list-header-menu">
-                            下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                            创建时间倒序<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>黄金糕</el-dropdown-item>
-                            <el-dropdown-item>狮子头</el-dropdown-item>
-                            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                            <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                            <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+                            <el-dropdown-item>创建时间倒序</el-dropdown-item>
+                            <el-dropdown-item>最后更新时间倒序</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
 
-                    <el-button icon="el-icon-edit" class="vt-main-metfile-list-header-edit" circle></el-button>
+                    <!-- 编辑素材文件筛选sql按钮，编辑面板 -->
+                    <el-button icon="el-icon-edit" class="vt-main-metfile-list-header-edit"
+                        @click="vt_main_metfile_list_header_edit_dialogVisible = true" circle></el-button>
+                    <el-dialog title="提示" :visible.sync="vt_main_metfile_list_header_edit_dialogVisible" width="30%">
+                        <span>这是一段信息</span>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="vt_main_metfile_list_header_edit_dialogVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="vt_main_metfile_list_header_edit_dialogVisible = false">确
+                                定</el-button>
+                        </span>
+                    </el-dialog>
                 </div>
                 <div>
                     test
