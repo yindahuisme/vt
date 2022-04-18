@@ -3,25 +3,30 @@ const metfile_component = Vue.extend({
     template: document.getElementById("vt-main-metfile-template").innerHTML,
     mounted() {
         // 生命周期函数，当组件挂载后调用
-        axiosInstance.post('/test/test1', {
-                test: 'yindahu'
-            })
-            .then(function (response) {
-                alert(response.data['data'])
-            })
-            .catch(function (error) {
-                alert(error.message)
-            })
+        // axiosInstance.post('/test/test1', {
+        //         test: 'yindahu'
+        //     })
+        //     .then(function (response) {
+        //         alert(response.data['data'])
+        //     })
+        //     .catch(function (error) {
+        //         alert(error.message)
+        //     })
 
     },
     // 这里必须用函数，防止多组件共用数据，下同
     data() {
         return {
-            vt_main_metfile_list_header_edit_sqlMap:{
-
-            },
-            vt_main_metfile_list_header_edit_defaultSql:'',
-            vt_main_metfile_list_header_edit_dialogVisible: false
+            vt_main_metfile_list_header_menuOptions: [{
+                value: '最后更新时间倒序',
+                label: '最后更新时间倒序'
+            }, {
+                value: '创建时间倒序',
+                label: '创建时间倒序'
+            }],
+            vt_main_metfile_list_header_menuValue: '创建时间倒序',
+            vt_main_metfile_list_header_edit_dialogVisible: false,
+            vt_main_metfile_list_header_edit_dialog_sqlText:'test sql'
         }
     }
 })

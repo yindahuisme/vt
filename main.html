@@ -69,23 +69,23 @@
                 <!-- 卡片头 -->
                 <div slot="header" class="clearfix">
                     <!-- sql筛选下拉框 -->
-                    <el-dropdown>
-                        <span class="el-dropdown-link vt-main-metfile-list-header-menu">
-                            创建时间倒序<i class="el-icon-arrow-down el-icon--right"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>创建时间倒序</el-dropdown-item>
-                            <el-dropdown-item>最后更新时间倒序</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
+                    <el-select size="mini" class="vt-main-metfile-list-header-menu"
+                        v-model="vt_main_metfile_list_header_menuValue"
+                        filterable allow-create>
+                        <el-option v-for="item in vt_main_metfile_list_header_menuOptions" :key="item.value"
+                            :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
 
                     <!-- 编辑素材文件筛选sql按钮，编辑面板 -->
                     <el-button icon="el-icon-edit" class="vt-main-metfile-list-header-edit"
                         @click="vt_main_metfile_list_header_edit_dialogVisible = true" circle></el-button>
-                    <el-dialog title="提示" :visible.sync="vt_main_metfile_list_header_edit_dialogVisible" width="30%">
-                        <span>这是一段信息</span>
+                    <el-dialog title="素材文件筛选sql编辑" :visible.sync="vt_main_metfile_list_header_edit_dialogVisible"
+                        class="vt_main_metfile_list_header_edit_dialog">
+                        <el-input type="textarea" v-model="vt_main_metfile_list_header_edit_dialog_sqlText"></el-input>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="vt_main_metfile_list_header_edit_dialogVisible = false">取 消</el-button>
+                            <el-button type="danger" @click="vt_main_metfile_list_header_edit_dialogVisible = false">删 除
+                            </el-button>
                             <el-button type="primary" @click="vt_main_metfile_list_header_edit_dialogVisible = false">确
                                 定</el-button>
                         </span>
