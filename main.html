@@ -86,13 +86,20 @@
                         <span slot="footer" class="dialog-footer">
                             <el-button type="danger" @click="vt_main_metfile_list_header_edit_dialogVisible = false">删 除
                             </el-button>
-                            <el-button type="primary" @click="vt_main_metfile_list_header_edit_dialogVisible = false">确
-                                定</el-button>
+                            <el-button type="primary" @click="vt_main_metfile_list_header_edit_dialogVisible = false">保 存</el-button>
                         </span>
                     </el-dialog>
                 </div>
+                <!-- 卡片body -->
                 <div>
-                    test
+                    <el-table height="42vh" width="200px" ref="vt_main_metfile_list_body_table_singleTable"
+                        :data="vt_main_metfile_list_body_table_date" highlight-current-row
+                        @current-change="vt_main_metfile_list_body_table_handleCurrentChange" >
+                        <el-table-column property="type" label="类型" width="50%">
+                        </el-table-column>
+                        <el-table-column property="key" label="素材文件名" width="50%">
+                        </el-table-column>
+                    </el-table>
                 </div>
             </el-card>
         </div>

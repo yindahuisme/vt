@@ -26,8 +26,30 @@ const metfile_component = Vue.extend({
             }],
             vt_main_metfile_list_header_menuValue: '创建时间倒序',
             vt_main_metfile_list_header_edit_dialogVisible: false,
-            vt_main_metfile_list_header_edit_dialog_sqlText:'test sql'
+            vt_main_metfile_list_header_edit_dialog_sqlText:'test sql',
+            vt_main_metfile_list_body_table_date: [{
+                        type: '视频',
+                        key: 'test1.mp4'
+                    }, {
+                        type: '音频',
+                        key: 'test2.mp3'
+                    }, {
+                        type: '图片',
+                        key: 'test3.jpg'
+                    }, {
+                        type: '音频',
+                        key: 'test4.mp3'
+                    }, {
+                        type: '图片',
+                        key: 'test5.jpg'
+                    }],
+            vt_main_metfile_list_body_table_currentRow:null
         }
+    },
+    methods:{
+        vt_main_metfile_list_body_table_handleCurrentChange(val) {
+                this.vt_main_metfile_list_body_table_currentRow = val;
+            }
     }
 })
 

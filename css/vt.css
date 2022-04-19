@@ -14,13 +14,13 @@ body {
 /*页面头部*/
 .vt-header {
     width: 100%;
-    height: 10%;
+    height: 10vh;
 }
 
 /*页面头部-卡片*/
 .vt-header-card {
     width: 100%;
-    height: 80%;
+    height: 8vh;
     border-radius: 10px;
 }
 
@@ -41,12 +41,12 @@ body {
 .vt-header-card-title {
     float:left;
     font-size:4vh;
-    margin:1vh 0% 0% 40%;
+    margin:1vh 0% 0vh 40%;
 }
 /*页面内容区*/
 .vt-main {
     width: 100%;
-    height: 90%;
+    height: 89vh;
 }
 
 /*页面内容区-导航栏*/
@@ -84,7 +84,7 @@ body {
 /*页面内容区-素材文件-列表区*/
 .vt-main-metfile-list {
     width: 40%;
-    height: 60%;
+    height: 50vh;
     float: left;
 }
 
@@ -123,7 +123,7 @@ body {
 /*页面内容区-素材文件-列表区-卡片-卡片头-编辑-对话框遮罩-面板*/
 .vt_main_metfile_list_header_edit_dialog>div {
     width: 80%;
-    height: 80%;
+    height: 80vh;
     margin-bottom: 5vh;
     margin-left: 10%;
 }
@@ -171,11 +171,31 @@ body {
     overflow: hidden;
 }
 
+/*页面内容区-素材文件-列表区-卡片-卡片body*/
+.vt-main-metfile-list>.el-card>.el-card__body {
+    height: 42vh;
+    padding: 1vh 2% 0vh 2%;
+}
+
+/*页面内容区-素材文件-列表区-卡片-卡片body-表头*/
+.vt-main-metfile-list>.el-card>.el-card__body .el-table__header {
+    width: 100% !important;
+}
+
+/*页面内容区-素材文件-列表区-卡片-卡片body-表body*/
+.vt-main-metfile-list>.el-card>.el-card__body .el-table__body {
+   width: 100% !important;
+}
+
+/*页面内容区-素材文件-列表区-卡片-卡片body-表头表body-列宽*/
+.vt-main-metfile-list>.el-card>.el-card__body colgroup>col {
+    width:auto !important;
+}
 
 /*页面内容区-素材文件-预览区*/
 .vt-main-metfile-preview {
     width: 60%;
-    height: 60%;
+    height: 50vh;
     float: left;
 }
 
@@ -187,7 +207,7 @@ body {
 /*页面内容区-素材文件-信息区*/
 .vt-main-metfile-info {
     width: 40%;
-    height: 38%;
+    height: 38vh;
     float: left;
 }
 
@@ -199,7 +219,7 @@ body {
 /*页面内容区-素材文件-素材区*/
 .vt-main-metfile-met {
     width: 60%;
-    height: 38%;
+    height: 38vh;
     float: left;
 }
 
@@ -210,7 +230,7 @@ body {
 
 /*页面内容区-设置-根卡片*/
 .vt-main-setting-root_card {
-    height: 98%;
+    height: 88vh;
 }
 
 /*页面内容区-设置-根卡片-常规分割线*/
