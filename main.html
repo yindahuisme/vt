@@ -16,6 +16,8 @@
     <script src="./js/vue/vue.js"></script>
     <!-- element-ui -->
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 音频波形可视化 -->
+    <script src="./js/wavesurfer/wavesurfer.js"></script>
     <!-- 自定义js -->
     <script src="./js/src/tools.js"></script>
     <script>
@@ -92,12 +94,14 @@
                 </div>
                 <!-- 卡片body -->
                 <div>
-                    <el-table height="42vh" width="200px" ref="vt_main_metfile_list_body_table_singleTable"
-                        :data="vt_main_metfile_list_body_table_date" highlight-current-row
-                        @current-change="vt_main_metfile_list_body_table_handleCurrentChange" >
-                        <el-table-column property="type" label="类型" width="50%">
+                    <el-table height="42vh" ref="vt_main_metfile_list_body_table_singleTable"
+                        :data="vt_main_metfile_list_body_table_date"
+                        :row-class-name="vt_main_metfile_list_body_table_rowClassName"
+                        @current-change="vt_main_metfile_list_body_table_handleCurrentChange" 
+                        highlight-current-row >
+                        <el-table-column property="type" label="类型" >
                         </el-table-column>
-                        <el-table-column property="key" label="素材文件名" width="50%">
+                        <el-table-column property="key" label="素材文件名" >
                         </el-table-column>
                     </el-table>
                 </div>
@@ -105,7 +109,21 @@
         </div>
         <div class='vt-main-metfile-preview'>
             <el-card class="box-card ">
-
+                <!-- 视频 -->
+                <div v-if="vt_main_metfile_list_body_table_currentRow.type == '视频'">
+                    视频
+                </div>
+                <!-- 音频 -->
+                <div v-else-if="vt_main_metfile_list_body_table_currentRow.type == '音频'" id="vt_main_metfile_preview_audio">
+                    音频
+                </div>
+                <!-- 图片 -->
+                <div v-else-if="vt_main_metfile_list_body_table_currentRow.type == '图片'">
+                    图片
+                </div>
+                <div v-else>
+                    none
+                </div>
             </el-card>
         </div>
         <div class='vt-main-metfile-info'>

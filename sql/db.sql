@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS vt.`vt_met_file`(
    `duration_second` VARCHAR(32) NOT NULL,-- 时长（秒）,如果为图片，留空串
    `create_time` VARCHAR(32) NOT NULL,-- 创建时间，格式（yyyy-MM-dd hh:mm:ss）
    `met_list` VARCHAR(32) NOT NULL,-- 被哪些素材使用到，格式（met1,met2）
+   `tags` VARCHAR(64) NOT NULL,-- 标签，格式(tag1,tag2)
    PRIMARY KEY ( `key` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

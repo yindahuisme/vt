@@ -1,3 +1,25 @@
+/* 常规格式------------------------------------- */
+/* 视频颜色 */
+.vedio {
+    background-color: rgb(226, 234, 255) !important; 
+}
+
+/* 音频颜色 */
+.audio {
+    background-color: rgb(233, 255, 246) !important;
+}
+
+/* 视频颜色 */
+.picture {
+    background-color: rgb(251, 255, 226) !important;
+}
+
+/* 表格选中当前行时展示颜色 */
+.current-row>td{
+    background-color: rgb(0, 0, 0) !important;
+}
+/* ------------------------------------------- */
+
 /*窗口*/
 body {
     margin: 0%;
@@ -39,10 +61,11 @@ body {
 
 /*页面头部-卡片-项目标题*/
 .vt-header-card-title {
-    float:left;
-    font-size:4vh;
-    margin:1vh 0% 0vh 40%;
+    float: left;
+    font-size: 4vh;
+    margin: 1vh 0% 0vh 40%;
 }
+
 /*页面内容区*/
 .vt-main {
     width: 100%;
@@ -102,16 +125,16 @@ body {
 
 /*页面内容区-素材文件-列表区-卡片-卡片头-下拉框*/
 .vt-main-metfile-list-header-menu {
-    float:left;
+    float: left;
     width: 50%;
 }
 
 /*页面内容区-素材文件-列表区-卡片-卡片头-编辑*/
 .vt-main-metfile-list-header-edit.is-circle {
-    width:28px;
+    width: 28px;
     height: 28px;
-    float:right;
-    padding:0%;
+    float: right;
+    padding: 0%;
 }
 
 /*页面内容区-素材文件-列表区-卡片-卡片头-编辑-对话框遮罩*/
@@ -154,7 +177,7 @@ body {
 /*页面内容区-素材文件-列表区-卡片-卡片头-编辑-对话框遮罩-面板-中部-sql区域*/
 .vt_main_metfile_list_header_edit_dialog>div>.el-dialog__body textarea {
     height: 65vh;
-    
+
 }
 
 /*页面内容区-素材文件-列表区-卡片-卡片头-编辑-对话框遮罩-面板-底部*/
@@ -165,7 +188,7 @@ body {
 
 /*页面内容区-素材文件-列表区-卡片-卡片头-编辑-对话框遮罩-面板-底部-按钮*/
 .vt_main_metfile_list_header_edit_dialog>div>.el-dialog__footer>.dialog-footer>button {
-    padding:0%;
+    padding: 0%;
     height: 100%;
     width: 10%;
     overflow: hidden;
@@ -184,12 +207,12 @@ body {
 
 /*页面内容区-素材文件-列表区-卡片-卡片body-表body*/
 .vt-main-metfile-list>.el-card>.el-card__body .el-table__body {
-   width: 100% !important;
+    width: 100% !important;
 }
 
 /*页面内容区-素材文件-列表区-卡片-卡片body-表头表body-列宽*/
 .vt-main-metfile-list>.el-card>.el-card__body colgroup>col {
-    width:auto !important;
+    width: auto !important;
 }
 
 /*页面内容区-素材文件-预览区*/

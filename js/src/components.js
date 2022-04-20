@@ -43,13 +43,28 @@ const metfile_component = Vue.extend({
                         type: '图片',
                         key: 'test5.jpg'
                     }],
-            vt_main_metfile_list_body_table_currentRow:null
+            vt_main_metfile_list_body_table_currentRow:{
+                type: '',
+                key: ''
+            }
         }
     },
     methods:{
         vt_main_metfile_list_body_table_handleCurrentChange(val) {
                 this.vt_main_metfile_list_body_table_currentRow = val;
+            },
+        vt_main_metfile_list_body_table_rowClassName({row}){
+            if (row.type == '视频') {
+                return 'vedio'
+            } else if (row.type == '音频') {
+                return 'audio'
+            } else if (row.type == '图片') {
+                return 'picture'
+            } else {
+                return ''
             }
+            
+        }
     }
 })
 
