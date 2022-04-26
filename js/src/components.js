@@ -1,9 +1,6 @@
-
-
-
 // 素材文件组件
 const metfile_component = Vue.extend({
-    template: document.getElementById("vt-main-metfile-template").innerHTML,
+    template: document.getElementById('vt-main-metfile-template').innerHTML,
     mounted() {
         // 生命周期函数，当组件挂载后调用
         // this.$store.state.axiosInstance.post('/test/test1', {
@@ -18,15 +15,18 @@ const metfile_component = Vue.extend({
 
         //第一张页面渲染后调用
         this.$nextTick(() => {
+
             // 音频波形可视化实例
             this.wavesurfer = WaveSurfer.create({
                 container: '#vt_main_metfile_preview_audio',
-                waveColor: "#368666",
-                progressColor: "#6d9e8b",
-                cursorColor: "#fff",
-                height: 80
+                waveColor: '#00FA9A',
+                progressColor: '#00BFBF',
+                backgroundColor: '#e9fff6'
             })
-            this.wavesurfer.load('/met_file/a.mp3')
+            setInterval(() => {
+                document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
+                this.wavesurfer.load('/met_file/a.mp3')
+            }, 1000)
 
         })
 
@@ -43,35 +43,37 @@ const metfile_component = Vue.extend({
             }],
             vt_main_metfile_list_header_menuValue: '创建时间倒序',
             vt_main_metfile_list_header_edit_dialogVisible: false,
-            vt_main_metfile_list_header_edit_dialog_sqlText:'test sql',
+            vt_main_metfile_list_header_edit_dialog_sqlText: 'test sql',
             vt_main_metfile_list_body_table_date: [{
-                        type: '视频',
-                        key: 'test1.mp4'
-                    }, {
-                        type: '音频',
-                        key: 'test2.mp3'
-                    }, {
-                        type: '图片',
-                        key: 'test3.jpg'
-                    }, {
-                        type: '音频',
-                        key: 'test4.mp3'
-                    }, {
-                        type: '图片',
-                        key: 'test5.jpg'
-                    }],
-            vt_main_metfile_list_body_table_currentRow:{
+                type: '视频',
+                key: 'test1.mp4'
+            }, {
+                type: '音频',
+                key: 'test2.mp3'
+            }, {
+                type: '图片',
+                key: 'test3.jpg'
+            }, {
+                type: '音频',
+                key: 'test4.mp3'
+            }, {
+                type: '图片',
+                key: 'test5.jpg'
+            }],
+            vt_main_metfile_list_body_table_currentRow: {
                 type: '音频',
                 key: ''
             },
             wavesurfer: null
         }
     },
-    methods:{
+    methods: {
         vt_main_metfile_list_body_table_handleCurrentChange(val) {
-                this.vt_main_metfile_list_body_table_currentRow = val;
-            },
-        vt_main_metfile_list_body_table_rowClassName({row}){
+            this.vt_main_metfile_list_body_table_currentRow = val;
+        },
+        vt_main_metfile_list_body_table_rowClassName({
+            row
+        }) {
             if (row.type == '视频') {
                 return 'vedio'
             } else if (row.type == '音频') {
@@ -81,7 +83,7 @@ const metfile_component = Vue.extend({
             } else {
                 return ''
             }
-            
+
         }
     }
 })
@@ -116,8 +118,8 @@ const temdev_component = Vue.extend({
 const setting_component = Vue.extend({
     template: `
     <div>
-        <el-card class="box-card vt-main-setting-root_card">
-        <el-divider content-position="center">常规</el-divider>
+        <el-card class='box-card vt-main-setting-root_card'>
+        <el-divider content-position='center'>常规</el-divider>
         <span>hi</span>
         </el-card>
     </div>
@@ -142,11 +144,11 @@ new Vue({
     mounted() {
         // 生命周期函数，当组件挂载后调用
 
-        
-        
+
+
         // 获取项目名
         // this.csInterface.evalScript('get_project_name()', (data) => {this.vt_header_card_title = data})
-        
+
     },
     components: {
         metfile_component,

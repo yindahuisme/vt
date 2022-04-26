@@ -16,7 +16,7 @@
 
 /* 表格选中当前行时展示颜色 */
 .current-row>td{
-    background-color: rgb(0, 0, 0) !important;
+    background-color: rgb(0, 191, 191) !important;
 }
 /* ------------------------------------------- */
 
@@ -225,6 +225,18 @@ body {
 /*页面内容区-素材文件-预览区-卡片*/
 .vt-main-metfile-preview>.el-card {
     height: 100%;
+}
+
+/*页面内容区-素材文件-预览区-卡片-卡片body*/
+.vt-main-metfile-preview>.el-card>.el-card__body {
+    height: 49vh;
+    padding: 1vh 2% 0vh 2%;
+}
+
+/*页面内容区-素材文件-预览区-卡片-音频区*/
+.vt_main_metfile_preview_audio>wave {
+    height: 30vh !important;
+    width: 100% !important;
 }
 
 /*页面内容区-素材文件-信息区*/
