@@ -1,17 +1,34 @@
-//素材文件组件
+
+
+
+// 素材文件组件
 const metfile_component = Vue.extend({
     template: document.getElementById("vt-main-metfile-template").innerHTML,
     mounted() {
         // 生命周期函数，当组件挂载后调用
-        // axiosInstance.post('/test/test1', {
+        // this.$store.state.axiosInstance.post('/test/test1', {
         //         test: 'yindahu'
         //     })
         //     .then(function (response) {
-        //         alert(response.data['data'])
+        //         console.log(response.data['data'])
         //     })
         //     .catch(function (error) {
         //         alert(error.message)
         //     })
+
+        //第一张页面渲染后调用
+        this.$nextTick(() => {
+            // 音频波形可视化实例
+            this.wavesurfer = WaveSurfer.create({
+                container: '#vt_main_metfile_preview_audio',
+                waveColor: "#368666",
+                progressColor: "#6d9e8b",
+                cursorColor: "#fff",
+                height: 80
+            })
+            this.wavesurfer.load('/met_file/a.mp3')
+
+        })
 
     },
     // 这里必须用函数，防止多组件共用数据，下同
@@ -44,9 +61,10 @@ const metfile_component = Vue.extend({
                         key: 'test5.jpg'
                     }],
             vt_main_metfile_list_body_table_currentRow:{
-                type: '',
+                type: '音频',
                 key: ''
-            }
+            },
+            wavesurfer: null
         }
     },
     methods:{
@@ -123,14 +141,18 @@ new Vue({
     },
     mounted() {
         // 生命周期函数，当组件挂载后调用
+
+        
+        
         // 获取项目名
-        csInterface.evalScript('get_project_name()', (data) => {this.vt_header_card_title = data})
-        // 
+        // this.csInterface.evalScript('get_project_name()', (data) => {this.vt_header_card_title = data})
+        
     },
     components: {
         metfile_component,
         track_component,
         temdev_component,
         setting_component
-    }
+    },
+    store
 })

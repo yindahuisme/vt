@@ -14,16 +14,17 @@
     <script src="./js/adobe/CSInterface.js"></script>
     <!-- vue -->
     <script src="./js/vue/vue.js"></script>
-    <!-- element-ui -->
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <!-- 音频波形可视化 -->
-    <script src="./js/wavesurfer/wavesurfer.js"></script>
-    <!-- 自定义js -->
-    <script src="./js/src/tools.js"></script>
     <script>
         // 关闭生产提示
         Vue.config.productionTip = false
     </script>
+    <!-- vuex -->
+    <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+    <!-- element-ui -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 音频波形可视化 -->
+    <script src="./js/wavesurfer/wavesurfer.js"></script>
+    
 </head>
 
 <body>
@@ -138,7 +139,8 @@
         </div>
     </div>
 </template>
-
+<!-- 注册vuex插件 -->
+<script src="./js/src/store.js"></script>
 <!-- 自定义vue组件 -->
 <script src="./js/src/components.js"></script>
 </html>
