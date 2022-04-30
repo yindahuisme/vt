@@ -16,19 +16,36 @@ const metfile_component = Vue.extend({
         //第一张页面渲染后调用
         this.$nextTick(() => {
 
-            // 音频波形可视化实例
-            this.wavesurfer = WaveSurfer.create({
-                container: '#vt_main_metfile_preview_audio',
-                waveColor: '#00FA9A',
-                progressColor: '#00BFBF',
-                backgroundColor: '#e9fff6'
-            })
-            setInterval(() => {
                 document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
+                // 音频波形可视化实例
+                this.wavesurfer = WaveSurfer.create({
+                    container: '#vt_main_metfile_preview_audio',
+                    waveColor: '#00FA9A',
+                    progressColor: '#00BFBF',
+                    backgroundColor: '#e9fff6',
+                    barWidth: '1'
+                })
                 this.wavesurfer.load('/met_file/a.mp3')
-            }, 1000)
+            
 
         })
+
+        window.onresize=
+            function(){
+                console.log('resize')
+                document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
+                // 音频波形可视化实例
+                this.wavesurfer = WaveSurfer.create({
+                    container: '#vt_main_metfile_preview_audio',
+                    waveColor: '#00FA9A',
+                    progressColor: '#00BFBF',
+                    backgroundColor: '#e9fff6',
+                    barWidth: '1'
+                })
+                this.wavesurfer.load('/met_file/a.mp3')
+            }
+        
+        
 
     },
     // 这里必须用函数，防止多组件共用数据，下同
@@ -64,7 +81,13 @@ const metfile_component = Vue.extend({
                 type: '音频',
                 key: ''
             },
-            wavesurfer: null
+            wavesurfer: null,
+            value: [0,300,1000],
+                marks: {
+                    0: '0s',
+                    100: '1s',
+                    500: '5s'
+                        }
         }
     },
     methods: {

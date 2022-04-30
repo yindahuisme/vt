@@ -116,7 +116,13 @@
                 </div>
                 <!-- 音频 -->
                 <div v-else-if="vt_main_metfile_list_body_table_currentRow.type == '音频'"
-                    id="vt_main_metfile_preview_audio" class="vt_main_metfile_preview_audio">
+                      style="width:100%">
+                    <div id="vt_main_metfile_preview_audio" class="vt_main_metfile_preview_audio"></div>
+                    <!-- 进度条 -->
+                    <div class="block">
+                        <el-slider v-model="value" range :marks="marks" max="1000">
+                        </el-slider>
+                    </div>
                 </div>
                 <!-- 图片 -->
                 <div v-else-if="vt_main_metfile_list_body_table_currentRow.type == '图片'">

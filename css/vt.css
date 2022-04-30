@@ -237,6 +237,17 @@ body {
 .vt_main_metfile_preview_audio>wave {
     height: 30vh !important;
     width: 100% !important;
+    overflow: hidden !important;
+}
+
+/*页面内容区-素材文件-预览区-卡片-音频slider*/
+.vt_main_metfile_preview_audio+.block .el-slider__runway {
+    margin: 0%;
+}
+
+/*页面内容区-素材文件-预览区-卡片-音频slider-蓝条*/
+.vt_main_metfile_preview_audio+.block .el-slider__runway>.el-slider__bar {
+    display: none;
 }
 
 /*页面内容区-素材文件-信息区*/
