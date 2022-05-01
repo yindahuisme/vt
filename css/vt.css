@@ -243,11 +243,26 @@ body {
 /*页面内容区-素材文件-预览区-卡片-音频slider*/
 .vt_main_metfile_preview_audio+.block .el-slider__runway {
     margin: 0%;
+    height: 1vh;
 }
 
 /*页面内容区-素材文件-预览区-卡片-音频slider-蓝条*/
 .vt_main_metfile_preview_audio+.block .el-slider__runway>.el-slider__bar {
     display: none;
+}
+
+/*页面内容区-素材文件-预览区-卡片-音频slider-圆形滑块*/
+.vt_main_metfile_preview_audio+.block .el-slider__runway .el-slider__button-wrapper {
+    height: 2vh;
+    width: 2vh;
+    top: -0.5vh
+}
+
+/*页面内容区-素材文件-预览区-卡片-音频slider-圆形滑块-图标*/
+.vt_main_metfile_preview_audio+.block .el-slider__runway .el-slider__button {
+    height: 2vh;
+    width: 2vh;
+    display: block;
 }
 
 /*页面内容区-素材文件-信息区*/

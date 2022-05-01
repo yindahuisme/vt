@@ -83,11 +83,12 @@ const metfile_component = Vue.extend({
             },
             wavesurfer: null,
             value: [0,300,1000],
-                marks: {
+            marks: {
                     0: '0s',
                     100: '1s',
                     500: '5s'
-                        }
+                    },
+            max:1000
         }
     },
     methods: {
