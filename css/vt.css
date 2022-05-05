@@ -265,6 +265,28 @@ body {
     display: block;
 }
 
+/*页面内容区-素材文件-预览区-卡片-音频slider*/
+.vt_main_metfile_preview_audio_slider {
+    height: 1vh;
+    width: 100%;
+    cursor: pointer;
+    background-color: #E4E7ED;
+    border-radius: 3px;
+}
+
+/*页面内容区-素材文件-预览区-卡片-音频slider-滑块*/
+.vt_main_metfile_preview_audio_slider>.block {
+    height: 2vh;
+    width: 1%;
+    cursor: pointer;
+    background-color: #ffffff;
+    border:2px solid aqua;
+    border-radius: 40% 40%;
+    margin-left: -0.5%;
+    left: 50%;
+    position:relative;
+}
+
 /*页面内容区-素材文件-信息区*/
 .vt-main-metfile-info {
     width: 40%;
