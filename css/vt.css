@@ -241,31 +241,6 @@ body {
 }
 
 /*页面内容区-素材文件-预览区-卡片-音频slider*/
-.vt_main_metfile_preview_audio+.block .el-slider__runway {
-    margin: 0%;
-    height: 1vh;
-}
-
-/*页面内容区-素材文件-预览区-卡片-音频slider-蓝条*/
-.vt_main_metfile_preview_audio+.block .el-slider__runway>.el-slider__bar {
-    display: none;
-}
-
-/*页面内容区-素材文件-预览区-卡片-音频slider-圆形滑块*/
-.vt_main_metfile_preview_audio+.block .el-slider__runway .el-slider__button-wrapper {
-    height: 2vh;
-    width: 2vh;
-    top: -0.5vh
-}
-
-/*页面内容区-素材文件-预览区-卡片-音频slider-圆形滑块-图标*/
-.vt_main_metfile_preview_audio+.block .el-slider__runway .el-slider__button {
-    height: 2vh;
-    width: 2vh;
-    display: block;
-}
-
-/*页面内容区-素材文件-预览区-卡片-音频slider*/
 .vt_main_metfile_preview_audio_slider {
     height: 1vh;
     width: 100%;
@@ -275,7 +250,7 @@ body {
 }
 
 /*页面内容区-素材文件-预览区-卡片-音频slider-滑块*/
-.vt_main_metfile_preview_audio_slider>.block {
+.vt_main_metfile_preview_audio_slider>.vt_bar {
     height: 2vh;
     width: 1%;
     cursor: pointer;
@@ -283,7 +258,7 @@ body {
     border:2px solid aqua;
     border-radius: 40% 40%;
     margin-left: -0.5%;
-    left: 50%;
+    top:-0.5vh;
     position:relative;
 }
 
@@ -316,9 +291,31 @@ body {
     height: 88vh;
 }
 
-/*页面内容区-设置-根卡片-常规分割线*/
+/*页面内容区-设置-根卡片-内容区*/
 .vt-main-setting-root_card>.el-card__body {
     padding-top: 0%;
     padding-bottom: 0%;
+    height: 100%;
+}
+
+/*页面内容区-设置-根卡片-内容区-分割线*/
+.vt-main-setting-root_card>.el-card__body>.el-divider--horizontal {
+    margin: 2vh 0%;
+}
+
+/*页面内容区-设置-根卡片-内容区-行*/
+.vt-main-setting-root_card>.el-card__body>.setting_row {
+    height: 4vh;
+}
+
+/*页面内容区-设置-根卡片-内容区-行-按钮*/
+.vt-main-setting-root_card>.el-card__body>.setting_row>button {
+    padding: 0%;
+    width: 10%;
+    overflow: hidden;
+}
+
+/*页面内容区-设置-根卡片-内容区-行-所有一级元素*/
+.vt-main-setting-root_card>.el-card__body>.setting_row>* {
     height: 100%;
 }

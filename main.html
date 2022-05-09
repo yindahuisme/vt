@@ -24,7 +24,7 @@
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <!-- 音频波形可视化 -->
     <script src="./js/wavesurfer/wavesurfer.js"></script>
-    
+
 </head>
 
 <body>
@@ -73,8 +73,7 @@
                 <div slot="header" class="clearfix">
                     <!-- sql筛选下拉框 -->
                     <el-select size="mini" class="vt-main-metfile-list-header-menu"
-                        v-model="vt_main_metfile_list_header_menuValue"
-                        filterable allow-create>
+                        v-model="vt_main_metfile_list_header_menuValue" filterable allow-create>
                         <el-option v-for="item in vt_main_metfile_list_header_menuOptions" :key="item.value"
                             :label="item.label" :value="item.value">
                         </el-option>
@@ -89,20 +88,20 @@
                         <span slot="footer" class="dialog-footer">
                             <el-button type="danger" @click="vt_main_metfile_list_header_edit_dialogVisible = false">删 除
                             </el-button>
-                            <el-button type="primary" @click="vt_main_metfile_list_header_edit_dialogVisible = false">保 存</el-button>
+                            <el-button type="primary" @click="vt_main_metfile_list_header_edit_dialogVisible = false">保
+                                存</el-button>
                         </span>
                     </el-dialog>
                 </div>
                 <!-- 卡片body -->
                 <div>
                     <el-table height="42vh" ref="vt_main_metfile_list_body_table_singleTable"
-                        :data="vt_main_metfile_list_body_table_date"
+                        :data="vt_main_metfile_list_body_table_data"
                         :row-class-name="vt_main_metfile_list_body_table_rowClassName"
-                        @current-change="vt_main_metfile_list_body_table_handleCurrentChange" 
-                        highlight-current-row >
-                        <el-table-column property="type" label="类型" >
+                        @current-change="vt_main_metfile_list_body_table_handleCurrentChange" highlight-current-row>
+                        <el-table-column property="type" label="类型">
                         </el-table-column>
-                        <el-table-column property="key" label="素材文件名" >
+                        <el-table-column property="key" label="素材文件名">
                         </el-table-column>
                     </el-table>
                 </div>
@@ -115,20 +114,15 @@
                     视频
                 </div>
                 <!-- 音频 -->
-                <div v-else-if="vt_main_metfile_list_body_table_currentRow.type == '音频'"
-                      style="width:100%">
+                <div v-else-if="vt_main_metfile_list_body_table_currentRow.type == '音频'" style="width:100%">
                     <div id="vt_main_metfile_preview_audio" class="vt_main_metfile_preview_audio"></div>
                     <!-- 进度条 -->
-                    <div class="block">
-                        <el-slider v-model="value" range :marks="marks" :max="1000">
-                        </el-slider>
-                    </div>
                     <div class="vt_main_metfile_preview_audio_slider">
-                        <div class="block" >
+                        <div class="vt_bar" style="left:30%">
 
                         </div>
-                        <div class="mark">
-                            
+                        <div class="vt_mark">
+
                         </div>
                     </div>
                 </div>
@@ -153,8 +147,24 @@
         </div>
     </div>
 </template>
-<!-- 注册vuex插件 -->
-<script src="./js/src/store.js"></script>
+
+<!-- 设置组件-模板代码 -->
+<template id="vt-main-setting-template">
+    <el-card class='box-card vt-main-setting-root_card'>
+        <el-divider content-position='center'>常规操作</el-divider>
+        <div class="setting_row">
+            <el-button type="primary">清空轨道</el-button>
+            <el-button type="primary">加载轨道</el-button>
+        </div>
+
+        <el-divider content-position='center'>项目属性</el-divider>
+    </el-card>
+</template>
 <!-- 自定义vue组件 -->
 <script src="./js/src/components.js"></script>
+<!-- 注册vuex插件 -->
+<script src="./js/src/store.js"></script>
+<!-- app组件 -->
+<script src="./js/src/app.js"></script>
+
 </html>

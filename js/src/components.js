@@ -1,100 +1,103 @@
-// 素材文件组件
+//素材文件组件
 const metfile_component = Vue.extend({
     template: document.getElementById('vt-main-metfile-template').innerHTML,
     mounted() {
-        // 生命周期函数，当组件挂载后调用
-        // this.$store.state.axiosInstance.post('/test/test1', {
-        //         test: 'yindahu'
-        //     })
-        //     .then(function (response) {
-        //         console.log(response.data['data'])
-        //     })
-        //     .catch(function (error) {
-        //         alert(error.message)
-        //     })
+        //生命周期函数，当组件挂载后调用
+
+        //更新素材文件表格数据
+        this.vt_main_metfile_list_body_full_data = this.$store.state.axios_exec()
+
+        
 
         //第一张页面渲染后调用
-        this.$nextTick(() => {
+        //this.$nextTick(() => {
 
-                document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
-                // 音频波形可视化实例
-                this.wavesurfer = WaveSurfer.create({
-                    container: '#vt_main_metfile_preview_audio',
-                    waveColor: '#00FA9A',
-                    progressColor: '#00BFBF',
-                    backgroundColor: '#e9fff6',
-                    barWidth: '1'
-                })
-                this.wavesurfer.load('/met_file/a.mp3')
+        //        document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
+        //        //音频波形可视化实例
+        //        this.wavesurfer = WaveSurfer.create({
+        //            container: '#vt_main_metfile_preview_audio',
+        //            waveColor: '#00FA9A',
+        //            progressColor: '#00BFBF',
+        //            backgroundColor: '#e9fff6',
+        //            barWidth: '1'
+        //        })
+        //        this.vt_main_metfile_preview_audio_wavesurfer.load('/met_file/a.mp3')
             
 
-        })
+        //})
 
-        window.onresize=
-            function(){
-                console.log('resize')
-                document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
-                // 音频波形可视化实例
-                this.wavesurfer = WaveSurfer.create({
-                    container: '#vt_main_metfile_preview_audio',
-                    waveColor: '#00FA9A',
-                    progressColor: '#00BFBF',
-                    backgroundColor: '#e9fff6',
-                    barWidth: '1'
-                })
-                this.wavesurfer.load('/met_file/a.mp3')
-            }
+        //window.onresize=
+        //    function(){
+        //        console.log('resize')
+        //        document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
+        //        //音频波形可视化实例
+        //        this.wavesurfer = WaveSurfer.create({
+        //            container: '#vt_main_metfile_preview_audio',
+        //            waveColor: '#00FA9A',
+        //            progressColor: '#00BFBF',
+        //            backgroundColor: '#e9fff6',
+        //            barWidth: '1'
+        //        })
+        //        this.vt_main_metfile_preview_audio_wavesurfer.load('/met_file/a.mp3')
+        //    }
         
         
 
     },
-    // 这里必须用函数，防止多组件共用数据，下同
     data() {
         return {
-            vt_main_metfile_list_header_menuOptions: [{
-                value: '最后更新时间倒序',
-                label: '最后更新时间倒序'
-            }, {
-                value: '创建时间倒序',
-                label: '创建时间倒序'
-            }],
-            vt_main_metfile_list_header_menuValue: '创建时间倒序',
+            //素材文件列表区
+            // vt_main_metfile_list_header_menuOptions: [{
+            //     value: '最后更新时间倒序',
+            //     label: '最后更新时间倒序'
+            // }, {
+            //     value: '创建时间倒序',
+            //     label: '创建时间倒序'
+            // }],
+            //素材文件列表-sql筛选项编辑框是否打开
             vt_main_metfile_list_header_edit_dialogVisible: false,
-            vt_main_metfile_list_header_edit_dialog_sqlText: 'test sql',
-            vt_main_metfile_list_body_table_date: [{
-                type: '视频',
-                key: 'test1.mp4'
-            }, {
-                type: '音频',
-                key: 'test2.mp3'
-            }, {
-                type: '图片',
-                key: 'test3.jpg'
-            }, {
-                type: '音频',
-                key: 'test4.mp3'
-            }, {
-                type: '图片',
-                key: 'test5.jpg'
-            }],
-            vt_main_metfile_list_body_table_currentRow: {
-                type: '音频',
-                key: ''
-            },
-            wavesurfer: null,
-            value: [0,300,1000],
-            marks: {
-                    0: '0s',
-                    100: '1s',
-                    500: '5s'
-                    },
-            max:1000
+            //素材文件列表-sql筛选项
+            vt_main_metfile_list_header_menuOptions: [],
+            //素材文件列表-sql筛选项默认选项
+            vt_main_metfile_list_header_menuValue: '',
+            //素材文件列表-素材文件完整信息
+            vt_main_metfile_list_body_full_data: [],
+            //素材文件列表-素材文件表格数据
+            vt_main_metfile_list_body_table_data: [],
+            //素材文件列表-素材文件表格默认选项
+            vt_main_metfile_list_body_table_currentRow: null,
+            //素材文件列表-筛选对话框sql内容
+            vt_main_metfile_list_header_edit_dialog_sqlText: '',
+            // vt_main_metfile_list_body_table_data: [{
+            //     type: '视频',
+            //     key: 'test1.mp4'
+            // }, {
+            //     type: '音频',
+            //     key: 'test2.mp3'
+            // }, {
+            //     type: '图片',
+            //     key: 'test3.jpg'
+            // }, {
+            //     type: '音频',
+            //     key: 'test4.mp3'
+            // }, {
+            //     type: '图片',
+            //     key: 'test5.jpg'
+            // }],
+            // vt_main_metfile_list_body_table_currentRow: {
+            //     type: '音频',
+            //     key: ''
+            // },
+            vt_main_metfile_preview_audio_wavesurfer: null
         }
     },
     methods: {
+        //素材文件列表区
+        //当选中素材文件列表的某一项时触发
         vt_main_metfile_list_body_table_handleCurrentChange(val) {
             this.vt_main_metfile_list_body_table_currentRow = val;
         },
+        //动态确定素材列表类型
         vt_main_metfile_list_body_table_rowClassName({
             row
         }) {
@@ -109,6 +112,7 @@ const metfile_component = Vue.extend({
             }
 
         }
+
     }
 })
 
@@ -140,14 +144,7 @@ const temdev_component = Vue.extend({
 
 //设置组件
 const setting_component = Vue.extend({
-    template: `
-    <div>
-        <el-card class='box-card vt-main-setting-root_card'>
-        <el-divider content-position='center'>常规</el-divider>
-        <span>hi</span>
-        </el-card>
-    </div>
-        `,
+    template: document.getElementById('vt-main-setting-template').innerHTML, 
     data() {
         return {
 
@@ -155,30 +152,3 @@ const setting_component = Vue.extend({
     }
 })
 
-// app组件
-new Vue({
-    el: '#vt',
-    data: {
-        vt_main_nav_activename: 'metfile',
-        vt_header_card_title: ''
-    },
-    methods: {
-
-    },
-    mounted() {
-        // 生命周期函数，当组件挂载后调用
-
-
-
-        // 获取项目名
-        // this.csInterface.evalScript('get_project_name()', (data) => {this.vt_header_card_title = data})
-
-    },
-    components: {
-        metfile_component,
-        track_component,
-        temdev_component,
-        setting_component
-    },
-    store
-})
