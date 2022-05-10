@@ -16,7 +16,7 @@ var store = new Vuex.Store({
         track_component: track_component,
         temdev_component: temdev_component,
         setting_component: setting_component,
-        app_component,
+        app_component: null,
 
         //通用方法
         //封装adobe cep桥接方法
