@@ -2,14 +2,12 @@
 const metfile_component = Vue.extend({
     template: document.getElementById('vt-main-metfile-template').innerHTML,
     mounted() {
-        //生命周期函数，当组件挂载后调用
 
         //更新素材文件表格数据
-        this.vt_main_metfile_list_body_full_data = this.$store.state.axios_exec()
+        // this.vt_main_metfile_list_body_full_data = this.$store.state.axios_exec()
 
         
 
-        //第一张页面渲染后调用
         //this.$nextTick(() => {
 
         //        document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
@@ -46,7 +44,6 @@ const metfile_component = Vue.extend({
     },
     data() {
         return {
-            //素材文件列表区
             // vt_main_metfile_list_header_menuOptions: [{
             //     value: '最后更新时间倒序',
             //     label: '最后更新时间倒序'
@@ -92,7 +89,6 @@ const metfile_component = Vue.extend({
         }
     },
     methods: {
-        //素材文件列表区
         //当选中素材文件列表的某一项时触发
         vt_main_metfile_list_body_table_handleCurrentChange(val) {
             this.vt_main_metfile_list_body_table_currentRow = val;
@@ -145,8 +141,22 @@ const temdev_component = Vue.extend({
 //设置组件
 const setting_component = Vue.extend({
     template: document.getElementById('vt-main-setting-template').innerHTML, 
+    mounted(){
+        //获取配置项
+        this.vt_main_setting_properties = this.$store.state.axios_exec(
+            '/getSettingProperties',{},(res)=>{
+                this.vt_main_setting_properties=res.message
+            }
+        )
+        //更新项目数据目录
+        this.vt_main_setting_card_projectDataPath=''
+    },
     data() {
         return {
+            //项目配置项
+            vt_main_setting_properties:[],
+            //项目数据目录
+            vt_main_setting_card_projectDataPath:''
 
         }
     }

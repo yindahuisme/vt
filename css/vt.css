@@ -287,35 +287,35 @@ body {
 }
 
 /*页面内容区-设置-根卡片*/
-.vt-main-setting-root_card {
+.vt-main-setting-card {
     height: 88vh;
 }
 
 /*页面内容区-设置-根卡片-内容区*/
-.vt-main-setting-root_card>.el-card__body {
+.vt-main-setting-card>.el-card__body {
     padding-top: 0%;
     padding-bottom: 0%;
     height: 100%;
 }
 
 /*页面内容区-设置-根卡片-内容区-分割线*/
-.vt-main-setting-root_card>.el-card__body>.el-divider--horizontal {
+.vt-main-setting-card>.el-card__body>.el-divider--horizontal {
     margin: 2vh 0%;
 }
 
 /*页面内容区-设置-根卡片-内容区-行*/
-.vt-main-setting-root_card>.el-card__body>.setting_row {
+.vt-main-setting-card>.el-card__body>.setting_singleRow {
     height: 4vh;
 }
 
 /*页面内容区-设置-根卡片-内容区-行-按钮*/
-.vt-main-setting-root_card>.el-card__body>.setting_row>button {
+.vt-main-setting-card>.el-card__body>.setting_singleRow>button {
     padding: 0%;
     width: 10%;
     overflow: hidden;
 }
 
 /*页面内容区-设置-根卡片-内容区-行-所有一级元素*/
-.vt-main-setting-root_card>.el-card__body>.setting_row>* {
+.vt-main-setting-card>.el-card__body>.setting_singleRow>* {
     height: 100%;
 }

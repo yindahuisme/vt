@@ -4,6 +4,8 @@ new Vue({
     data: {
         //异步等待任务数量
         vt_async_task_num: 0,
+        //异步处理状态时提示信息
+        vt_loadingText:'...',
         //当前激活的功能导航栏
         vt_main_nav_activename: 'metfile',
         //项目标题
@@ -12,8 +14,20 @@ new Vue({
     methods: {
 
     },
+    computed: {
+        //此刻是否为异步处理状态
+        vt_loading:{
+            get: function () {
+                if(this.vt_async_task_num>0){
+                    return true
+                }
+                else{
+                    return false
+                }
+            }
+        }
+    },
     mounted() {
-        //生命周期函数，当组件挂载后调用
         //注册app组件实例到vuex
         this.$store.state.app_component=this
         //获取项目名

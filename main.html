@@ -28,7 +28,8 @@
 </head>
 
 <body>
-    <div id="vt">
+    <div id="vt" v-loading="vt_loading" :element-loading-text="vt_loadingText" element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(255, 255, 255, 0.8)">
         <!-- 内容头 -->
         <div class="vt-header">
             <!-- 内容头-卡片 -->
@@ -150,14 +151,16 @@
 
 <!-- 设置组件-模板代码 -->
 <template id="vt-main-setting-template">
-    <el-card class='box-card vt-main-setting-root_card'>
+    <el-card class='box-card vt-main-setting-card'>
         <el-divider content-position='center'>常规操作</el-divider>
-        <div class="setting_row">
+        <div class="setting_singleRow">
             <el-button type="primary">清空轨道</el-button>
             <el-button type="primary">加载轨道</el-button>
         </div>
 
         <el-divider content-position='center'>项目属性</el-divider>
+        <el-input type="textarea" autosize v-model="vt_main_setting_card_projectDataPath">
+        </el-input>
     </el-card>
 </template>
 <!-- 自定义vue组件 -->

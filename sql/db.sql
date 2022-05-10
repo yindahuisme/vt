@@ -3,11 +3,13 @@ create databases vt;
 
 -- 项目配置表
 CREATE TABLE IF NOT EXISTS vt.`vt_setting`(
-   `type` VARCHAR(32) NOT NULL,-- 配置所属类别
    `key` VARCHAR(32) NOT NULL,-- 配置项唯一id
    `value` VARCHAR(32) NOT NULL,-- 值
    PRIMARY KEY ( `key` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 项目数据目录
+insert into vt.`vt_setting` values('projectDataPath','C:\Users\Administrator\Desktop\pr_plugin\vt_data')
 
 -- 素材文件表
 CREATE TABLE IF NOT EXISTS vt.`vt_met_file`(
