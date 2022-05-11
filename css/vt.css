@@ -26,11 +26,17 @@ body {
     background-color: white;
 }
 
-/*app 组件根元素*/
-#vt {
+/*app 根元素*/
+#app {
     width: 99vw;
     height: 99vh;
     border: solid 1px rgb(187, 187, 187);
+}
+
+/*app 组件内容区*/
+#vt {
+    width: 100%;
+    height: 100%;
 }
 
 /*页面头部*/
@@ -296,6 +302,7 @@ body {
     padding-top: 0%;
     padding-bottom: 0%;
     height: 100%;
+    overflow-y: scroll;
 }
 
 /*页面内容区-设置-根卡片-内容区-分割线*/

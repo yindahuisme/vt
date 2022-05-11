@@ -28,7 +28,13 @@
 </head>
 
 <body>
-    <div id="vt" v-loading="vt_loading" :element-loading-text="vt_loadingText" element-loading-spinner="el-icon-loading"
+    <div id="app">
+        <vt_component></vt_component>
+    </div>
+</body>
+
+<template id="vt">
+    <div v-loading="vt_loading" :element-loading-text="vt_loadingText" element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)">
         <!-- 内容头 -->
         <div class="vt-header">
@@ -60,9 +66,8 @@
             </el-tabs>
 
         </div>
-
     </div>
-</body>
+</template>
 
 <!-- 素材文件组件-模板代码 -->
 <template id="vt-main-metfile-template">
@@ -85,7 +90,8 @@
                         @click="vt_main_metfile_list_header_edit_dialogVisible = true" circle></el-button>
                     <el-dialog title="素材文件筛选sql编辑" :visible.sync="vt_main_metfile_list_header_edit_dialogVisible"
                         class="vt_main_metfile_list_header_edit_dialog">
-                        <el-input type="textarea" v-model="vt_main_metfile_list_header_edit_dialog_sqlText"></el-input>
+                        <el-input type="textarea" placeholder="请输入内容"
+                            v-model="vt_main_metfile_list_header_edit_dialog_sqlText"></el-input>
                         <span slot="footer" class="dialog-footer">
                             <el-button type="danger" @click="vt_main_metfile_list_header_edit_dialogVisible = false">删 除
                             </el-button>
@@ -159,7 +165,9 @@
         </div>
 
         <el-divider content-position='center'>项目属性</el-divider>
-        <el-input type="textarea" autosize v-model="vt_main_setting_card_projectDataPath">
+        <label>数据目录:</label>
+        <el-input type="textarea" placeholder="请输入内容" :rows="vt_main_setting_card_projectDataPath.split('\n').length"
+            v-model="vt_main_setting_card_projectDataPath">
         </el-input>
     </el-card>
 </template>

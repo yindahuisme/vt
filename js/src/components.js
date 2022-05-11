@@ -6,7 +6,7 @@ const metfile_component = Vue.extend({
         //更新素材文件表格数据
         // this.vt_main_metfile_list_body_full_data = this.$store.state.axios_exec()
 
-        
+
 
         //this.$nextTick(() => {
 
@@ -20,7 +20,7 @@ const metfile_component = Vue.extend({
         //            barWidth: '1'
         //        })
         //        this.vt_main_metfile_preview_audio_wavesurfer.load('/met_file/a.mp3')
-            
+
 
         //})
 
@@ -38,8 +38,8 @@ const metfile_component = Vue.extend({
         //        })
         //        this.vt_main_metfile_preview_audio_wavesurfer.load('/met_file/a.mp3')
         //    }
-        
-        
+
+
 
     },
     data() {
@@ -140,25 +140,72 @@ const temdev_component = Vue.extend({
 
 //设置组件
 const setting_component = Vue.extend({
-    template: document.getElementById('vt-main-setting-template').innerHTML, 
-    mounted(){
+    template: document.getElementById('vt-main-setting-template').innerHTML,
+    mounted() {
         //获取配置项
-        this.vt_main_setting_properties = this.$store.state.axios_exec(
-            '/getSettingProperties',{},(res)=>{
-                this.vt_main_setting_properties=res.message
+        this.$store.state.axios_exec(
+            '/vt/getSettingProperties', {}, (res) => {
+                this.vt_main_setting_properties = res.data.data
+                //更新项目数据目录
+                this.vt_main_setting_card_projectDataPath = this.vt_main_setting_properties.projectDataPath
             }
         )
-        //更新项目数据目录
-        this.vt_main_setting_card_projectDataPath=''
+        
+        
     },
     data() {
         return {
             //项目配置项
-            vt_main_setting_properties:[],
+            vt_main_setting_properties: [],
             //项目数据目录
-            vt_main_setting_card_projectDataPath:''
+            vt_main_setting_card_projectDataPath: ''
 
         }
     }
 })
 
+//vt组件
+const vt_component = Vue.extend({
+    template: document.getElementById('vt').innerHTML,
+    data() {
+        return {
+            //异步等待任务数量
+            vt_async_task_num: 0,
+            //异步处理状态时提示信息
+            vt_loadingText: '...',
+            //当前激活的功能导航栏
+            vt_main_nav_activename: 'metfile',
+            //项目标题
+            vt_header_card_title: ''
+        }
+
+    },
+    methods: {
+
+    },
+    computed: {
+        //此刻是否为异步处理状态
+        vt_loading: {
+            get: function () {
+                if (this.vt_async_task_num > 0) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+        }
+    },
+    mounted() {
+        //获取项目名
+        this.$store.state.csInterface.evalScript('get_project_name()', (data) => {
+            this.vt_header_card_title = data
+        })
+
+    },
+    components: {
+        metfile_component,
+        track_component,
+        temdev_component,
+        setting_component
+    }
+})
