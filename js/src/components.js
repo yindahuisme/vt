@@ -1,45 +1,11 @@
+
+
 //素材文件组件
 const metfile_component = Vue.extend({
     template: document.getElementById('vt-main-metfile-template').innerHTML,
     mounted() {
-
-        //更新素材文件表格数据
-        // this.vt_main_metfile_list_body_full_data = this.$store.state.axios_exec()
-
-
-
-        //this.$nextTick(() => {
-
-        //        document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
-        //        //音频波形可视化实例
-        //        this.wavesurfer = WaveSurfer.create({
-        //            container: '#vt_main_metfile_preview_audio',
-        //            waveColor: '#00FA9A',
-        //            progressColor: '#00BFBF',
-        //            backgroundColor: '#e9fff6',
-        //            barWidth: '1'
-        //        })
-        //        this.vt_main_metfile_preview_audio_wavesurfer.load('/met_file/a.mp3')
-
-
-        //})
-
-        //window.onresize=
-        //    function(){
-        //        console.log('resize')
-        //        document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
-        //        //音频波形可视化实例
-        //        this.wavesurfer = WaveSurfer.create({
-        //            container: '#vt_main_metfile_preview_audio',
-        //            waveColor: '#00FA9A',
-        //            progressColor: '#00BFBF',
-        //            backgroundColor: '#e9fff6',
-        //            barWidth: '1'
-        //        })
-        //        this.vt_main_metfile_preview_audio_wavesurfer.load('/met_file/a.mp3')
-        //    }
-
-
+    //注册组件实例对象到store
+    this.$store.state.metfile_component = this
 
     },
     data() {
@@ -89,6 +55,54 @@ const metfile_component = Vue.extend({
         }
     },
     methods: {
+        //初始化
+        init: function () {
+            //更新素材文件表格数据
+            // this.vt_main_metfile_list_body_full_data = this.$store.state.axios_exec()
+
+
+
+            //this.$nextTick(() => {
+
+            //        document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
+            //        //音频波形可视化实例
+            //        this.wavesurfer = WaveSurfer.create({
+            //            container: '#vt_main_metfile_preview_audio',
+            //            waveColor: '#00FA9A',
+            //            progressColor: '#00BFBF',
+            //            backgroundColor: '#e9fff6',
+            //            barWidth: '1'
+            //        })
+            //        this.vt_main_metfile_preview_audio_wavesurfer.load('/met_file/a.mp3')
+
+
+            //})
+
+            //window.onresize=
+            //    function(){
+            //        console.log('resize')
+            //        document.getElementById('vt_main_metfile_preview_audio').innerHTML = ''
+            //        //音频波形可视化实例
+            //        this.wavesurfer = WaveSurfer.create({
+            //            container: '#vt_main_metfile_preview_audio',
+            //            waveColor: '#00FA9A',
+            //            progressColor: '#00BFBF',
+            //            backgroundColor: '#e9fff6',
+            //            barWidth: '1'
+            //        })
+            //        this.vt_main_metfile_preview_audio_wavesurfer.load('/met_file/a.mp3')
+            //    }
+        },
+        //获取素材文件列表数据
+        get_vt_main_metfile_list_body_table_data(data_path){
+            // this.$store.state.axios_exec(
+            //     '/vt/getMetFileInfo', {}, (res) => {
+            //         this.vt_main_setting_properties = res.data.data
+            //         //更新项目数据目录
+            //         this.vt_main_setting_card_projectDataPath = this.vt_main_setting_properties.projectDataPath
+            //     }
+            // )
+        },
         //当选中素材文件列表的某一项时触发
         vt_main_metfile_list_body_table_handleCurrentChange(val) {
             this.vt_main_metfile_list_body_table_currentRow = val;
@@ -118,6 +132,16 @@ const track_component = Vue.extend({
     template: `
         <h1> track </h1>
         `,
+    mounted() {
+        //注册组件实例对象到store
+        this.$store.state.track_component = this
+    },
+    methods: {
+        //初始化
+        init: function () {
+
+        }
+    },
     data() {
         return {
 
@@ -131,6 +155,16 @@ const temdev_component = Vue.extend({
     template: `
         <h1> tem_dev </h1>
         `,
+    mounted() {
+        //注册组件实例对象到store
+        this.$store.state.temdev_component = this
+    },
+    methods: {
+        //初始化
+        init: function () {
+
+        }
+    },
     data() {
         return {
 
@@ -142,16 +176,21 @@ const temdev_component = Vue.extend({
 const setting_component = Vue.extend({
     template: document.getElementById('vt-main-setting-template').innerHTML,
     mounted() {
-        //获取配置项
-        this.$store.state.axios_exec(
-            '/vt/getSettingProperties', {}, (res) => {
-                this.vt_main_setting_properties = res.data.data
-                //更新项目数据目录
-                this.vt_main_setting_card_projectDataPath = this.vt_main_setting_properties.projectDataPath
-            }
-        )
-        
-        
+        //注册组件实例对象到store
+        this.$store.state.setting_component = this
+    },
+    methods: {
+        //初始化
+        init: function () {
+            //获取配置项
+            this.$store.state.axios_exec(
+                '/vt/getSettingProperties', {}, (res) => {
+                    this.vt_main_setting_properties = res.data.data
+                    //更新项目数据目录
+                    this.vt_main_setting_card_projectDataPath = this.vt_main_setting_properties.projectDataPath
+                }
+            )
+        }
     },
     data() {
         return {
@@ -181,7 +220,13 @@ const vt_component = Vue.extend({
 
     },
     methods: {
-
+        //初始化
+        init: function () {
+            //获取项目名
+            this.$store.state.jsx_exec('get_project_name', '', (data) => {
+                this.vt_header_card_title = data
+            })
+        }
     },
     computed: {
         //此刻是否为异步处理状态
@@ -196,11 +241,16 @@ const vt_component = Vue.extend({
         }
     },
     mounted() {
-        //获取项目名
-        this.$store.state.csInterface.evalScript('get_project_name()', (data) => {
-            this.vt_header_card_title = data
-        })
+        //注册组件实例对象到store
+        this.$store.state.vt_component = this
 
+
+        //初始化各组件数据
+        this.$store.state.metfile_component.init()
+        this.$store.state.track_component.init()
+        this.$store.state.temdev_component.init()
+        this.$store.state.setting_component.init()
+        this.$store.state.vt_component.init()
     },
     components: {
         metfile_component,

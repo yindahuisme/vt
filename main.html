@@ -24,6 +24,10 @@
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <!-- 音频波形可视化 -->
     <script src="./js/wavesurfer/wavesurfer.js"></script>
+    <script>
+        // 安装vue插件
+        Vue.use(Vuex)
+    </script>
 
 </head>
 
@@ -165,11 +169,11 @@
         </div>
 
         <el-divider content-position='center'>项目属性</el-divider>
-        <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
+        <div class="setting_singleRow" style="display:inline-block;width:10%;text-align:center;">
             <label>数据目录:</label>
         </div>
-        <el-input type="textarea" placeholder="请输入内容" :rows="vt_main_setting_card_projectDataPath.split('\n').length"
-            v-model="vt_main_setting_card_projectDataPath" style="display:inline-block;width:75%; ">
+        <el-input type="textarea" resize="none" placeholder="请输入内容" :rows="vt_main_setting_card_projectDataPath.split('\n').length"
+            v-model="vt_main_setting_card_projectDataPath" style="display:inline-block;width:85%; ">
         </el-input>
     </el-card>
 </template>
