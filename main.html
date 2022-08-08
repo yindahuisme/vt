@@ -41,141 +41,139 @@
     <div v-loading="vt_loading" :element-loading-text="vt_loadingText" element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(255, 255, 255, 0.8)">
         <!-- 内容头 -->
-        <div class="vt-header">
+        <div id="vt_header">
             <!-- 内容头-卡片 -->
-            <el-card class="box-card vt-header-card">
+            <el-card class="box-card">
                 <!-- 项目logo -->
-                <img class="vt-header-card-logo" src="./imgs/header_ico.png">
+                <img src="./imgs/header_ico.png">
                 <!-- 项目名 -->
-                <div class="vt-header-card-title">{{vt_header_card_title}}</div>
+                <div>{{vt_header_card_title}}</div>
+                <!-- 设置 -->
+                <setting_component></setting_component>
             </el-card>
 
         </div>
         <!-- 内容区 -->
-        <div class="vt-main">
-            <!-- 内容区-导航组件 -->
-            <el-tabs tab-position="left" class="vt-main-nav" v-model="vt_main_nav_activename" type="card">
-                <el-tab-pane label="素材文件" name="metfile">
-                    <metfile_component></metfile_component>
-                </el-tab-pane>
-                <el-tab-pane label="轨道" name="track">
-                    <track_component></track_component>
-                </el-tab-pane>
-                <el-tab-pane label="模板开发" name="temdev">
-                    <temdev_component></temdev_component>
-                </el-tab-pane>
-                <el-tab-pane label="设置" name="setting">
-                    <setting_component></setting_component>
-                </el-tab-pane>
-            </el-tabs>
-
+        <div id="vt_main">
+            <matfile_component></matfile_component>
+            <pre_component></pre_component>
+            <info_component></info_component>
+            <mat_component></mat_component>
         </div>
     </div>
 </template>
 
 <!-- 素材文件组件-模板代码 -->
-<template id="vt-main-metfile-template">
-    <div>
-        <div class='vt-main-metfile-list'>
-            <!-- 素材文件组件-卡片 -->
-            <el-card class="box-card">
-                <!-- 卡片头 -->
-                <div slot="header" class="clearfix">
-                    <!-- sql筛选下拉框 -->
-                    <el-select size="mini" class="vt-main-metfile-list-header-menu"
-                        v-model="vt_main_metfile_list_header_menuValue" filterable allow-create>
-                        <el-option v-for="item in vt_main_metfile_list_header_menuOptions" :key="item.value"
-                            :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
+<template id="vt_main_matFile_template">
+    <div id="vt_main_matFile">
+        <!-- 素材文件组件-卡片 -->
+        <el-card class="box-card">
+            <!-- 卡片头 -->
+            <div slot="header" class="clearfix">
+                <!-- sql筛选下拉框 -->
+                <el-select title="sql筛选下拉框" size="mini" v-model="vt_main_matFile_headerMenuValue" filterable
+                    allow-create>
+                    <el-option v-for="item in vt_main_matFile_headerMenuOptions" :key="item.value" :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
 
-                    <!-- 编辑素材文件筛选sql按钮，编辑面板 -->
-                    <el-button icon="el-icon-edit" class="vt-main-metfile-list-header-edit"
-                        @click="vt_main_metfile_list_header_edit_dialogVisible = true" circle></el-button>
-                    <el-dialog title="素材文件筛选sql编辑" :visible.sync="vt_main_metfile_list_header_edit_dialogVisible"
-                        class="vt_main_metfile_list_header_edit_dialog">
-                        <el-input type="textarea" placeholder="请输入内容"
-                            v-model="vt_main_metfile_list_header_edit_dialog_sqlText"></el-input>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button type="danger" @click="vt_main_metfile_list_header_edit_dialogVisible = false">删 除
-                            </el-button>
-                            <el-button type="primary" @click="vt_main_metfile_list_header_edit_dialogVisible = false">保
-                                存</el-button>
-                        </span>
-                    </el-dialog>
-                </div>
-                <!-- 卡片body -->
-                <div>
-                    <el-table height="42vh" ref="vt_main_metfile_list_body_table_singleTable"
-                        :data="vt_main_metfile_list_body_table_data"
-                        :row-class-name="vt_main_metfile_list_body_table_rowClassName"
-                        @current-change="vt_main_metfile_list_body_table_handleCurrentChange" highlight-current-row>
-                        <el-table-column property="type" label="类型">
-                        </el-table-column>
-                        <el-table-column property="key" label="素材文件名">
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </el-card>
-        </div>
-        <div class='vt-main-metfile-preview'>
-            <el-card class="box-card ">
-                <!-- 视频 -->
-                <div v-if="vt_main_metfile_list_body_table_currentRow.type == '视频'">
-                    视频
-                </div>
-                <!-- 音频 -->
-                <div v-else-if="vt_main_metfile_list_body_table_currentRow.type == '音频'" style="width:100%">
-                    <div id="vt_main_metfile_preview_audio" class="vt_main_metfile_preview_audio"></div>
-                    <!-- 进度条 -->
-                    <div class="vt_main_metfile_preview_audio_slider">
-                        <div class="vt_bar" style="left:30%">
+                <!-- 编辑素材文件筛选sql按钮，编辑面板 -->
+                <el-button title="sql编辑按钮" icon="el-icon-edit" @click="vt_main_matFile_headerEditDialogVisible = true"
+                    circle>
+                </el-button>
+                <el-dialog title="素材文件筛选sql编辑" :visible.sync="vt_main_matFile_headerEditDialogVisible">
+                    <el-input type="textarea" placeholder="请输入内容" v-model="vt_main_matFile_headerEditDialogSqlText">
+                    </el-input>
+                    <span slot="footer">
+                        <el-button type="danger" @click="vt_main_matFile_headerEditDialogVisible = false">删 除
+                        </el-button>
+                        <el-button type="primary" @click="vt_main_matFile_headerEditDialogVisible = false">保
+                            存</el-button>
+                    </span>
+                </el-dialog>
+            </div>
+            <!-- 卡片body -->
+            <div>
+                <el-table height="42vh" :data="vt_main_matFile_bodyTableData"
+                    :row-class-name="vt_main_matFile_bodyTableRowClassName"
+                    @current-change="vt_main_matFile_bodyTableHandleCurrentChange" highlight-current-row>
+                    <el-table-column property="type" label="类型">
+                    </el-table-column>
+                    <el-table-column property="key" label="素材文件名">
+                    </el-table-column>
+                </el-table>
+            </div>
+        </el-card>
+    </div>
 
-                        </div>
-                        <div class="vt_mark">
+</template>
 
-                        </div>
-                    </div>
-                </div>
-                <!-- 图片 -->
-                <div v-else-if="vt_main_metfile_list_body_table_currentRow.type == '图片'">
-                    图片
-                </div>
-                <div v-else>
-                    none
-                </div>
-            </el-card>
-        </div>
-        <div class='vt-main-metfile-info'>
-            <el-card class="box-card ">
+<!-- 预览组件-模板代码 -->
+<template id="vt_main_pre_template">
+    <div id='vt_main_pre'>
+        <el-card class="box-card ">
+            <!-- 视频 -->
+            <div title="视频" v-if="vt_main_matFile_bodyTableCurrentRow.type == '视频'">
+                视频
+            </div>
+            <!-- 音频 -->
+            <div title="音频" v-else-if="vt_main_matFile_bodyTableCurrentRow.type == '音频'" style="width:100%">
+                音频
+            </div>
+            <!-- 图片 -->
+            <div title="图片" v-else-if="vt_main_matFile_bodyTableCurrentRow.type == '图片'">
+                图片
+            </div>
+            <div title="none" v-else>
+                未选中素材文件
+            </div>
+        </el-card>
+    </div>
+</template>
 
-            </el-card>
-        </div>
-        <div class='vt-main-metfile-met'>
-            <el-card class="box-card ">
+<!-- 信息组件-模板代码 -->
+<template id="vt_main_info_template">
+    <div id='vt_main_info'>
+        <el-card class="box-card ">
+            info
+        </el-card>
+    </div>
+</template>
 
-            </el-card>
-        </div>
+<!-- 素材组件-模板代码 -->
+<template id="vt_main_mat_template">
+    <div id='vt_main_mat'>
+        <el-card class="box-card ">
+            mat
+        </el-card>
     </div>
 </template>
 
 <!-- 设置组件-模板代码 -->
-<template id="vt-main-setting-template">
-    <el-card class='box-card vt-main-setting-card'>
-        <el-divider content-position='center'>常规操作</el-divider>
-        <div class="setting_singleRow">
-            <el-button type="primary">清空轨道</el-button>
-            <el-button type="primary">加载轨道</el-button>
-        </div>
+<template id="vt_main_setting_template">
+    <div id="vt_main_setting">
+        <el-button icon="el-icon-setting" @click="vt_header_settingDialogVisible = true" >
+        </el-button>
+        <el-dialog title="设置" :visible.sync="vt_header_settingDialogVisible">
+            <el-card class='box-card'>
+                <el-divider content-position='center'>常规操作</el-divider>
+                <div title="setting_singleRow">
+                    <el-button type="primary">清空轨道</el-button>
+                    <el-button type="primary">加载轨道</el-button>
+                </div>
 
-        <el-divider content-position='center'>项目属性</el-divider>
-        <div class="setting_singleRow" style="display:inline-block;width:10%;text-align:center;">
-            <label>数据目录:</label>
-        </div>
-        <el-input type="textarea" resize="none" placeholder="请输入内容" :rows="vt_main_setting_card_projectDataPath.split('\n').length"
-            v-model="vt_main_setting_card_projectDataPath" style="display:inline-block;width:85%; ">
-        </el-input>
-    </el-card>
+                <el-divider content-position='center'>项目属性</el-divider>
+                <div title="setting_singleRow" style="display:inline-block;width:10%;text-align:center;">
+                    <label>数据目录:</label>
+                </div>
+                <el-input type="textarea" resize="none" placeholder="请输入内容"
+                    :rows="vt_main_setting_projectDataPath.split('\n').length" v-model="vt_main_setting_projectDataPath"
+                    style="display:inline-block;width:85%; ">
+                </el-input>
+            </el-card>
+        </el-dialog>
+    </div>
 </template>
 <!-- 自定义vue组件 -->
 <script src="./js/src/components.js"></script>
