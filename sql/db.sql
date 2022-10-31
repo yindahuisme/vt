@@ -8,8 +8,11 @@ CREATE TABLE IF NOT EXISTS vt.`vt_setting`(
    PRIMARY KEY ( `key` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 项目数据目录
-insert into vt.`vt_setting` values('projectDataPath','C:\Users\Administrator\Desktop\pr_plugin\vt_data')
+insert into vt.`vt_setting` values('vt_main_setting_metFilePath','C:\Users\Administrator\Desktop\pr_plugin\vt_data');
+insert into vt.`vt_setting` values('vt_main_setting_freePointMs','300');
+insert into vt.`vt_setting` values('vt_main_setting_inPointHotKey','a');
+insert into vt.`vt_setting` values('vt_main_setting_speedPointHotKey','s');
+insert into vt.`vt_setting` values('vt_main_setting_outPointHotKey','d');
 
 -- 素材文件表
 CREATE TABLE IF NOT EXISTS vt.`vt_met_file`(

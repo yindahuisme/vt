@@ -1,10 +1,10 @@
 //素材文件组件
-const matFile_component = Vue.extend({
+const matfile_component = Vue.extend({
     template: document.getElementById('vt_main_matFile_template').innerHTML,
     mounted() {
         //初始化
         //更新素材文件表格数据
-        // this.vt_main_matFile_bodyFullData = this.$store.state.axios_exec()
+        // this.vt_main_matFile_bodyFullData = this.$axios_exec()
 
     },
     data() {
@@ -49,11 +49,11 @@ const matFile_component = Vue.extend({
 
         //获取素材文件列表数据
         get_vt_main_matFile_bodyTableData(data_path) {
-            // this.$store.state.axios_exec(
+            // this.$axios_exec(
             //     '/vt/getSettingProperties', {}, (res) => {
             //         this.vt_main_setting_properties = res.data.data
             //         //更新项目数据目录
-            //         this.vt_main_setting_projectDataPath = this.vt_main_setting_properties.projectDataPath
+            //         this.vt_main_setting_metFilePath = this.vt_main_setting_properties.projectDataPath
             //     }
             // )
         },
@@ -175,16 +175,29 @@ const setting_component = Vue.extend({
     mounted() {
         //初始化
         //获取配置项
-        this.$store.state.axios_exec(
+        this.$axios_exec(
             '/vt/getSettingProperties', {}, (res) => {
-                this.vt_main_setting_properties = res.data.data
-                //更新项目数据目录
-                this.vt_main_setting_card_projectDataPath = this.vt_main_setting_properties.projectDataPath
+                console.log('获取配置')
+                this.vt_main_setting_properties = res
+                //初始化配置
+                this.vt_main_setting_metFilePath = this.vt_main_setting_properties.vt_main_setting_metFilePath
+                this.vt_main_setting_freePointMs = this.vt_main_setting_properties.vt_main_setting_freePointMs
+                this.vt_main_setting_inPointHotKey = this.vt_main_setting_properties.vt_main_setting_inPointHotKey
+                this.vt_main_setting_speedPointHotKey = this.vt_main_setting_properties.vt_main_setting_speedPointHotKey
+                this.vt_main_setting_outPointHotKey = this.vt_main_setting_properties.vt_main_setting_outPointHotKey
+                this.vt_main_setting_transformEffectValue = this.vt_main_setting_properties.vt_main_setting_transformEffectValue
+                this.vt_main_setting_transformEffectOptions = this.vt_main_setting_properties.vt_main_setting_transformEffectOptions.split(',')
+                this.vt_main_setting_transformEffectMs = this.vt_main_setting_properties.vt_main_setting_transformEffectMs
             }
         )
     },
     methods: {
-
+        //更新配置
+        update_property(cur_value,key){
+            this.$axios_exec(
+                '/vt/setSettingProperty', {'key':key,'value':cur_value}, (res) => {
+        })}
+    
     },
     data() {
         return {
@@ -192,8 +205,22 @@ const setting_component = Vue.extend({
             vt_header_settingDialogVisible:false,
             //项目配置项
             vt_main_setting_properties: [],
-            //项目数据目录
-            vt_main_setting_projectDataPath: ''
+            //素材文件目录
+            vt_main_setting_metFilePath: '',
+            //卡点时长（ms）
+            vt_main_setting_freePointMs: '',
+            //入点快捷键
+            vt_main_setting_inPointHotKey: '',
+            //变速点快捷键
+            vt_main_setting_speedPointHotKey: '',
+            //出点快捷键
+            vt_main_setting_outPointHotKey: '',
+            //转场效果下拉框值
+            vt_main_setting_transformEffectValue: '',
+            //转场效果下拉框选项
+            vt_main_setting_transformEffectOptions: [],
+            //转场持续时间(ms)
+            vt_main_setting_transformEffectMs: ''
 
         }
     }
@@ -235,13 +262,13 @@ const vt_component = Vue.extend({
     mounted() {
         //初始化
         //获取项目名
-        this.$store.state.jsx_exec('get_project_name', '', (data) => {
+        this.$jsx_exec('get_project_name', '', (data) => {
             this.vt_header_card_title = data
         })
 
     },
     components: {
-        matfile_component: matFile_component,
+        matfile_component,
         pre_component,
         info_component,
         mat_component,
