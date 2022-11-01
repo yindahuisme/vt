@@ -168,6 +168,15 @@
                     :rows="vt_main_setting_metFilePath.split('\n').length" v-model="vt_main_setting_metFilePath"
                     style="display:inline-block;width:75%; ">
                 </el-input>
+                
+                <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
+                    <label>mogrt目录:</label>
+                </div>
+                <el-input type="textarea" resize="none" @change="update_property($event,'vt_main_setting_mogrtPath')" placeholder="请输入内容"
+                    :rows="vt_main_setting_mogrtPath.split('\n').length" v-model="vt_main_setting_mogrtPath"
+                    style="display:inline-block;width:75%; ">
+                </el-input>
+                
 
                 <el-divider content-position='center'>卡点</el-divider>
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">

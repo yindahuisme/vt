@@ -188,6 +188,7 @@ const setting_component = Vue.extend({
                 this.vt_main_setting_transformEffectValue = this.vt_main_setting_properties.vt_main_setting_transformEffectValue
                 this.vt_main_setting_transformEffectOptions = this.vt_main_setting_properties.vt_main_setting_transformEffectOptions.split(',')
                 this.vt_main_setting_transformEffectMs = this.vt_main_setting_properties.vt_main_setting_transformEffectMs
+                this.vt_main_setting_mogrtPath = this.vt_main_setting_properties.vt_main_setting_mogrtPath
             }
         )
     },
@@ -207,6 +208,8 @@ const setting_component = Vue.extend({
             vt_main_setting_properties: [],
             //素材文件目录
             vt_main_setting_metFilePath: '',
+            //mogrt文件目录
+            vt_main_setting_mogrtPath: '',
             //卡点时长（ms）
             vt_main_setting_freePointMs: '',
             //入点快捷键
