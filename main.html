@@ -164,7 +164,7 @@
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>素材文件目录:</label>
                 </div>
-                <el-input type="textarea" resize="none" @change="update_property($event,'vt_main_setting_metFilePath')" placeholder="请输入内容"
+                <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_metFilePath.split('\n').length" v-model="vt_main_setting_metFilePath"
                     style="display:inline-block;width:75%; ">
                 </el-input>
@@ -172,7 +172,7 @@
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>mogrt目录:</label>
                 </div>
-                <el-input type="textarea" resize="none" @change="update_property($event,'vt_main_setting_mogrtPath')" placeholder="请输入内容"
+                <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_mogrtPath.split('\n').length" v-model="vt_main_setting_mogrtPath"
                     style="display:inline-block;width:75%; ">
                 </el-input>
@@ -182,28 +182,28 @@
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>卡点时长(ms):</label>
                 </div>
-                <el-input type="textarea" resize="none" @change="update_property($event,'vt_main_setting_freePointMs')" placeholder="请输入内容"
+                <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_freePointMs.split('\n').length" v-model="vt_main_setting_freePointMs"
                     style="display:inline-block;width:75%; ">
                 </el-input>
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>入点快捷键:</label>
                 </div>
-                <el-input type="textarea" resize="none" @change="update_property($event,'vt_main_setting_inPointHotKey')" placeholder="请输入内容"
+                <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_inPointHotKey.split('\n').length" v-model="vt_main_setting_inPointHotKey"
                     style="display:inline-block;width:75%; ">
                 </el-input>
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>变速点快捷键:</label>
                 </div>
-                <el-input type="textarea" resize="none" @change="update_property($event,'vt_main_setting_speedPointHotKey')" placeholder="请输入内容"
+                <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_speedPointHotKey.split('\n').length" v-model="vt_main_setting_speedPointHotKey"
                     style="display:inline-block;width:75%; ">
                 </el-input>
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>出点快捷键:</label>
                 </div>
-                <el-input type="textarea" resize="none" @change="update_property($event,'vt_main_setting_outPointHotKey')" placeholder="请输入内容"
+                <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_outPointHotKey.split('\n').length" v-model="vt_main_setting_outPointHotKey"
                     style="display:inline-block;width:75%; ">
                 </el-input>
@@ -213,7 +213,7 @@
                     <label>转场效果:</label>
                 </div>
                 <!-- 转场效果下拉框 -->
-                <el-select title="转场效果下拉框" size="mini" @change="update_property($event,'vt_main_setting_transformEffectValue')" v-model="vt_main_setting_transformEffectValue" filterable 
+                <el-select title="转场效果下拉框" size="mini" v-model="vt_main_setting_transformEffectValue" filterable 
                 style="display:inline-block;width:75%; ">
                     <el-option v-for="item in vt_main_setting_transformEffectOptions" :key="item" :label="item"
                         :value="item">
@@ -224,7 +224,6 @@
                     <label>转场持续时间(ms):</label>
                 </div>
                 <el-input type="textarea" resize="none" placeholder="请输入内容" 
-                    @change="update_property($event,'vt_main_setting_transformEffectMs')"
                     :rows="vt_main_setting_transformEffectMs.split('\n').length" v-model="vt_main_setting_transformEffectMs"
                     style="display:inline-block;width:75%; ">
                 </el-input>

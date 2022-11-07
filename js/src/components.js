@@ -180,21 +180,22 @@ const setting_component = Vue.extend({
                 console.log('获取配置')
                 this.vt_main_setting_properties = res
                 //初始化配置
-                this.vt_main_setting_metFilePath = this.vt_main_setting_properties.vt_main_setting_metFilePath
-                this.vt_main_setting_freePointMs = this.vt_main_setting_properties.vt_main_setting_freePointMs
-                this.vt_main_setting_inPointHotKey = this.vt_main_setting_properties.vt_main_setting_inPointHotKey
-                this.vt_main_setting_speedPointHotKey = this.vt_main_setting_properties.vt_main_setting_speedPointHotKey
-                this.vt_main_setting_outPointHotKey = this.vt_main_setting_properties.vt_main_setting_outPointHotKey
-                this.vt_main_setting_transformEffectValue = this.vt_main_setting_properties.vt_main_setting_transformEffectValue
-                this.vt_main_setting_transformEffectOptions = this.vt_main_setting_properties.vt_main_setting_transformEffectOptions.split(',')
-                this.vt_main_setting_transformEffectMs = this.vt_main_setting_properties.vt_main_setting_transformEffectMs
-                this.vt_main_setting_mogrtPath = this.vt_main_setting_properties.vt_main_setting_mogrtPath
+                this.$store.state.vt_main_setting_metFilePath = this.vt_main_setting_properties.vt_main_setting_metFilePath
+                this.$store.state.vt_main_setting_freePointMs = this.vt_main_setting_properties.vt_main_setting_freePointMs
+                this.$store.state.vt_main_setting_inPointHotKey = this.vt_main_setting_properties.vt_main_setting_inPointHotKey
+                this.$store.state.vt_main_setting_speedPointHotKey = this.vt_main_setting_properties.vt_main_setting_speedPointHotKey
+                this.$store.state.vt_main_setting_outPointHotKey = this.vt_main_setting_properties.vt_main_setting_outPointHotKey
+                this.$store.state.vt_main_setting_transformEffectValue = this.vt_main_setting_properties.vt_main_setting_transformEffectValue
+                this.$store.state.vt_main_setting_transformEffectOptions = this.vt_main_setting_properties.vt_main_setting_transformEffectOptions.split(',')
+                this.$store.state.vt_main_setting_transformEffectMs = this.vt_main_setting_properties.vt_main_setting_transformEffectMs
+                this.$store.state.vt_main_setting_mogrtPath = this.vt_main_setting_properties.vt_main_setting_mogrtPath
             }
         )
     },
     methods: {
         //更新配置
         update_property(cur_value,key){
+            eval(`this.$store.state.${key} = '${cur_value}'`)
             this.$axios_exec(
                 '/vt/setSettingProperty', {'key':key,'value':cur_value}, (res) => {
         })}
@@ -205,26 +206,47 @@ const setting_component = Vue.extend({
             //设置面板是否展开
             vt_header_settingDialogVisible:false,
             //项目配置项
-            vt_main_setting_properties: [],
-            //素材文件目录
-            vt_main_setting_metFilePath: '',
-            //mogrt文件目录
-            vt_main_setting_mogrtPath: '',
-            //卡点时长（ms）
-            vt_main_setting_freePointMs: '',
-            //入点快捷键
-            vt_main_setting_inPointHotKey: '',
-            //变速点快捷键
-            vt_main_setting_speedPointHotKey: '',
-            //出点快捷键
-            vt_main_setting_outPointHotKey: '',
-            //转场效果下拉框值
-            vt_main_setting_transformEffectValue: '',
-            //转场效果下拉框选项
-            vt_main_setting_transformEffectOptions: [],
-            //转场持续时间(ms)
-            vt_main_setting_transformEffectMs: ''
+            vt_main_setting_properties: []
+            
 
+        }
+    },
+    computed:{
+        vt_main_setting_metFilePath:{
+            set:function(value){ this.update_property(value,'vt_main_setting_metFilePath')},
+            get:function() {return this.$store.state.vt_main_setting_metFilePath}
+        },
+        vt_main_setting_mogrtPath:{
+            set:function(value){ this.update_property(value,'vt_main_setting_mogrtPath')},
+            get:function() {return this.$store.state.vt_main_setting_mogrtPath}
+        },
+        vt_main_setting_freePointMs:{
+            set:function(value){ this.update_property(value,'vt_main_setting_freePointMs')},
+            get:function() {return this.$store.state.vt_main_setting_freePointMs}
+        },
+        vt_main_setting_inPointHotKey:{
+            set:function(value){ this.update_property(value,'vt_main_setting_inPointHotKey')},
+            get:function() {return this.$store.state.vt_main_setting_inPointHotKey}
+        },
+        vt_main_setting_speedPointHotKey:{
+            set:function(value){ this.update_property(value,'vt_main_setting_speedPointHotKey')},
+            get:function() {return this.$store.state.vt_main_setting_speedPointHotKey}
+        },
+        vt_main_setting_outPointHotKey:{
+            set:function(value){ this.update_property(value,'vt_main_setting_outPointHotKey')},
+            get:function() {return this.$store.state.vt_main_setting_outPointHotKey}
+        },
+        vt_main_setting_transformEffectValue:{
+            set:function(value){ this.update_property(value,'vt_main_setting_transformEffectValue')},
+            get:function() {return this.$store.state.vt_main_setting_transformEffectValue}
+        },
+        vt_main_setting_transformEffectOptions:{
+            set:function(value){ this.update_property(value,'vt_main_setting_transformEffectOptions')},
+            get:function() {return this.$store.state.vt_main_setting_transformEffectOptions}
+        },
+        vt_main_setting_transformEffectMs:{
+            set:function(value){ this.update_property(value,'vt_main_setting_transformEffectMs')},
+            get:function() {return this.$store.state.vt_main_setting_transformEffectMs}
         }
     }
 })
