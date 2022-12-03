@@ -38,17 +38,10 @@ var store = new Vuex.Store({
         //转场持续时间(ms)
         vt_main_setting_transformEffectMs: ''
     },
-    //提交更改
+    //同步提交更改
     mutations: {
-        //修改素材文件-表格默认选项
-        vt_main_matFile_bodyTableCurrentRow: function(state,val){
-            state.vt_main_matFile_bodyTableCurrentRow=val
-        },
+        
 
-        //修改异步等待任务数量
-        vt_async_task_num: function(state,val){
-            state.vt_async_task_num=val
-        }
     },
     // 异步的方式提交用这个
     actions: {}

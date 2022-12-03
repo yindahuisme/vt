@@ -28,8 +28,8 @@ new Vue({
             
             })
         }
-        //封装axios请求
-        Vue.prototype.$axios_exec = async function (path, body, call_back) {
+        //封装axios异步请求
+        Vue.prototype.$axios_async_exec = async function (path, body, call_back) {
             this.$store.state.vt_async_task_num += 1
             await this.$store.state.axiosInstance.post(path, body)
                 .then((res)=>{
@@ -44,7 +44,6 @@ new Vue({
                     }
                 })
         }
-
 
     },
     store

@@ -75,24 +75,24 @@
             <!-- 卡片头 -->
             <div slot="header" class="clearfix">
                 <!-- sql筛选下拉框 -->
-                <el-select title="sql筛选下拉框" size="mini" v-model="vt_main_matFile_headerMenuValue" filterable
-                    allow-create>
-                    <el-option v-for="item in vt_main_matFile_headerMenuOptions" :key="item.value" :label="item.label"
-                        :value="item.value">
+                <el-select title="sql筛选下拉框" size="mini" @change="vt_main_matFile_sqlMenuChangeEvent" v-model="vt_main_matFile_sqlMenuCurOption" filterable
+                    allow-create default-first-option>
+                    <el-option v-for="item in vt_main_matFile_sqlMenuOptions" :key="item.label" :label="item.label"
+                        :value="item.label">
                     </el-option>
                 </el-select>
 
                 <!-- 编辑素材文件筛选sql按钮，编辑面板 -->
-                <el-button title="sql编辑按钮" icon="el-icon-edit" @click="vt_main_matFile_headerEditDialogVisible = true"
+                <el-button title="sql编辑按钮" icon="el-icon-edit" @click="vt_main_matFile_sqlEditButtonClick"
                     circle>
                 </el-button>
                 <el-dialog title="素材文件筛选sql编辑" :visible.sync="vt_main_matFile_headerEditDialogVisible">
                     <el-input type="textarea" placeholder="请输入内容" v-model="vt_main_matFile_headerEditDialogSqlText" resize="none">
                     </el-input>
                     <span slot="footer">
-                        <el-button type="danger" @click="vt_main_matFile_headerEditDialogVisible = false">删 除
+                        <el-button type="danger" @click="vt_main_matFile_delSql()">删 除
                         </el-button>
-                        <el-button type="primary" @click="vt_main_matFile_headerEditDialogVisible = false">保
+                        <el-button type="primary" @click="vt_main_matFile_saveSql()">保
                             存</el-button>
                     </span>
                 </el-dialog>
@@ -104,7 +104,9 @@
                     @current-change="vt_main_matFile_bodyTableHandleCurrentChange" highlight-current-row>
                     <el-table-column property="type" label="类型">
                     </el-table-column>
-                    <el-table-column property="key" label="素材文件名">
+                    <el-table-column property="metFileName" label="素材文件名">
+                    </el-table-column>
+                    <el-table-column property="durationSecond" label="时长(s)">
                     </el-table-column>
                 </el-table>
             </div>
@@ -166,7 +168,7 @@
                 </div>
                 <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_metFilePath.split('\n').length" v-model="vt_main_setting_metFilePath"
-                    style="display:inline-block;width:75%; ">
+                    @change="change_setting_value('vt_main_setting_metFilePath')" style="display:inline-block;width:75%; ">
                 </el-input>
                 
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
@@ -174,7 +176,7 @@
                 </div>
                 <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_mogrtPath.split('\n').length" v-model="vt_main_setting_mogrtPath"
-                    style="display:inline-block;width:75%; ">
+                    @change="change_setting_value('vt_main_setting_mogrtPath')" style="display:inline-block;width:75%; ">
                 </el-input>
                 
 
@@ -184,28 +186,28 @@
                 </div>
                 <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_freePointMs.split('\n').length" v-model="vt_main_setting_freePointMs"
-                    style="display:inline-block;width:75%; ">
+                    @change="change_setting_value('vt_main_setting_freePointMs')" style="display:inline-block;width:75%; ">
                 </el-input>
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>入点快捷键:</label>
                 </div>
                 <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_inPointHotKey.split('\n').length" v-model="vt_main_setting_inPointHotKey"
-                    style="display:inline-block;width:75%; ">
+                    @change="change_setting_value('vt_main_setting_inPointHotKey')" style="display:inline-block;width:75%; ">
                 </el-input>
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>变速点快捷键:</label>
                 </div>
                 <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_speedPointHotKey.split('\n').length" v-model="vt_main_setting_speedPointHotKey"
-                    style="display:inline-block;width:75%; ">
+                    @change="change_setting_value('vt_main_setting_speedPointHotKey')" style="display:inline-block;width:75%; ">
                 </el-input>
                 <div class="setting_singleRow" style="display:inline-block;width:20%;text-align:center;">
                     <label>出点快捷键:</label>
                 </div>
                 <el-input type="textarea" resize="none" placeholder="请输入内容"
                     :rows="vt_main_setting_outPointHotKey.split('\n').length" v-model="vt_main_setting_outPointHotKey"
-                    style="display:inline-block;width:75%; ">
+                    @change="change_setting_value('vt_main_setting_outPointHotKey')" style="display:inline-block;width:75%; ">
                 </el-input>
                 
                 <el-divider content-position='center'>转场</el-divider>
@@ -214,7 +216,7 @@
                 </div>
                 <!-- 转场效果下拉框 -->
                 <el-select title="转场效果下拉框" size="mini" v-model="vt_main_setting_transformEffectValue" filterable 
-                style="display:inline-block;width:75%; ">
+                @change="change_setting_value('vt_main_setting_transformEffectValue')" style="display:inline-block;width:75%; ">
                     <el-option v-for="item in vt_main_setting_transformEffectOptions" :key="item" :label="item"
                         :value="item">
                     </el-option>
@@ -225,12 +227,14 @@
                 </div>
                 <el-input type="textarea" resize="none" placeholder="请输入内容" 
                     :rows="vt_main_setting_transformEffectMs.split('\n').length" v-model="vt_main_setting_transformEffectMs"
-                    style="display:inline-block;width:75%; ">
+                    @change="change_setting_value('vt_main_setting_transformEffectMs')" style="display:inline-block;width:75%; ">
                 </el-input>
                 
         </el-dialog>
     </div>
 </template>
+<!-- 自定义工具 -->
+<script src="./js/src/tools.js"></script>
 <!-- 自定义vue组件 -->
 <script src="./js/src/components.js"></script>
 <!-- 注册vuex插件 -->

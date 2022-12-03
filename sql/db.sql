@@ -24,10 +24,10 @@ drop table vt.`vt_met_file`;
 CREATE TABLE IF NOT EXISTS vt.`vt_met_file`(
    `met_file_id` INTEGER AUTO_INCREMENT,-- 素材文件id
    `met_file_type` VARCHAR(32) NOT NULL,-- 素材文件类型（视频，音频，图片）
-   `met_file_full_path` VARCHAR(32) NOT NULL,-- 文件全名，例如test.mp4
+   `met_file_full_path` VARCHAR(256) NOT NULL,-- 文件全名，例如D:\test.mp4
    `duration_second` VARCHAR(32) NOT NULL,-- 时长（秒）,如果为图片，留空串
    `create_time` VARCHAR(32) NOT NULL,-- 创建时间，格式（yyyy-MM-dd hh:mm:ss）
-   `tags` VARCHAR(64) NOT NULL,-- 标签，格式(tag1,tag2)
+   `tags` VARCHAR(256) NOT NULL,-- 标签，格式(tag1,tag2)
    PRIMARY KEY ( `met_file_id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS vt.`vt_met_file_sql`(
    `sql_value` VARCHAR(4096) NOT NULL,-- 具体素材文件，素材的筛选sql，sql只能返回素材文件名，素材名两个字段
    PRIMARY KEY ( `sql_name` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+insert into vt.`vt_met_file_sql` values('默认','select met_file_type as type,\n met_file_full_path as metFileName, \n duration_second as durationSecond \n from vt.vt_met_file \n order by create_time asc');
 
 -- 项目表
 drop table vt.`vt_project`;
