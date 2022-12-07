@@ -11,32 +11,29 @@ var store = new Vuex.Store({
             baseURL: 'http://localhost:9999'
         }),
         //素材文件-表格默认选项
-        vt_main_matFile_bodyTableCurrentRow: {
-            type: '',
-            key: ''
-        },
+        matFileBodyTableCurrentRow: {},
         //异步等待任务数量
-        vt_async_task_num: 0,
+        vtAsyncTaskNum: 0,
 
         //设置---------------------
         //素材文件目录
-        vt_main_setting_metFilePath: '',
+        settingMatFilePath: '',
         //mogrt文件目录
-        vt_main_setting_mogrtPath: '',
+        settingMogrtPath: '',
         //卡点时长（ms）
-        vt_main_setting_freePointMs: '',
+        settingFreePointMs: '',
         //入点快捷键
-        vt_main_setting_inPointHotKey: '',
+        settingInPointHotKey: '',
         //变速点快捷键
-        vt_main_setting_speedPointHotKey: '',
+        settingSpeedPointHotKey: '',
         //出点快捷键
-        vt_main_setting_outPointHotKey: '',
+        settingOutPointHotKey: '',
         //转场效果下拉框值
-        vt_main_setting_transformEffectValue: '',
+        settingTransformEffectValue: '',
         //转场效果下拉框选项
-        vt_main_setting_transformEffectOptions: [],
+        settingTransformEffectOptions: [],
         //转场持续时间(ms)
-        vt_main_setting_transformEffectMs: ''
+        settingTransformEffectMs: ''
     },
     //同步提交更改
     mutations: {

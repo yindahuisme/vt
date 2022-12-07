@@ -1,34 +1,35 @@
-//素材文件组件
-const matfile_component = Vue.extend({
-    template: document.getElementById('vt_main_matFile_template').innerHTML,
-    created(){
-        //初始化(before)
-        console.log('初始化(before)素材文件组件')
 
-        
-    },
+
+//素材文件组件
+const matFileComponent = Vue.extend({
+    template: document.getElementById('matFileTemplate').innerHTML,
     mounted() {
         //初始化
         console.log('初始化素材文件组件')
         
+        window.onclick=()=>{
+            // 点击事件关闭菜单
+            this.matFileRClickMenuStyle.display='none'
+        }
+        
         //同步实际素材文件与表中元数据，使其保持一致
         console.log('api:同步实际素材文件与表中元数据')
-        this.$axios_async_exec(
+        this.$axiosAsyncExec(
             '/vt/syncMetFileMetaData', {}, (res) => {
             }
         ).then(res => {
             //获取素材文件筛选sql列表
-            return this.$axios_async_exec(
+            return this.$axiosAsyncExec(
                 '/vt/getSqlMenuOptions', {}, (res) => {
-                    this.vt_main_matFile_sqlMenuOptions = res
-                    this.vt_main_matFile_sqlMenuCurOption = this.vt_main_matFile_sqlMenuOptions[0]['label']
+                    this.matFileSqlMenuOptions = res
+                    this.matFileSqlMenuCurOption = this.matFileSqlMenuOptions[0]['label']
                 }
             )
         }
         ).then(
             res =>{
                 //更新素材文件列表
-                this.vt_main_matFile_updateList()
+                this.matFileUpdateList()
             }
         )
 
@@ -37,22 +38,29 @@ const matfile_component = Vue.extend({
     data() {
         return {
             //sql筛选项编辑框是否打开
-            vt_main_matFile_headerEditDialogVisible: false,
+            matFileHeaderEditDialogVisible: false,
             //sql筛选项
-            vt_main_matFile_sqlMenuOptions: [],
+            matFileSqlMenuOptions: [],
             //sql筛选项当前选项
-            vt_main_matFile_sqlMenuCurOption: '',
+            matFileSqlMenuCurOption: '',
             //素材文件列表数据
-            vt_main_matFile_bodyTableData: [],
+            matFileBodyTableData: [],
             //筛选对话框sql内容
-            vt_main_matFile_headerEditDialogSqlText: ''
+            matFileHeaderEditDialogSqlText: '',
+            //素材文件列表项右键菜单style
+            matFileRClickMenuStyle:{
+                'display': 'none',
+                'z-index':'5000',
+                'top':'0px',
+                'left':'0px'
+            }
         }
     },
     computed: {
         //sql筛选项当前对象
-        vt_main_matFile_sqlMenuCurObj: {
+        matFileSqlMenuCurObj: {
             get: function () {
-                return getJsonArrayObj(this.vt_main_matFile_sqlMenuOptions,'label',this.vt_main_matFile_sqlMenuCurOption) 
+                return getJsonArrayObj(this.matFileSqlMenuOptions,'label',this.matFileSqlMenuCurOption) 
             }
         }
         
@@ -61,11 +69,21 @@ const matfile_component = Vue.extend({
 
         
         //当选中素材文件列表的某一项时触发
-        vt_main_matFile_bodyTableHandleCurrentChange(val) {
-            this.$store.state.vt_main_matFile_bodyTableCurrentRow=val
+        matFileBodyTableHandleCurrentChange(val) {
+            this.$store.state.matFileBodyTableCurrentRow=val
+        },
+        //当素材文件列表某一行右击时触发
+        matFileBodyTableRowRClickChange(row,column,event){
+            //右键点击也会有选中效果
+            this.$refs.matFileListRef.setCurrentRow(row)
+            //显示右键菜单
+            this.matFileRClickMenuStyle.top=String(event.clientY)+'px'
+            this.matFileRClickMenuStyle.left=String(event.clientX)+'px'
+            this.matFileRClickMenuStyle.display='block'
+
         },
         //动态确定素材列表类型
-        vt_main_matFile_bodyTableRowClassName({
+        matFileBodyTableRowClassName({
             row
         }) {
             if (row.type == '视频') {
@@ -80,81 +98,90 @@ const matfile_component = Vue.extend({
 
         },
         //点击保存sql按钮触发
-        vt_main_matFile_saveSql(){
-            this.vt_main_matFile_headerEditDialogVisible = false
-            this.$axios_async_exec(
-                '/vt/saveMetFileFilterSql', {'label':this.vt_main_matFile_sqlMenuCurOption,'value':this.vt_main_matFile_headerEditDialogSqlText}, (res) => {
+        matFileSaveSql(){
+            this.matFileHeaderEditDialogVisible = false
+            this.$axiosAsyncExec(
+                '/vt/saveMetFileFilterSql', {'label':this.matFileSqlMenuCurOption,'value':this.matFileHeaderEditDialogSqlText}, (res) => {
                 }
             ).then(res => {
                
-                this.vt_main_matFile_sqlMenuCurObj['value'] = this.vt_main_matFile_headerEditDialogSqlText
+                this.matFileSqlMenuCurObj['value'] = this.matFileHeaderEditDialogSqlText
 
                 //更新素材文件列表
-                return this.vt_main_matFile_updateList()
+                return this.matFileUpdateList()
 
             }
             ).then(res =>{
-                this.$vt_notify('success','提示','保存成功')
+                this.$vtNotify('success','提示','保存成功')
             }
             )
         },
         //点击删除sql按钮触发
-        vt_main_matFile_delSql(){
-            this.vt_main_matFile_headerEditDialogVisible = false
+        matFileDelSql(){
+            this.matFileHeaderEditDialogVisible = false
 
-            this.$axios_async_exec(
-                '/vt/delMetFileFilterSql', {'label':this.vt_main_matFile_sqlMenuCurOption}, (res) => {
+            this.$axiosAsyncExec(
+                '/vt/delMetFileFilterSql', {'label':this.matFileSqlMenuCurOption}, (res) => {
                 }
             ).then(res => {
-                this.vt_main_matFile_sqlMenuOptions.forEach((item,index,arr) => {
-                    if(item['label'] == this.vt_main_matFile_sqlMenuCurOption){
+                this.matFileSqlMenuOptions.forEach((item,index,arr) => {
+                    if(item['label'] == this.matFileSqlMenuCurOption){
                         arr.splice(index,1)
                     }
                 })
 
-                this.vt_main_matFile_sqlMenuCurOption = this.vt_main_matFile_sqlMenuOptions[0]['label']
+                this.matFileSqlMenuCurOption = this.matFileSqlMenuOptions[0]['label']
                 //更新素材文件列表
-                return this.vt_main_matFile_updateList()
+                return this.matFileUpdateList()
 
             }
             ).then(res =>{
-                this.$vt_notify('success','提示','删除成功')
+                this.$vtNotify('success','提示','删除成功')
             }
             )
             
         },
         //更新素材文件列表
-        vt_main_matFile_updateList(){
-            this.$axios_async_exec(
-                '/vt/getSqlData', {'sql_str':this.vt_main_matFile_sqlMenuCurObj['value']}, (res) => {
-                    this.vt_main_matFile_bodyTableData = res
+        matFileUpdateList(){
+            this.$axiosAsyncExec(
+                '/vt/getSqlData', {'sqlStr':this.matFileSqlMenuCurObj['value']}, (res) => {
+                    this.matFileBodyTableData = res
                 }
             )
             
         },
         //素材文件sql筛选项变化时触发
-        vt_main_matFile_sqlMenuChangeEvent(val){
+        matFileSqlMenuChangeEvent(val){
             //如果新增选项
-            if (this.vt_main_matFile_sqlMenuCurObj === null){
-                var tmp_new_item = {'label':this.vt_main_matFile_sqlMenuCurOption,'value':`
-select '' as type,
-'' as metFileName, 
-'' as durationSecond 
-from vt.vt_met_file 
+            if (this.matFileSqlMenuCurObj === null){
+                var tmpNewItem = {'label':this.matFileSqlMenuCurOption,'value':`
+select matfile_id as id,
+matfile_type as type,
+SUBSTRING_INDEX(matfile_full_path,"\\\\",-1) as matFileName, 
+duration_second as durationSecond 
+from vt.vt_matfile 
 where false
 order by create_time asc
                                 `}
-                this.vt_main_matFile_sqlMenuOptions.push(tmp_new_item)
+                this.matFileSqlMenuOptions.push(tmpNewItem)
             }
             //更新素材文件列表
-            this.vt_main_matFile_updateList()
+            this.matFileUpdateList()
 
         },
         //素材文件sql编辑按钮点击触发
-        vt_main_matFile_sqlEditButtonClick(){
-            this.vt_main_matFile_headerEditDialogVisible = true
-            this.vt_main_matFile_headerEditDialogSqlText =this.vt_main_matFile_sqlMenuCurObj['value']
+        matFileSqlEditButtonClick(){
+            this.matFileHeaderEditDialogVisible = true
+            this.matFileHeaderEditDialogSqlText =this.matFileSqlMenuCurObj['value']
 
+        },
+        //删除当前素材文件
+        matFileDelMatFile(){
+            this.$axiosAsyncExec(
+                '/vt/delMatFile', {'matFileId':this.$store.state.matFileBodyTableCurrentRow['id']}, (res) => {
+                    this.$vtNotify('success','提示','删除成功')
+                }
+            )
         }
 
 
@@ -162,24 +189,25 @@ order by create_time asc
 })
 
 
+
 //预览组件
-const pre_component = Vue.extend({
-    template: document.getElementById('vt_main_pre_template').innerHTML,
+const preComponent = Vue.extend({
+    template: document.getElementById('preTemplate').innerHTML,
     mounted() {
         //初始化
         console.log('初始化预览组件')
         //this.$nextTick(() => {
 
-        //        document.getElementById('vt_main_pre_audio').innerHTML = ''
+        //        document.getElementById('preAudio').innerHTML = ''
         //        //音频波形可视化实例
         //        this.wavesurfer = WaveSurfer.create({
-        //            container: '#vt_main_pre_audio',
+        //            container: '#preAudio',
         //            waveColor: '#00FA9A',
         //            progressColor: '#00BFBF',
         //            backgroundColor: '#e9fff6',
         //            barWidth: '1'
         //        })
-        //        this.vt_main_pre_audioWavesurfer.load('/met_file/a.mp3')
+        //        this.preAudioWavesurfer.load('/matfile/a.mp3')
 
 
         //})
@@ -187,16 +215,16 @@ const pre_component = Vue.extend({
         //window.onresize=
         //    function(){
         //        console.log('resize')
-        //        document.getElementById('vt_main_pre_audio').innerHTML = ''
+        //        document.getElementById('preAudio').innerHTML = ''
         //        //音频波形可视化实例
         //        this.wavesurfer = WaveSurfer.create({
-        //            container: '#vt_main_pre_audio',
+        //            container: '#preAudio',
         //            waveColor: '#00FA9A',
         //            progressColor: '#00BFBF',
         //            backgroundColor: '#e9fff6',
         //            barWidth: '1'
         //        })
-        //        this.vt_main_pre_audioWavesurfer.load('/met_file/a.mp3')
+        //        this.preAudioWavesurfer.load('/matfile/a.mp3')
         //    }
 
     },
@@ -206,20 +234,20 @@ const pre_component = Vue.extend({
     computed: {
         ...Vuex.mapState([
             // 素材文件-表格默认选项
-            'vt_main_matFile_bodyTableCurrentRow'
+            'matFileBodyTableCurrentRow'
         ])
     },
     data() {
         return {
 
-            vt_main_pre_audioWavesurfer: null
+            preAudioWavesurfer: null
         }
     }
 })
 
 //详情组件
-const info_component = Vue.extend({
-    template: document.getElementById('vt_main_info_template').innerHTML,
+const infoComponent = Vue.extend({
+    template: document.getElementById('infoTemplate').innerHTML,
     mounted() {
         //初始化
         console.log('初始化详情组件')
@@ -235,8 +263,8 @@ const info_component = Vue.extend({
 })
 
 //素材组件
-const mat_component = Vue.extend({
-    template: document.getElementById('vt_main_mat_template').innerHTML,
+const matComponent = Vue.extend({
+    template: document.getElementById('matTemplate').innerHTML,
     mounted() {
         //初始化
         console.log('初始化素材组件')
@@ -254,40 +282,39 @@ const mat_component = Vue.extend({
 
 
 //设置组件
-const setting_component = Vue.extend({
-    template: document.getElementById('vt_main_setting_template').innerHTML,
+const settingComponent = Vue.extend({
+    template: document.getElementById('settingTemplate').innerHTML,
     mounted() {
         //初始化
         console.log('初始化设置组件')
         //获取设置选项
         console.log('api:获取配置表的值')
-        this.$axios_async_exec(
+        this.$axiosAsyncExec(
             '/vt/getSettingProperties', {}, (res) => {
-                var vt_main_setting_properties = res
+                var settingProperties = res
                 //初始化配置
-                this.$store.state.vt_main_setting_metFilePath = vt_main_setting_properties.vt_main_setting_metFilePath
-                this.$store.state.vt_main_setting_freePointMs = vt_main_setting_properties.vt_main_setting_freePointMs
-                this.$store.state.vt_main_setting_inPointHotKey = vt_main_setting_properties.vt_main_setting_inPointHotKey
-                this.$store.state.vt_main_setting_speedPointHotKey = vt_main_setting_properties.vt_main_setting_speedPointHotKey
-                this.$store.state.vt_main_setting_outPointHotKey = vt_main_setting_properties.vt_main_setting_outPointHotKey
-                this.$store.state.vt_main_setting_transformEffectValue = vt_main_setting_properties.vt_main_setting_transformEffectValue
-                this.$store.state.vt_main_setting_transformEffectOptions = vt_main_setting_properties.vt_main_setting_transformEffectOptions.split(',')
-                this.$store.state.vt_main_setting_transformEffectMs = vt_main_setting_properties.vt_main_setting_transformEffectMs
-                this.$store.state.vt_main_setting_mogrtPath = vt_main_setting_properties.vt_main_setting_mogrtPath
+                this.$store.state.settingMatFilePath = settingProperties.settingMatFilePath
+                this.$store.state.settingFreePointMs = settingProperties.settingFreePointMs
+                this.$store.state.settingInPointHotKey = settingProperties.settingInPointHotKey
+                this.$store.state.settingSpeedPointHotKey = settingProperties.settingSpeedPointHotKey
+                this.$store.state.settingOutPointHotKey = settingProperties.settingOutPointHotKey
+                this.$store.state.settingTransformEffectValue = settingProperties.settingTransformEffectValue
+                this.$store.state.settingTransformEffectOptions = settingProperties.settingTransformEffectOptions.split(',')
+                this.$store.state.settingTransformEffectMs = settingProperties.settingTransformEffectMs
+                this.$store.state.settingMogrtPath = settingProperties.settingMogrtPath
             }
         )
     },
     methods: {
         //更新配置
-        update_property(value,key){
-            // var tmp_value = value.replace('\\','/')
+        settingUpdateProperty(value,key){
             eval(`this.$store.state.${key} = value` )
             },
         //设置选项值改变时触发更新
-        change_setting_value(key){
+        settingChangeSettingValue(key){
             eval(`var value = this.${key}`)
             console.log(`api:更新配置：${key}=${value}`)
-            this.$axios_async_exec(
+            this.$axiosAsyncExec(
                 '/vt/setSettingProperty', {'key':key,'value':value}, (res) => {
         })
         }
@@ -296,60 +323,60 @@ const setting_component = Vue.extend({
     data() {
         return {
             //设置面板是否展开
-            vt_header_settingDialogVisible:false
+            settingDialogVisible:false
 
         }
     },
     computed:{
-        vt_main_setting_metFilePath:{
-            set:function(value){ this.update_property(value,'vt_main_setting_metFilePath')},
-            get:function() {return this.$store.state.vt_main_setting_metFilePath}
+        settingMatFilePath:{
+            set:function(value){ this.settingUpdateProperty(value,'settingMatFilePath')},
+            get:function() {return this.$store.state.settingMatFilePath}
         },
-        vt_main_setting_mogrtPath:{
-            set:function(value){ this.update_property(value,'vt_main_setting_mogrtPath')},
-            get:function() {return this.$store.state.vt_main_setting_mogrtPath}
+        settingMogrtPath:{
+            set:function(value){ this.settingUpdateProperty(value,'settingMogrtPath')},
+            get:function() {return this.$store.state.settingMogrtPath}
         },
-        vt_main_setting_freePointMs:{
-            set:function(value){ this.update_property(value,'vt_main_setting_freePointMs')},
-            get:function() {return this.$store.state.vt_main_setting_freePointMs}
+        settingFreePointMs:{
+            set:function(value){ this.settingUpdateProperty(value,'settingFreePointMs')},
+            get:function() {return this.$store.state.settingFreePointMs}
         },
-        vt_main_setting_inPointHotKey:{
-            set:function(value){ this.update_property(value,'vt_main_setting_inPointHotKey')},
-            get:function() {return this.$store.state.vt_main_setting_inPointHotKey}
+        settingInPointHotKey:{
+            set:function(value){ this.settingUpdateProperty(value,'settingInPointHotKey')},
+            get:function() {return this.$store.state.settingInPointHotKey}
         },
-        vt_main_setting_speedPointHotKey:{
-            set:function(value){ this.update_property(value,'vt_main_setting_speedPointHotKey')},
-            get:function() {return this.$store.state.vt_main_setting_speedPointHotKey}
+        settingSpeedPointHotKey:{
+            set:function(value){ this.settingUpdateProperty(value,'settingSpeedPointHotKey')},
+            get:function() {return this.$store.state.settingSpeedPointHotKey}
         },
-        vt_main_setting_outPointHotKey:{
-            set:function(value){ this.update_property(value,'vt_main_setting_outPointHotKey')},
-            get:function() {return this.$store.state.vt_main_setting_outPointHotKey}
+        settingOutPointHotKey:{
+            set:function(value){ this.settingUpdateProperty(value,'settingOutPointHotKey')},
+            get:function() {return this.$store.state.settingOutPointHotKey}
         },
-        vt_main_setting_transformEffectValue:{
-            set:function(value){ this.update_property(value,'vt_main_setting_transformEffectValue')},
-            get:function() {return this.$store.state.vt_main_setting_transformEffectValue}
+        settingTransformEffectValue:{
+            set:function(value){ this.settingUpdateProperty(value,'settingTransformEffectValue')},
+            get:function() {return this.$store.state.settingTransformEffectValue}
         },
-        vt_main_setting_transformEffectOptions:{
-            set:function(value){ this.update_property(value,'vt_main_setting_transformEffectOptions')},
-            get:function() {return this.$store.state.vt_main_setting_transformEffectOptions}
+        settingTransformEffectOptions:{
+            set:function(value){ this.settingUpdateProperty(value,'settingTransformEffectOptions')},
+            get:function() {return this.$store.state.settingTransformEffectOptions}
         },
-        vt_main_setting_transformEffectMs:{
-            set:function(value){ this.update_property(value,'vt_main_setting_transformEffectMs')},
-            get:function() {return this.$store.state.vt_main_setting_transformEffectMs}
+        settingTransformEffectMs:{
+            set:function(value){ this.settingUpdateProperty(value,'settingTransformEffectMs')},
+            get:function() {return this.$store.state.settingTransformEffectMs}
         }
     }
 })
 
 //vt组件
-const vt_component = Vue.extend({
+const vtComponent = Vue.extend({
     template: document.getElementById('vt').innerHTML,
     data() {
         return {
             
             //异步处理状态时提示信息
-            vt_loadingText: '...',
+            vtLoadingText: '...',
             //项目标题
-            vt_header_card_title: '-'
+            vtTitle: '-'
         }
 
     },
@@ -358,9 +385,9 @@ const vt_component = Vue.extend({
     },
     computed: {
         //此刻是否为异步处理状态
-        vt_loading: {
+        vtIsLoading: {
             get: function () {
-                if (this.vt_async_task_num > 0) {
+                if (this.vtAsyncTaskNum > 0) {
                     return true
                 } else {
                     return false
@@ -369,23 +396,24 @@ const vt_component = Vue.extend({
         },
         ...Vuex.mapState([
             // 异步等待任务数量
-            'vt_async_task_num'
+            'vtAsyncTaskNum'
         ])
         
     },
     mounted() {
         //初始化
         //获取项目名
-        this.$jsx_exec('get_project_name', '', (data) => {
-            this.vt_header_card_title = data
+        this.$jsxExec('getProjectName', '', (data) => {
+            this.vtTitle = data
         })
 
     },
     components: {
-        setting_component,
-        matfile_component,
-        mat_component,
-        pre_component,
-        info_component
+        settingcomponent:settingComponent,
+        matfilecomponent:matFileComponent,
+        matcomponent:matComponent,
+        precomponent:preComponent,
+        infocomponent:infoComponent
     }
 })
+

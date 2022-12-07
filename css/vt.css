@@ -84,38 +84,38 @@ body {
 }
 
 /*页面内容区*/
-#vt_main {
+#vtMain {
     width: 100%;
     height: 89vh;
 }
 
 /*页面内容区-素材文件区*/
-#vt_main_matFile  {
+#matFile  {
     width: 40%;
     height: 50vh;
     float: left;
 }
 
 /*页面内容区-素材文件区-卡片*/
-#vt_main_matFile>.el-card {
+#matFile>.el-card {
     height: 100%;
 }
 
 /*页面内容区-素材文件区-卡片-卡片头*/
-#vt_main_matFile>.el-card>.el-card__header {
+#matFile>.el-card>.el-card__header {
     height: 6vh;
     padding: 1vh 2% 0vh 2%;
     overflow: hidden;
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-下拉框*/
-#vt_main_matFile>.el-card>.el-card__header *[title=sql筛选下拉框]{
+#matFile>.el-card>.el-card__header *[title=sql筛选下拉框]{
     float: left;
     width: 50%;
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑*/
-#vt_main_matFile>.el-card>.el-card__header *[title=sql编辑按钮] {
+#matFile>.el-card>.el-card__header *[title=sql编辑按钮] {
     width: 28px;
     height: 28px;
     float: right;
@@ -123,13 +123,13 @@ body {
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑-对话框遮罩*/
-#vt_main_matFile>.el-card>.el-card__header .el-dialog__wrapper{
+#matFile>.el-card>.el-card__header .el-dialog__wrapper{
     width: 100%;
     height: 100%;
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑-对话框遮罩-面板*/
-#vt_main_matFile>.el-card>.el-card__header .el-dialog__wrapper>div {
+#matFile>.el-card>.el-card__header .el-dialog__wrapper>div {
     width: 80%;
     height: 80vh;
     margin-bottom: 5vh;
@@ -137,13 +137,13 @@ body {
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑-对话框遮罩-面板-头部*/
-#vt_main_matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__header {
+#matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__header {
     padding: 0vh 2% 0vh 2%;
     height: 4vh;
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑-对话框遮罩-面板-头部-关闭按钮*/
-#vt_main_matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__header>button {
+#matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__header>button {
     position: relative;
     float: right;
 
@@ -154,24 +154,24 @@ body {
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑-对话框遮罩-面板-中部*/
-#vt_main_matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__body {
+#matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__body {
     padding: 1vh 2% 0vh 2%;
     height: 65vh;
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑-对话框遮罩-面板-中部-sql区域*/
-#vt_main_matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__body textarea {
+#matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__body textarea {
     height: 65vh;
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑-对话框遮罩-面板-底部*/
-#vt_main_matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__footer {
+#matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__footer {
     padding: 1vh 2% 1vh 2%;
     height: 8vh;
 }
 
 /*页面内容区-素材文件区-卡片-卡片头-编辑-对话框遮罩-面板-底部-按钮*/
-#vt_main_matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__footer>span>button {
+#matFile>.el-card>.el-card__header .el-dialog__wrapper>div>.el-dialog__footer>span>button {
     padding: 0%;
     height: 100%;
     width: 10%;
@@ -179,77 +179,95 @@ body {
 }
 
 /*页面内容区-素材文件区-卡片-卡片body*/
-#vt_main_matFile>.el-card>.el-card__body {
+#matFile>.el-card>.el-card__body {
     height: 42vh;
     padding: 1vh 2% 0vh 2%;
 }
 
 /*页面内容区-素材文件区-卡片-卡片body-表头*/
-#vt_main_matFile>.el-card>.el-card__body .el-table__header {
+#matFile>.el-card>.el-card__body .el-table__header {
     width: 100% !important;
 }
 
 /*页面内容区-素材文件区-卡片-卡片body-表body*/
-#vt_main_matFile>.el-card>.el-card__body .el-table__body {
+#matFile>.el-card>.el-card__body .el-table__body {
     width: 100% !important;
 }
 
-/*页面内容区-素材文件区-卡片-卡片body-表头表body-列宽*/
-#vt_main_matFile>.el-card>.el-card__body colgroup>col {
+/*页面内容区-素材文件区-卡片-卡片body-表body-列宽*/
+#matFile>.el-card>.el-card__body colgroup>col {
     width: auto !important;
 }
 
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单*/
+#matFile>.el-card #matFileRClickMenu{
+    position:fixed;
+}
+
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-body*/
+#matFile>.el-card #matFileRClickMenu>.el-card__body{
+    padding:1vh 1% 1vh 1%;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-body-选项*/
+#matFile>.el-card #matFileRClickMenu>.el-card__body>button{
+    display: block;
+    width: 100%;
+    margin-left: 0%;
+}
+
 /*页面内容区-预览区*/
-#vt_main_pre {
+#pre {
     width: 60%;
     height: 50vh;
     float: left;
 }
 
 /*页面内容区-预览区-卡片*/
-#vt_main_pre>.el-card {
+#pre>.el-card {
     height: 100%;
 }
 
 /*页面内容区-预览区-卡片-卡片body*/
-#vt_main_pre>.el-card>.el-card__body {
+#pre>.el-card>.el-card__body {
     height: 49vh;
     padding: 1vh 2% 0vh 2%;
 }
 
 /*页面内容区-预览区-卡片-音频区*/
-#vt_main_pre>.el-card>.el-card__body > *[title=音频] {
+#pre>.el-card>.el-card__body > *[title=音频] {
     height: 30vh !important;
     width: 100% !important;
     overflow: hidden !important;
 }
 
 /*页面内容区-信息区*/
-#vt_main_info {
+#info {
     width: 40%;
     height: 38vh;
     float: left;
 }
 
 /*页面内容区-信息区-卡片*/
-#vt_main_info>.el-card {
+#info>.el-card {
     height: 100%;
 }
 
 /*页面内容区-素材区*/
-#vt_main_mat {
+#mat {
     width: 60%;
     height: 38vh;
     float: left;
 }
 
 /*页面内容区-素材区-卡片*/
-#vt_main_mat>.el-card {
+#mat>.el-card {
     height: 100%;
 }
 
 /*设置*/
-#vt_main_setting>button {
+#setting>button {
     width: 28px;
     height: 28px;
     float: right;
@@ -260,13 +278,13 @@ body {
 }
 
 /* 设置-面板遮罩 */
-#vt_main_setting .el-dialog__wrapper{
+#setting .el-dialog__wrapper{
     width: 100%;
     height: 100%;
 }
 
 /*设置-面板遮罩-面板*/
-#vt_main_setting .el-dialog__wrapper>div {
+#setting .el-dialog__wrapper>div {
     width: 80%;
     height: 80vh;
     margin-bottom: 5vh;
@@ -274,13 +292,13 @@ body {
 }
 
 /*设置-面板遮罩-面板-头部*/
-#vt_main_setting .el-dialog__wrapper>div>.el-dialog__header {
+#setting .el-dialog__wrapper>div>.el-dialog__header {
     padding: 0vh 2% 0vh 2%;
     height: 4vh;
 }
 
 /*设置-面板遮罩-面板-头部-关闭按钮*/
-#vt_main_setting .el-dialog__wrapper>div>.el-dialog__header>button {
+#setting .el-dialog__wrapper>div>.el-dialog__header>button {
     position: relative;
     float: right;
 
@@ -291,7 +309,7 @@ body {
 }
 
 /*设置-面板遮罩-面板-内容区*/
-#vt_main_setting .el-dialog__wrapper>div>.el-dialog__body {
+#setting .el-dialog__wrapper>div>.el-dialog__body {
     padding-top: 0%;
     padding-bottom: 0%;
     height: 76vh;
@@ -299,29 +317,29 @@ body {
 }
 
 /*设置-面板遮罩-面板-内容区-分割线*/
-#vt_main_setting .el-dialog__wrapper>div>.el-dialog__body>.el-divider--horizontal {
+#setting .el-dialog__wrapper>div>.el-dialog__body>.el-divider--horizontal {
     margin: 2vh 0%;
 }
 
 /*设置-面板遮罩-面板-内容区-textarea输入框*/
-#vt_main_setting .el-dialog__wrapper>div>.el-dialog__body textarea {
+#setting .el-dialog__wrapper>div>.el-dialog__body textarea {
     white-space:nowrap;
     overflow-x:scroll;
 }
 
 /*设置-面板遮罩-面板-内容区-行*/
-#vt_main_setting .el-dialog__wrapper>div>.el-dialog__body>.setting_singleRow {
+#setting .el-dialog__wrapper>div>.el-dialog__body>.settingSingleRow {
     height: 4vh;
     overflow: hidden;
 }
 
 /*设置-面板遮罩-面板-内容区-行-按钮*/
-#vt_main_setting .el-dialog__wrapper>div>.el-dialog__body>.setting_singleRow>button {
+#setting .el-dialog__wrapper>div>.el-dialog__body>.settingSingleRow>button {
     padding: 0%;
     width: 10%;
 }
 
 /*设置-面板遮罩-面板-内容区-行-所有一级元素*/
-#vt_main_setting .el-dialog__wrapper>div>.el-dialog__body>.setting_singleRow>* {
+#setting .el-dialog__wrapper>div>.el-dialog__body>.settingSingleRow>* {
     height: 100%;
 }
