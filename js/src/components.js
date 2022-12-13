@@ -15,22 +15,11 @@ const matFileComponent = Vue.extend({
         //同步实际素材文件与表中元数据，使其保持一致
         console.log('api:同步实际素材文件与表中元数据')
         this.$axiosAsyncExec(
-            '/vt/syncMetFileMetaData', {}, (res) => {
+            '/vt/syncMatFileMetaData', {}, (res) => {
             }
         ).then(res => {
-            //获取素材文件筛选sql列表
-            return this.$axiosAsyncExec(
-                '/vt/getSqlMenuOptions', {}, (res) => {
-                    this.matFileSqlMenuOptions = res
-                    this.matFileSqlMenuCurOption = this.matFileSqlMenuOptions[0]['label']
-                }
-            )
+            return this.matFileUpdateSqlMenu()
         }
-        ).then(
-            res =>{
-                //更新素材文件列表
-                this.matFileUpdateList()
-            }
         )
 
 
@@ -53,6 +42,24 @@ const matFileComponent = Vue.extend({
                 'z-index':'5000',
                 'top':'0px',
                 'left':'0px'
+            },
+            //素材文件重命名弹窗style
+            matFileRenameStyle:{
+                'display': 'none',
+                'z-index':'6000',
+                'top':'0px',
+                'left':'0px'
+                
+            },
+            //素材文件重命名输入框文本
+            matFileRenameText:'',
+            //素材文件管理标签弹窗是否展示
+            matFileManageTagsStyle : {
+                'display': 'none',
+                'z-index':'6000',
+                'top':'0px',
+                'left':'0px'
+                
             }
         }
     },
@@ -97,11 +104,27 @@ const matFileComponent = Vue.extend({
             }
 
         },
+        //更新素材文件筛选sql菜单
+        matFileUpdateSqlMenu(){
+            //获取素材文件筛选sql列表
+            return this.$axiosAsyncExec(
+                '/vt/getSqlMenuOptions', {}, (res) => {
+                    this.matFileSqlMenuOptions = res
+                    this.matFileSqlMenuCurOption = this.matFileSqlMenuOptions[0]['label']
+                }
+            )
+            .then(
+                res =>{
+                    //更新素材文件列表
+                    this.matFileUpdateList()
+                }
+            )
+        },
         //点击保存sql按钮触发
         matFileSaveSql(){
             this.matFileHeaderEditDialogVisible = false
             this.$axiosAsyncExec(
-                '/vt/saveMetFileFilterSql', {'label':this.matFileSqlMenuCurOption,'value':this.matFileHeaderEditDialogSqlText}, (res) => {
+                '/vt/saveMatFileFilterSql', {'label':this.matFileSqlMenuCurOption,'value':this.matFileHeaderEditDialogSqlText}, (res) => {
                 }
             ).then(res => {
                
@@ -118,27 +141,22 @@ const matFileComponent = Vue.extend({
         },
         //点击删除sql按钮触发
         matFileDelSql(){
-            this.matFileHeaderEditDialogVisible = false
-
-            this.$axiosAsyncExec(
-                '/vt/delMetFileFilterSql', {'label':this.matFileSqlMenuCurOption}, (res) => {
-                }
-            ).then(res => {
-                this.matFileSqlMenuOptions.forEach((item,index,arr) => {
-                    if(item['label'] == this.matFileSqlMenuCurOption){
-                        arr.splice(index,1)
+            if (this.matFileSqlMenuCurOption == '默认'){
+                this.$vtNotify('error','错误','不能删除[默认]sql筛选项')
+            }else{
+                this.matFileHeaderEditDialogVisible = false
+                this.$axiosAsyncExec(
+                    '/vt/delMatFileFilterSql', {'label':this.matFileSqlMenuCurOption}, (res) => {
                     }
-                })
-
-                this.matFileSqlMenuCurOption = this.matFileSqlMenuOptions[0]['label']
-                //更新素材文件列表
-                return this.matFileUpdateList()
-
+                ).then(res => {
+                    return this.matFileUpdateSqlMenu()
+                }
+                ).then(res =>{
+                    this.$vtNotify('success','提示','删除成功')
+                }
+                )
             }
-            ).then(res =>{
-                this.$vtNotify('success','提示','删除成功')
-            }
-            )
+            
             
         },
         //更新素材文件列表
@@ -180,8 +198,44 @@ order by create_time asc
             this.$axiosAsyncExec(
                 '/vt/delMatFile', {'matFileId':this.$store.state.matFileBodyTableCurrentRow['id']}, (res) => {
                     this.$vtNotify('success','提示','删除成功')
+                    //更新素材文件列表
+                    this.matFileUpdateList()
+
                 }
             )
+        },
+        //素材文件重命名点击触发
+        matFileRename(event){
+            this.matFileRenameStyle.top=String(event.clientY)+'px'
+            this.matFileRenameStyle.left=String(event.clientX)+'px'
+            
+            this.matFileRenameText = this.$store.state.matFileBodyTableCurrentRow['matFileName']
+            this.matFileRenameStyle.display='block'
+            
+        },
+        //素材文件重命名取消时触发
+        matFileRenameCancel(){
+            this.matFileRenameStyle.display='none'
+        },
+        //素材文件重命名确定时触发
+        matFileRenameComfirm(){
+            this.$axiosAsyncExec(
+                '/vt/renameMatFile', {'matFileId':this.$store.state.matFileBodyTableCurrentRow['id'],'newName':this.matFileRenameText}, (res) => {
+                    this.$vtNotify('success','提示','重命名成功')
+
+                    this.matFileRenameStyle.display='none'
+                    //更新素材文件列表
+                    this.matFileUpdateList()
+
+                }
+            )
+        },
+        //素材文件管理标签点击触发
+        matFileManageTags(event){
+            this.matFileManageTagsStyle.top=String(event.clientY)+'px'
+            this.matFileManageTagsStyle.left=String(event.clientX)+'px'
+            this.matFileManageTagsStyle.display='block'
+            
         }
 
 
@@ -316,6 +370,7 @@ const settingComponent = Vue.extend({
             console.log(`api:更新配置：${key}=${value}`)
             this.$axiosAsyncExec(
                 '/vt/setSettingProperty', {'key':key,'value':value}, (res) => {
+                this.$vtNotify('success','提示','设置更新成功')
         })
         }
     

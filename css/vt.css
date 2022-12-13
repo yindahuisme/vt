@@ -1,22 +1,22 @@
 /* 常规格式------------------------------------- */
 /* 视频颜色 */
 .vedio {
-    background-color: rgb(182, 203, 255) !important; 
+    background-color: #ffffff !important; 
 }
 
 /* 音频颜色 */
 .audio {
-    background-color: rgb(182, 255, 225) !important;
+    background-color: #ffffff !important;
 }
 
 /* 图片颜色 */
 .picture {
-    background-color: rgb(244, 255, 176) !important;
+    background-color: #ffffff !important;
 }
 
 /* 表格选中当前行时展示颜色 */
 .current-row>td{
-    background-color: #f5f7fa !important;
+    background-color: #d4d4d4 !important;
 }
 /* ------------------------------------------- */
 
@@ -194,13 +194,10 @@ body {
     width: 100% !important;
 }
 
-/*页面内容区-素材文件区-卡片-卡片body-表body-列宽*/
-#matFile>.el-card>.el-card__body colgroup>col {
-    width: auto !important;
-}
-
 /*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单*/
 #matFile>.el-card #matFileRClickMenu{
+    width:10%;
+    height:32vh;
     position:fixed;
 }
 
@@ -214,7 +211,35 @@ body {
 #matFile>.el-card #matFileRClickMenu>.el-card__body>button{
     display: block;
     width: 100%;
+    height: 10vh;
     margin-left: 0%;
+    padding:0%;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-重命名面板*/
+#matFile>.el-card #matFileRename{
+    width:30%;
+    height:20vh;
+    position:fixed;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-重命名面板-body*/
+#matFile>.el-card #matFileRename>.el-card__body{
+    padding:1vh 1% 1vh 1%;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-重命名面板-body-输入框*/
+#matFile>.el-card #matFileRename>.el-card__body input{
+    height:10vh;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-重命名面板-body-按钮*/
+#matFile>.el-card #matFileRename>.el-card__body>button{
+    margin:0%;
+    padding:0%;
+    width:30%;
+    height:8vh;
+    float:right
 }
 
 /*页面内容区-预览区*/
