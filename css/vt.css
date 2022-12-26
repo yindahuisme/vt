@@ -242,6 +242,37 @@ body {
     float:right
 }
 
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-标签管理面板*/
+#matFile>.el-card #matFileManageTags{
+    height:30vh;
+    width:50%;
+    position:fixed;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-标签管理面板-编辑*/
+#matFile>.el-card #matFileManageTags .matFileManageTagEdic{
+    width:100%;
+    height: 23vh;
+    overflow-y: scroll;
+    overflow-x: visible;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-标签管理面板-body*/
+#matFile>.el-card #matFileManageTags>.el-card__body{
+    padding:1vh 1% 1vh 1%;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单-标签管理面板-body-按钮*/
+#matFile>.el-card #matFileManageTags>.el-card__body>.matFileManageTag{
+    margin:0%;
+    padding:0%;
+    width:20%;
+    height:5vh;
+    float:right;
+
+    
+}
+
 /*页面内容区-预览区*/
 #pre {
     width: 60%;

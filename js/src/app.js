@@ -44,6 +44,18 @@ new Vue({
                     }
                 })
         }
+        //根据素材文件路径获得url
+        Vue.prototype.$getMatFileUrl = function (path) {
+            var matFilePathList = this.$store.state.settingMatFilePath.split('\n')
+            for (i = 0; i < matFilePathList.length; i++) { 
+                if(path.startsWith(matFilePathList[i])){
+                    var tmpFileName = path.replace(matFilePathList[i],'')
+                    return `http://localhost:880${i}/${tmpFileName}`
+                }
+             }
+            this.$vtNotify('error','错误','素材文件路径解析异常')
+            return ''
+        }
 
     },
     store

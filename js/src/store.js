@@ -10,8 +10,9 @@ var store = new Vuex.Store({
         axiosInstance: axios.create({
             baseURL: 'http://localhost:9999'
         }),
-        //素材文件-表格默认选项
+        //素材文件表格当前选项,信息
         matFileBodyTableCurrentRow: {},
+        matFileInfo:{},
         //异步等待任务数量
         vtAsyncTaskNum: 0,
 

@@ -126,8 +126,27 @@
                     <el-input placeholder="请输入新文件名" v-model="matFileRenameText" resize="none">
                     </el-input>
                     <el-button type="danger" @click="matFileRenameCancel">取消</el-button>
-                    <el-button type="primary" @click="matFileRenameComfirm">确定</el-button>
+                    <el-button type="primary" @click="matFileRenameConfirm">确定</el-button>
+                </el-card>
 
+
+                <!-- 标签管理弹窗弹窗 -->
+                <el-card class="box-card" id="matFileManageTags" :style="matFileManageTagsStyle">
+                    <div class="matFileManageTagEdic">
+                        <el-tag :key="tag" v-for="tag in matFileCurTags" closable :disable-transitions="false"
+                        @close="metFileCloseTag(tag)">
+                        {{tag}}
+                    </el-tag>
+                    <el-input class="input-new-tag" v-if="metFileTagInputVisible" v-model="metFileTagInputValue" ref="metFileTagInput"
+                        size="small" @blur="metFileNewTagConfirm">
+                    </el-input>
+                    <el-button v-else class="button-new-tag" size="small" @click="metFileTagShowInput">新增</el-button>
+                    </div>
+                    
+
+                    <el-button class="matFileManageTag" type="danger" @click="matFileManageTagCancel">取消</el-button>
+                    <el-button class="matFileManageTag" type="primary" @click="matFileManageTagConfirm">确定</el-button>
+                    
                 </el-card>
             </div>
 
@@ -146,8 +165,10 @@
                 视频
             </div>
             <!-- 音频 -->
-            <div title="音频" v-else-if="matFileBodyTableCurrentRow.type == '音频'" style="width:100%">
-                音频
+            <div title="音频" v-else-if="matFileBodyTableCurrentRow.type == '音频'" >
+                <div id="preAudio">
+
+                </div>
             </div>
             <!-- 图片 -->
             <div title="图片" v-else-if="matFileBodyTableCurrentRow.type == '图片'">
@@ -163,8 +184,12 @@
 <!-- 信息组件-模板代码 -->
 <template id="infoTemplate">
     <div id='info'>
-        <el-card class="box-card ">
-            info
+        <el-card class="box-card " style="overflow-y:scroll;overflow-x: visible;">
+            <div><span style="color:rgb(51, 51, 255)">id:</span>{{matFileInfo.matfile_id}}</div>
+            <div><span style="color:rgb(51, 51, 255)">路径:</span>{{matFileInfo.matfile_full_path}}</div>
+            <div><span style="color:rgb(51, 51, 255)">大小(kb):</span>{{matFileInfo.size_kb}}</div>
+            <div><span style="color:rgb(51, 51, 255)">创建时间:</span>{{matFileInfo.create_time}}</div>
+            <div><span style="color:rgb(51, 51, 255)">标签:</span>{{matFileInfo.tags}}</div>
         </el-card>
     </div>
 </template>
