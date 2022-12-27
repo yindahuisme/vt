@@ -288,14 +288,53 @@ body {
 /*页面内容区-预览区-卡片-卡片body*/
 #pre>.el-card>.el-card__body {
     height: 49vh;
-    padding: 1vh 2% 0vh 2%;
+    padding: 1vh 2% 1vh 2%;
 }
 
-/*页面内容区-预览区-卡片-音频区*/
-#pre>.el-card>.el-card__body > *[title=音频] {
-    height: 30vh !important;
+/*页面内容区-预览区-卡片-卡片body-up*/
+#pre>.el-card>.el-card__body .vtUp {
+    height: 5vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+/*页面内容区-预览区-卡片-卡片body-up-输入框*/
+#pre>.el-card>.el-card__body .vtUp input {
+    padding: 0% !important;
+}
+
+/*页面内容区-预览区-卡片-卡片body-up-button*/
+#pre>.el-card>.el-card__body .vtUp button {
+    height: 5vh;
+    width:15%;
+    padding: 0%;
+    overflow: hidden;
+    float: right;
+}
+
+/*页面内容区-预览区-卡片-卡片body-down*/
+#pre>.el-card>.el-card__body .vtDown {
+    height: 42vh;
+    width: 100%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left*/
+#pre>.el-card>.el-card__body .vtLeft {
+    height: 42vh;
+    width: 60%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-音频波形区*/
+#pre>.el-card>.el-card__body .vtLeft #preAudio>wave {
+    height: 15vh !important;
     width: 100% !important;
     overflow: hidden !important;
+}
+
+/*页面内容区-预览区-卡片-卡片body-right*/
+#pre>.el-card>.el-card__body .vtRight {
+    height: 42vh;
+    width: 40%;
 }
 
 /*页面内容区-信息区*/

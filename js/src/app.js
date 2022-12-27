@@ -14,11 +14,11 @@ new Vue({
 
         }
         //封装adobe cep桥接方法
-        Vue.prototype.$jsxExec = function (funcName, funcArgs, callBack) {
+        Vue.prototype.$jsxExec = async function (funcName, funcArgs, callBack) {
             this.$store.state.vtAsyncTaskNum += 1
             var tmpFuncArgs = funcName + '("' + funcArgs + '")'
             //预处理返回结果，如果结果异常，发送通知
-            this.$store.state.csInterface.evalScript(tmpFuncArgs, (data)=>{
+            await this.$store.state.csInterface.evalScript(tmpFuncArgs, (data)=>{
                 if (data == 'EvalScript error.') {
                     this.$vtNotify('error', '错误', '执行adobe pr脚本异常')
                 } else {

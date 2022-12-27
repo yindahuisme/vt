@@ -166,8 +166,30 @@
             </div>
             <!-- 音频 -->
             <div title="音频" v-else-if="matFileBodyTableCurrentRow.type == '音频'" >
-                <div id="preAudio">
+                <div class="vtUp">
+                    <div style="height:5vh;display: inline-block;overflow: hidden;font-size: x-small;">主轨道</div>
+                    <el-select size="mini" v-model="preMainTrackValue"
+                        style="display:inline-block;width:15%;height:5vh;vertical-align: top;"
+                        @focus="preUpdateTraks">
+                        <el-option v-for="item in preMainTrackOptions" :key="item" :label="item" :value="item">
+                        </el-option>
+                    </el-select>
 
+                    <div style="height:5vh;display: inline-block;overflow: hidden;font-size: x-small;">当前轨道</div>
+                    <el-select size="mini" v-model="preCurTrackValue"
+                        style="display:inline-block;width:15%;height:5vh;vertical-align: top; "
+                        @focus="preUpdateTraks">
+                        <el-option v-for="item in preCurTrackOptions" :key="item" :label="item" :value="item">
+                        </el-option>
+                    </el-select>
+                    <el-button type="primary" @click="preSave">保存</el-button>
+                    <el-button type="success" @click="preCommit">提交</el-button>
+                </div>
+                <div class="vtDown">
+                    <div class="vtLeft">
+                        <div id="preAudio"></div>
+                    </div>
+                    <div class="vtRight"></div>
                 </div>
             </div>
             <!-- 图片 -->

@@ -309,8 +309,6 @@ const preComponent = Vue.extend({
         //初始化
         console.log('初始化预览组件')
 
-        window.onresize= this.preUpdateAudioWave()
-
     },
     methods: {
         //更新音频波形
@@ -321,7 +319,6 @@ const preComponent = Vue.extend({
                     return null
                 }
                 audioEle.innerHTML = ''
-    
                 //音频波形可视化实例
                 this.preAudioWavesurfer = WaveSurfer.create({
                     container: '#preAudio',
@@ -331,8 +328,34 @@ const preComponent = Vue.extend({
                     barWidth: '1'
                 })
                 this.preAudioWavesurfer.load(this.$getMatFileUrl(this.matFileInfo['matfile_full_path']))
-                
             })
+            
+        },
+        //更新当前项目中的轨道
+        preUpdateTraks(){
+            var vts=[]
+            var ats=[]
+            this.$jsxExec('getProjectTracks', '视频', (data) => {
+                vts = data.split(',')
+                this.$jsxExec('getProjectTracks', '音频', (data) => {
+                    ats = data.split(',')
+                    this.preMainTrackOptions=vts.concat(ats)
+                    if(this.matFileBodyTableCurrentRow.type=='视频' || this.matFileBodyTableCurrentRow.type=='图片'){
+                        this.preCurTrackOptions=vts
+                    }else if(this.matFileBodyTableCurrentRow.type=='音频'){
+                        this.preCurTrackOptions=ats
+                    }else{
+                        this.preCurTrackOptions=[]
+                    }
+                })
+            })
+        },
+        //保存
+        preSave(){
+
+        },
+        //提交
+        preCommit(){
             
         }
     },
@@ -346,18 +369,39 @@ const preComponent = Vue.extend({
     },
     data() {
         return {
+            //音频波形渲染对象
+            preAudioWavesurfer: null,
+            //主轨道值
+            preMainTrackValue:'',
+            //主轨道选项
+            preMainTrackOptions:[],
+            //当前轨道值
+            preCurTrackValue:'',
+            //当前轨道选项
+            preCurTrackOptions:[],
 
-            preAudioWavesurfer: null
         }
     },
     watch:{
         matFileBodyTableCurrentRow(cur_value,old_value){
-            if(cur_value['type']=='音频'){
-                this.preUpdateAudioWave()
-            }
+            //获得当前素材文件信息
+            this.$axiosAsyncExec(
+                '/vt/getMatFileInfo', {
+                    'matFileId': cur_value['id']
+                }, (res) => {
+                    this.$store.state.matFileInfo=res
+                    if(cur_value['type']=='音频'){
+                        this.preUpdateAudioWave()
+
+                        //更新当前项目中的轨道
+                        this.preUpdateTraks()
+                    }
+                }
+            )  
         }
     }
-})
+}
+)
 
 //详情组件
 const infoComponent = Vue.extend({
@@ -377,30 +421,9 @@ const infoComponent = Vue.extend({
         ...Vuex.mapState([
             // 素材文件-表格当前选项
             'matFileBodyTableCurrentRow',
-            
-        ]),
-        // 当前素材文件信息
-        matFileInfo:{
-            get(){
-                return this.$store.state.matFileInfo
-            },
-            set(new_value){
-                this.$store.state.matFileInfo=new_value
-            }
-        }
-    },
-    watch:{
-        matFileBodyTableCurrentRow(cur_value,old_value){
-            //获得当前素材文件信息
-            this.$axiosAsyncExec(
-                '/vt/getMatFileInfo', {
-                    'matFileId': cur_value['id']
-                }, (res) => {
-                    this.matFileInfo=res
-
-                }
-            )
-        }
+            // 当前素材文件信息
+            'matFileInfo'
+        ])
     }
 })
 
