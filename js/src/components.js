@@ -252,7 +252,7 @@ order by create_time asc
                 '/vt/getMatFileTags', {
                     'matFileId': this.$store.state.matFileBodyTableCurrentRow['id']
                 }, (res) => {
-                    this.matFileCurTags=res
+                    this.matFileCurTags = res
 
                 }
             )
@@ -266,7 +266,7 @@ order by create_time asc
         metFileTagShowInput() {
             this.metFileTagInputVisible = true;
             this.$nextTick(_ => {
-                this.$refs.metFileTagInput.$refs.input.focus();
+                this.$refs.metFileTagInputRef.$refs.input.focus();
             });
         },
         //素材文件标签新增确认时触发
@@ -308,14 +308,23 @@ const preComponent = Vue.extend({
     mounted() {
         //初始化
         console.log('初始化预览组件')
+        //获取项目各轨道信息
+        this.$axiosAsyncExec(
+            '/vt/getProjectTrackInfo', {
+                'proName': this.$store.state.vtTitle
+            }, (res) => {
+                this.$store.state.vtTrackMatInfo=res
+        })
+        //开启定时器，更新项目指针当前时间
+        setInterval(this.updatePrTimeLineSecond,500)
 
     },
     methods: {
         //更新音频波形
-        preUpdateAudioWave(){
-            this.$nextTick(()=>{
-                var audioEle=document.getElementById('preAudio')
-                if (audioEle == null){
+        preUpdateAudioWave() {
+            this.$nextTick(() => {
+                var audioEle = document.getElementById('preAudio')
+                if (audioEle == null) {
                     return null
                 }
                 audioEle.innerHTML = ''
@@ -327,36 +336,135 @@ const preComponent = Vue.extend({
                     backgroundColor: '#e9fff6',
                     barWidth: '1'
                 })
+                this.preAudioWavesurfer.on('finish', () => {
+                    this.prePlay()
+                })
                 this.preAudioWavesurfer.load(this.$getMatFileUrl(this.matFileInfo['matfile_full_path']))
             })
-            
+
         },
         //更新当前项目中的轨道
-        preUpdateTraks(){
-            var vts=[]
-            var ats=[]
+        preUpdateTraks() {
+            var vts = []
+            var ats = []
             this.$jsxExec('getProjectTracks', '视频', (data) => {
                 vts = data.split(',')
                 this.$jsxExec('getProjectTracks', '音频', (data) => {
                     ats = data.split(',')
-                    this.preMainTrackOptions=vts.concat(ats)
-                    if(this.matFileBodyTableCurrentRow.type=='视频' || this.matFileBodyTableCurrentRow.type=='图片'){
-                        this.preCurTrackOptions=vts
-                    }else if(this.matFileBodyTableCurrentRow.type=='音频'){
-                        this.preCurTrackOptions=ats
-                    }else{
-                        this.preCurTrackOptions=[]
+                    this.preMainTrackOptions = vts.concat(ats)
+                    if (this.matFileBodyTableCurrentRow.type == '视频' || this.matFileBodyTableCurrentRow.type == '图片') {
+                        this.preCurTrackOptions = vts
+                    } else if (this.matFileBodyTableCurrentRow.type == '音频') {
+                        this.preCurTrackOptions = ats
+                    } else {
+                        this.preCurTrackOptions = []
                     }
                 })
             })
         },
         //保存
-        preSave(){
+        preSave() {
 
         },
         //提交
-        preCommit(){
-            
+        preCommit() {
+
+        },
+        //时间线向左移动
+        preTimeLeft() {
+            if (this.matFileBodyTableCurrentRow['type'] == '音频') {
+                var tmpDurationSeconds = this.preAudioWavesurfer.getDuration()
+                var tmpProgress = (this.preAudioWavesurfer.getCurrentTime() - parseFloat(this.preTimeLeftValue)) / tmpDurationSeconds
+                this.preAudioWavesurfer.seekTo(Math.max(Math.min(tmpProgress, 1), 0))
+
+            }
+            if (this.matFileBodyTableCurrentRow['type'] == '视频') {
+                var tmpDurationSeconds = this.$refs.preVideoRef.duration
+                var tmpProgress = 100 * (this.$refs.preVideoRef.currentTime - parseFloat(this.preTimeLeftValue)) / tmpDurationSeconds
+                this.preVideoSliderValue = Math.max(Math.min(tmpProgress, 100), 0)
+
+            }
+        },
+        //时间线向右移动
+        preTimeRight() {
+            if (this.matFileBodyTableCurrentRow['type'] == '音频') {
+                var tmpDurationSeconds = this.preAudioWavesurfer.getDuration()
+                var tmpProgress = (this.preAudioWavesurfer.getCurrentTime() + parseFloat(this.preTimeRightValue)) / tmpDurationSeconds
+                this.preAudioWavesurfer.seekTo(Math.max(Math.min(tmpProgress, 1), 0))
+            }
+            if (this.matFileBodyTableCurrentRow['type'] == '视频') {
+                var tmpDurationSeconds = this.$refs.preVideoRef.duration
+                var tmpProgress = 100 * (this.$refs.preVideoRef.currentTime + parseFloat(this.preTimeRightValue)) / tmpDurationSeconds
+                this.preVideoSliderValue = Math.max(Math.min(tmpProgress, 100), 0)
+
+            }
+        },
+        //播放按钮触发
+        prePlay(event, mediaType = '') {
+            if (mediaType == '') {
+                mediaType = this.matFileBodyTableCurrentRow['type']
+            }
+            this.prePlayStatus = 1 - this.prePlayStatus
+            if (mediaType == '音频') {
+                if (this.prePlayStatus == 1) {
+                    //播放
+                    this.preAudioWavesurfer.play()
+
+                } else {
+                    //暂停
+                    this.preAudioWavesurfer.pause()
+
+                }
+            }
+            if (mediaType == '视频') {
+                if (this.prePlayStatus == 1) {
+                    //播放
+                    this.$refs.preVideoRef.play()
+
+                } else {
+                    //暂停
+                    this.$refs.preVideoRef.pause()
+
+                }
+            }
+
+        },
+        //更新待匹配素材信息
+        updateMatMatchInfo(){
+            if(this.preMainTrackValue != ''){
+                var tmpMatList=this.$store.state.vtTrackMatInfo[this.preMainTrackValue]
+                if(typeof(tmpMatList)=='undefined'){
+                    tmpMatList=[]
+                }
+                var tmpMatListFilter=tmpMatList.filter(item=>parseFloat(item[0])<=this.vtPrTimeLineSecond)
+                
+                var tmpMatItem= []
+                tmpMatListFilter.forEach(item => tmpMatItem = tmpMatItem.length==0 || parseFloat(item[0]) > parseFloat(tmpMatItem[0]) ? item : tmpMatItem)
+                
+                if(tmpMatItem.length==0){
+                    this.preMatMatchInfo=null
+                }else{
+                    //获取素材信息，更新待匹配素材信息
+                    this.$axiosAsyncExec(
+                        '/vt/getMatInfo', {
+                            'matId': tmpMatItem[1].toString()
+                        }, (res) => {
+                            this.preMatMatchInfo=res
+
+                        })
+
+                }
+                
+            }
+        },
+        //更新项目指针当前时间
+        updatePrTimeLineSecond(){
+            this.$store.state.csInterface.evalScript("getTimeLineSecond(\"\")", (data)=>{
+                if(this.vtPrTimeLineSecond != data){
+                    this.vtPrTimeLineSecond = data
+                }
+                
+            })
         }
     },
     computed: {
@@ -365,43 +473,130 @@ const preComponent = Vue.extend({
             'matFileBodyTableCurrentRow',
             // 当前素材文件信息
             'matFileInfo'
-        ])
+        ]),
+        //播放按钮图标
+        prePlayIco() {
+            icoList = ['el-icon-video-play', 'el-icon-video-pause']
+            return icoList[this.prePlayStatus]
+        },
+        //视频进度滑动条值
+        preVideoSliderValueCompute: {
+            set(value) {
+                //计算出了视频时长，在执行
+                if (this.preVideoSliderValueUpdateFlag && !(this.$refs.preVideoRef.duration != this.$refs.preVideoRef.duration)) {
+                    this.$refs.preVideoRef.currentTime = Math.floor(value * 10 * this.$refs.preVideoRef.duration) / 1000
+                } else {
+                    this.preVideoSliderValueUpdateFlag = true
+                }
+                this.preVideoSliderValue = value
+            },
+            get() {
+                return this.preVideoSliderValue
+            }
+        },
+        //待匹配点位信息
+        preMatMatchPointInfo(){
+            if(this.preMatMatchInfo){
+                var tmpPointArray = new Array(this.preMatMatchInfo['pointInfo'].length)
+                tmpPointArray.map((item,index)=>index<this.prePointedList.length?'success':'')
+                return tmpPointArray
+            }else{
+                return []
+            }
+        }
     },
     data() {
         return {
             //音频波形渲染对象
             preAudioWavesurfer: null,
             //主轨道值
-            preMainTrackValue:'',
+            preMainTrackValue: '',
             //主轨道选项
-            preMainTrackOptions:[],
+            preMainTrackOptions: [],
             //当前轨道值
-            preCurTrackValue:'',
+            preCurTrackValue: '',
             //当前轨道选项
-            preCurTrackOptions:[],
+            preCurTrackOptions: [],
+            //保存按钮style
+            preSaveStyle: {
+                display: 'block'
+            },
+            //当前播放状态，0暂停，1播放
+            prePlayStatus: 0,
+            //时间线左移量
+            preTimeLeftValue: '0',
+            //时间线右移量
+            preTimeRightValue: '0',
+            //视频进度条值
+            preVideoSliderValue: 0,
+            //是否可以更新视频进度条值
+            preVideoSliderValueUpdateFlag: true,
+            //当前待匹配素材信息
+            preMatMatchInfo: null,
+            //当前项目时间线指针当前停留时间
+            vtPrTimeLineSecond:0,
+            //当前已打点列表
+            prePointedList:[]
+
+
 
         }
     },
-    watch:{
-        matFileBodyTableCurrentRow(cur_value,old_value){
-            //获得当前素材文件信息
-            this.$axiosAsyncExec(
-                '/vt/getMatFileInfo', {
-                    'matFileId': cur_value['id']
-                }, (res) => {
-                    this.$store.state.matFileInfo=res
-                    if(cur_value['type']=='音频'){
-                        this.preUpdateAudioWave()
+    watch: {
+        matFileBodyTableCurrentRow(curValue, oldValue) {
+            //暂停播放
+            if (this.prePlayStatus == 1) {
+                this.prePlay(null, oldValue['type'])
+            }
+            if (curValue != null) {
+                //获得当前素材文件信息
+                this.$axiosAsyncExec(
+                    '/vt/getMatFileInfo', {
+                        'matFileId': curValue['id'].toString()
+                    }, (res) => {
+                        this.$store.state.matFileInfo = res
+                        if (curValue['type'] == '音频') {
+                            this.preSaveStyle.display = 'block'
+                            this.preUpdateAudioWave()
 
-                        //更新当前项目中的轨道
-                        this.preUpdateTraks()
+                            //更新当前项目中的轨道
+                            this.preUpdateTraks()
+                        }
+                        if (curValue['type'] == '视频') {
+                            this.preSaveStyle.display = 'block'
+                            this.$nextTick(() => {
+                                this.$refs.preVideoRef.onended = this.prePlay
+                                this.$refs.preVideoRef.ontimeupdate = () => {
+                                    var tmpSliderValue = Math.floor(this.$refs.preVideoRef.currentTime * 100000 / this.$refs.preVideoRef.duration) / 1000
+                                    this.preVideoSliderValueUpdateFlag = false
+                                    this.preVideoSliderValue = tmpSliderValue
+                                }
+                            })
+
+                        }
+                        if (curValue['type'] == '图片') {
+                            this.preSaveStyle.display = 'none'
+
+                        }
                     }
-                }
-            )  
+                )
+            } else {
+                this.$store.state.matFileBodyTableCurrentRow = {}
+            }
+
+        },
+        //主轨道值改变时触发
+        preMainTrackValue(){
+            this.updateMatMatchInfo()
+
+        },
+        //项目时间轴指针时间改变时触发
+        vtPrTimeLineSecond(){
+            this.updateMatMatchInfo()
+
         }
     }
-}
-)
+})
 
 //详情组件
 const infoComponent = Vue.extend({
@@ -414,8 +609,7 @@ const infoComponent = Vue.extend({
 
     },
     data() {
-        return {
-        }
+        return {}
     },
     computed: {
         ...Vuex.mapState([
@@ -459,10 +653,10 @@ const settingComponent = Vue.extend({
                 var settingProperties = res
                 //初始化配置
                 this.$store.state.settingMatFilePath = settingProperties.settingMatFilePath
-                this.$store.state.settingFreePointMs = settingProperties.settingFreePointMs
+                this.$store.state.settingFreePointSecond = settingProperties.settingFreePointSecond
                 this.$store.state.settingInPointHotKey = settingProperties.settingInPointHotKey
-                this.$store.state.settingSpeedPointHotKey = settingProperties.settingSpeedPointHotKey
                 this.$store.state.settingOutPointHotKey = settingProperties.settingOutPointHotKey
+                this.$store.state.settingPointHotKey = settingProperties.settingPointHotKey
                 this.$store.state.settingTransformEffectValue = settingProperties.settingTransformEffectValue
                 this.$store.state.settingTransformEffectOptions = settingProperties.settingTransformEffectOptions.split(',')
                 this.$store.state.settingTransformEffectMs = settingProperties.settingTransformEffectMs
@@ -513,12 +707,12 @@ const settingComponent = Vue.extend({
                 return this.$store.state.settingMogrtPath
             }
         },
-        settingFreePointMs: {
+        settingFreePointSecond: {
             set: function (value) {
-                this.settingUpdateProperty(value, 'settingFreePointMs')
+                this.settingUpdateProperty(value, 'settingFreePointSecond')
             },
             get: function () {
-                return this.$store.state.settingFreePointMs
+                return this.$store.state.settingFreePointSecond
             }
         },
         settingInPointHotKey: {
@@ -529,20 +723,20 @@ const settingComponent = Vue.extend({
                 return this.$store.state.settingInPointHotKey
             }
         },
-        settingSpeedPointHotKey: {
-            set: function (value) {
-                this.settingUpdateProperty(value, 'settingSpeedPointHotKey')
-            },
-            get: function () {
-                return this.$store.state.settingSpeedPointHotKey
-            }
-        },
         settingOutPointHotKey: {
             set: function (value) {
                 this.settingUpdateProperty(value, 'settingOutPointHotKey')
             },
             get: function () {
                 return this.$store.state.settingOutPointHotKey
+            }
+        },
+        settingPointHotKey: {
+            set: function (value) {
+                this.settingUpdateProperty(value, 'settingPointHotKey')
+            },
+            get: function () {
+                return this.$store.state.settingPointHotKey
             }
         },
         settingTransformEffectValue: {
@@ -579,9 +773,7 @@ const vtComponent = Vue.extend({
         return {
 
             //异步处理状态时提示信息
-            vtLoadingText: '...',
-            //项目标题
-            vtTitle: '-'
+            vtLoadingText: '...'
         }
 
     },
@@ -599,6 +791,15 @@ const vtComponent = Vue.extend({
                 }
             }
         },
+        //项目标题
+        vtTitle: {
+            get: function () {
+                return this.$store.state.vtTitle
+            },
+            set: function(value) {
+                this.$store.state.vtTitle=value
+            }
+        },
         ...Vuex.mapState([
             // 异步等待任务数量
             'vtAsyncTaskNum'
@@ -613,9 +814,8 @@ const vtComponent = Vue.extend({
         })
         //启动文件web服务
         this.$axiosAsyncExec(
-            '/vt/startFileWebServer', {
-            }, (res) => {
-                
+            '/vt/startFileWebServer', {}, (res) => {
+
             })
 
     },

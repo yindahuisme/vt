@@ -184,14 +184,14 @@ body {
     padding: 1vh 2% 0vh 2%;
 }
 
-/*页面内容区-素材文件区-卡片-卡片body-表头*/
-#matFile>.el-card>.el-card__body .el-table__header {
+/*页面内容区-素材文件区-卡片-卡片body-表*/
+#matFile>.el-card>.el-card__body table {
     width: 100% !important;
 }
 
-/*页面内容区-素材文件区-卡片-卡片body-表body*/
-#matFile>.el-card>.el-card__body .el-table__body {
-    width: 100% !important;
+/*页面内容区-素材文件区-卡片-卡片body-表-列和单元格*/
+#matFile>.el-card>.el-card__body table th, #matFile>.el-card>.el-card__body table td, #matFile>.el-card>.el-card__body table .cell{
+    padding: 0%;
 }
 
 /*页面内容区-素材文件区-卡片-卡片body-表body-右键菜单*/
@@ -324,11 +324,70 @@ body {
     width: 60%;
 }
 
+/*页面内容区-预览区-卡片-卡片body-left-按钮*/
+#pre>.el-card>.el-card__body .vtLeft button {
+    height: 6vh;
+    width:6vh;
+    margin: 0%;
+    padding: 0%;
+    overflow: hidden;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-视频*/
+#pre>.el-card>.el-card__body .vtLeft video {
+    height: 28vh;
+    width:100%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-滑动条*/
+#pre>.el-card>.el-card__body .vtLeft .el-slider__runway {
+    height: 2vh;
+    width:100%;
+    margin: 0%;
+}
+
 /*页面内容区-预览区-卡片-卡片body-left-音频波形区*/
 #pre>.el-card>.el-card__body .vtLeft #preAudio>wave {
-    height: 15vh !important;
+    height: 30vh !important;
     width: 100% !important;
     overflow: hidden !important;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-图片*/
+#pre>.el-card>.el-card__body .vtLeft img {
+    height: 36vh;
+    width:100%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-控制区*/
+#pre>.el-card>.el-card__body .vtLeft .preContral {
+    height: 6vh;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-控制区-输入框*/
+#pre>.el-card>.el-card__body .vtLeft .preContral .el-input {
+    height: 6vh;
+    width:20%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-控制区-输入区*/
+#pre>.el-card>.el-card__body .vtLeft .preContral input {
+    height: 6vh;
+    width:100%;
+    margin: 0%;
+    padding: 0%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-点位信息区*/
+#pre>.el-card>.el-card__body .vtLeft .prePointInfo {
+    height: 6vh;
+    width: 100%;
+    border: solid 1px #ebeef5;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 /*页面内容区-预览区-卡片-卡片body-right*/
@@ -419,7 +478,6 @@ body {
 /*设置-面板遮罩-面板-内容区-textarea输入框*/
 #setting .el-dialog__wrapper>div>.el-dialog__body textarea {
     white-space:nowrap;
-    overflow-x:scroll;
 }
 
 /*设置-面板遮罩-面板-内容区-行*/

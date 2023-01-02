@@ -9,7 +9,7 @@ new Vue({
         //弹出提示信息
         Vue.prototype.$vtNotify = function(type, title, message) {
             this.$notify({
-                title,message,type
+                title,message,type,duration:1000
             })
 
         }

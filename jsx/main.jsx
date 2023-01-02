@@ -26,3 +26,10 @@ function getProjectTracks(argc) {
         return tracks.join()
     }
 }
+
+// 获取当前项目时间线指针当前时间
+// 参数：
+function getTimeLineSecond(argc) {
+    app.enableQE()
+    return Math.floor(qe.project.getActiveSequence().CTI.ticks/254016000)/1000
+}

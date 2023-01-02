@@ -10,3 +10,15 @@
 //     //js是单线程调度，用空跑代替sleep
 //     console.log('空跑')
 // }
+
+// tmp={}.id
+// console.log(tmp)
+// if(typeof(tmp) == 'undefined'){
+//     console.log('yes')
+// }else{
+//     console.log('no')
+// }
+
+// console.log(parseFloat(Math.floor(0/100)))
+
+console.log({}.length)

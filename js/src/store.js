@@ -15,6 +15,10 @@ var store = new Vuex.Store({
         matFileInfo:{},
         //异步等待任务数量
         vtAsyncTaskNum: 0,
+        //项目轨道素材信息
+        vtTrackMatInfo:{},
+        //项目标题
+        vtTitle: '-',
 
         //设置---------------------
         //素材文件目录
@@ -22,13 +26,13 @@ var store = new Vuex.Store({
         //mogrt文件目录
         settingMogrtPath: '',
         //卡点时长（ms）
-        settingFreePointMs: '',
+        settingFreePointSecond: '',
         //入点快捷键
         settingInPointHotKey: '',
-        //变速点快捷键
-        settingSpeedPointHotKey: '',
         //出点快捷键
         settingOutPointHotKey: '',
+        //卡点快捷键
+        settingPointHotKey: '',
         //转场效果下拉框值
         settingTransformEffectValue: '',
         //转场效果下拉框选项
