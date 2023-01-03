@@ -21,4 +21,4 @@
 
 // console.log(parseFloat(Math.floor(0/100)))
 
-console.log({}.length)
+console.log(typeof(''))

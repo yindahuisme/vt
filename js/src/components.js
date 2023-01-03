@@ -174,7 +174,7 @@ const matFileComponent = Vue.extend({
         //素材文件sql筛选项变化时触发
         matFileSqlMenuChangeEvent(val) {
             //如果新增选项
-            if (this.matFileSqlMenuCurObj === null) {
+            if (this.matFileSqlMenuCurObj == null) {
                 var tmpNewItem = {
                     'label': this.matFileSqlMenuCurOption,
                     'value': `
@@ -325,7 +325,7 @@ const preComponent = Vue.extend({
             this.$nextTick(() => {
                 var audioEle = document.getElementById('preAudio')
                 if (audioEle == null) {
-                    return null
+                    return
                 }
                 audioEle.innerHTML = ''
                 //音频波形可视化实例
@@ -400,9 +400,12 @@ const preComponent = Vue.extend({
             }
         },
         //播放按钮触发
-        prePlay(event, mediaType = '') {
-            if (mediaType == '') {
+        prePlay(event) {
+            var mediaType=''
+            if (typeof(event)!='string') {
                 mediaType = this.matFileBodyTableCurrentRow['type']
+            }else{
+                mediaType=event
             }
             this.prePlayStatus = 1 - this.prePlayStatus
             if (mediaType == '音频') {
@@ -442,7 +445,7 @@ const preComponent = Vue.extend({
                 tmpMatListFilter.forEach(item => tmpMatItem = tmpMatItem.length==0 || parseFloat(item[0]) > parseFloat(tmpMatItem[0]) ? item : tmpMatItem)
                 
                 if(tmpMatItem.length==0){
-                    this.preMatMatchInfo=null
+                    this.preMatMatchInfo={}
                 }else{
                     //获取素材信息，更新待匹配素材信息
                     this.$axiosAsyncExec(
@@ -532,7 +535,7 @@ const preComponent = Vue.extend({
             //是否可以更新视频进度条值
             preVideoSliderValueUpdateFlag: true,
             //当前待匹配素材信息
-            preMatMatchInfo: null,
+            preMatMatchInfo: {},
             //当前项目时间线指针当前停留时间
             vtPrTimeLineSecond:0,
             //当前已打点列表
@@ -546,7 +549,7 @@ const preComponent = Vue.extend({
         matFileBodyTableCurrentRow(curValue, oldValue) {
             //暂停播放
             if (this.prePlayStatus == 1) {
-                this.prePlay(null, oldValue['type'])
+                this.prePlay(oldValue['type'])
             }
             if (curValue != null) {
                 //获得当前素材文件信息
