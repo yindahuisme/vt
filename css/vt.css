@@ -1,19 +1,4 @@
 /* 常规格式------------------------------------- */
-/* 视频颜色 */
-.vedio {
-    background-color: #ffffff !important; 
-}
-
-/* 音频颜色 */
-.audio {
-    background-color: #ffffff !important;
-}
-
-/* 图片颜色 */
-.picture {
-    background-color: #ffffff !important;
-}
-
 /* 表格选中当前行时展示颜色 */
 .current-row>td{
     background-color: #d4d4d4 !important;
@@ -182,6 +167,11 @@ body {
 #matFile>.el-card>.el-card__body {
     height: 42vh;
     padding: 1vh 2% 0vh 2%;
+}
+
+/*页面内容区-素材文件区-卡片-卡片body--空表数据页*/
+#matFile>.el-card>.el-card__body .el-table__empty-block{
+    width: 100% !important;
 }
 
 /*页面内容区-素材文件区-卡片-卡片body-表*/
@@ -403,9 +393,23 @@ body {
     float: left;
 }
 
+/*页面内容区-信息区-头部*/
+#info>span {
+    height: 8vh;
+    position:relative;
+    left:40%;
+}
+
 /*页面内容区-信息区-卡片*/
 #info>.el-card {
-    height: 100%;
+    height: 30vh;
+    overflow-y:scroll;
+    word-wrap:normal;
+}
+
+/*页面内容区-信息区-卡片-body*/
+#info>.el-card .el-card__body {
+    padding: 1vh 2% 1vh 2%;
 }
 
 /*页面内容区-素材区*/

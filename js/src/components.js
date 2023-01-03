@@ -80,6 +80,7 @@ const matFileComponent = Vue.extend({
         //当选中素材文件列表的某一项时触发
         matFileBodyTableHandleCurrentChange(val) {
             this.$store.state.matFileBodyTableCurrentRow = val
+            this.$store.state.infoType = '素材文件'
         },
         //当素材文件列表某一行右击时触发
         matFileBodyTableRowRClickChange(row, column, event) {
@@ -89,21 +90,6 @@ const matFileComponent = Vue.extend({
             this.matFileRClickMenuStyle.top = String(event.clientY) + 'px'
             this.matFileRClickMenuStyle.left = String(event.clientX) + 'px'
             this.matFileRClickMenuStyle.display = 'block'
-
-        },
-        //动态确定素材列表类型
-        matFileBodyTableRowClassName({
-            row
-        }) {
-            if (row.type == '视频') {
-                return 'vedio'
-            } else if (row.type == '音频') {
-                return 'audio'
-            } else if (row.type == '图片') {
-                return 'picture'
-            } else {
-                return ''
-            }
 
         },
         //更新素材文件筛选sql菜单
@@ -313,10 +299,10 @@ const preComponent = Vue.extend({
             '/vt/getProjectTrackInfo', {
                 'proName': this.$store.state.vtTitle
             }, (res) => {
-                this.$store.state.vtTrackMatInfo=res
-        })
+                this.$store.state.vtTrackMatInfo = res
+            })
         //开启定时器，更新项目指针当前时间
-        setInterval(this.updatePrTimeLineSecond,500)
+        setInterval(this.updatePrTimeLineSecond, 500)
 
     },
     methods: {
@@ -433,11 +419,11 @@ const preComponent = Vue.extend({
 
         },
         //更新待匹配素材信息
-        updateMatMatchInfo(){
-            if(this.preMainTrackValue != ''){
-                var tmpMatList=this.$store.state.vtTrackMatInfo[this.preMainTrackValue]
-                if(typeof(tmpMatList)=='undefined'){
-                    tmpMatList=[]
+        updateMatMatchInfo() {
+            if (this.preMainTrackValue != '') {
+                var tmpMatList = this.$store.state.vtTrackMatInfo[this.preMainTrackValue]
+                if (typeof (tmpMatList) == 'undefined') {
+                    tmpMatList = []
                 }
                 var tmpMatListFilter=tmpMatList.filter(item=>parseFloat(item[0])<=this.vtPrTimeLineSecond)
                 
@@ -452,21 +438,21 @@ const preComponent = Vue.extend({
                         '/vt/getMatInfo', {
                             'matId': tmpMatItem[1].toString()
                         }, (res) => {
-                            this.preMatMatchInfo=res
+                            this.preMatMatchInfo = res
 
                         })
 
                 }
-                
+
             }
         },
         //更新项目指针当前时间
-        updatePrTimeLineSecond(){
-            this.$store.state.csInterface.evalScript("getTimeLineSecond(\"\")", (data)=>{
-                if(this.vtPrTimeLineSecond != data){
+        updatePrTimeLineSecond() {
+            this.$store.state.csInterface.evalScript("getTimeLineSecond(\"\")", (data) => {
+                if (this.vtPrTimeLineSecond != data) {
                     this.vtPrTimeLineSecond = data
                 }
-                
+
             })
         }
     },
@@ -498,12 +484,12 @@ const preComponent = Vue.extend({
             }
         },
         //待匹配点位信息
-        preMatMatchPointInfo(){
-            if(this.preMatMatchInfo){
+        preMatMatchPointInfo() {
+            if (this.preMatMatchInfo) {
                 var tmpPointArray = new Array(this.preMatMatchInfo['pointInfo'].length)
-                tmpPointArray.map((item,index)=>index<this.prePointedList.length?'success':'')
+                tmpPointArray.map((item, index) => index < this.prePointedList.length ? 'success' : '')
                 return tmpPointArray
-            }else{
+            } else {
                 return []
             }
         }
@@ -537,9 +523,9 @@ const preComponent = Vue.extend({
             //当前待匹配素材信息
             preMatMatchInfo: {},
             //当前项目时间线指针当前停留时间
-            vtPrTimeLineSecond:0,
+            vtPrTimeLineSecond: 0,
             //当前已打点列表
-            prePointedList:[]
+            prePointedList: []
 
 
 
@@ -551,7 +537,16 @@ const preComponent = Vue.extend({
             if (this.prePlayStatus == 1) {
                 this.prePlay(oldValue['type'])
             }
-            if (curValue != null) {
+            //判断特使情况异常赋值
+            if (!curValue) {
+                curValue = {}
+                this.$store.state.matFileBodyTableCurrentRow = {}
+
+                this.$store.state.infoType = ''
+                return
+            }
+
+            if (typeof (this.$store.state.matFileBodyTableCurrentRow['id']) != 'undefined') {
                 //获得当前素材文件信息
                 this.$axiosAsyncExec(
                     '/vt/getMatFileInfo', {
@@ -583,18 +578,17 @@ const preComponent = Vue.extend({
                         }
                     }
                 )
-            } else {
-                this.$store.state.matFileBodyTableCurrentRow = {}
             }
+
 
         },
         //主轨道值改变时触发
-        preMainTrackValue(){
+        preMainTrackValue() {
             this.updateMatMatchInfo()
 
         },
         //项目时间轴指针时间改变时触发
-        vtPrTimeLineSecond(){
+        vtPrTimeLineSecond() {
             this.updateMatMatchInfo()
 
         }
@@ -619,7 +613,9 @@ const infoComponent = Vue.extend({
             // 素材文件-表格当前选项
             'matFileBodyTableCurrentRow',
             // 当前素材文件信息
-            'matFileInfo'
+            'matFileInfo',
+            // 当前详情展示类型
+            'infoType'
         ])
     }
 })
@@ -637,7 +633,8 @@ const matComponent = Vue.extend({
     },
     data() {
         return {
-
+            //素材文件列表数据
+            matBodyTableData: []
         }
     }
 })
@@ -799,8 +796,8 @@ const vtComponent = Vue.extend({
             get: function () {
                 return this.$store.state.vtTitle
             },
-            set: function(value) {
-                this.$store.state.vtTitle=value
+            set: function (value) {
+                this.$store.state.vtTitle = value
             }
         },
         ...Vuex.mapState([

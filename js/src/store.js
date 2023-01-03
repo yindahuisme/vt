@@ -13,12 +13,17 @@ var store = new Vuex.Store({
         //素材文件表格当前选项,信息
         matFileBodyTableCurrentRow: {},
         matFileInfo:{},
+        //素材表格当前选项,信息
+        matBodyTableCurrentRow: {},
+        matInfo:{},
         //异步等待任务数量
         vtAsyncTaskNum: 0,
         //项目轨道素材信息
         vtTrackMatInfo:{},
         //项目标题
         vtTitle: '-',
+        // 当前详情展示类型,素材文件或素材
+        infoType:'',
 
         //设置---------------------
         //素材文件目录
