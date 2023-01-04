@@ -103,12 +103,12 @@
             </div>
             <!-- 卡片body -->
             <div>
-                <el-table height="42vh" ref="matFileListRef" :data="matFileBodyTableData" border
-                     @current-change="matFileBodyTableHandleCurrentChange"
-                    @row-contextmenu="matFileBodyTableRowRClickChange" :show-header="false" highlight-current-row>
-                    <el-table-column property="type"  width="20%">
+                <el-table height="42vh" ref="matFileListRef" :data="matFileTableData" border
+                    @current-change="matFileTableCurrentChange" @row-contextmenu="matFileTableRowRClickChange"
+                    :show-header="false" highlight-current-row>
+                    <el-table-column property="type" width="20%">
                     </el-table-column>
-                    <el-table-column property="matFileName"  width="60%">
+                    <el-table-column property="matFileName" width="60%">
                     </el-table-column>
                     <el-table-column property="durationSecond" width="20%">
                     </el-table-column>
@@ -134,13 +134,13 @@
                 <el-card class="box-card" id="matFileManageTags" :style="matFileManageTagsStyle">
                     <div class="matFileManageTagEdic">
                         <el-tag :key="tag" v-for="tag in matFileCurTags" closable :disable-transitions="false"
-                            @close="metFileCloseTag(tag)">
+                            @close="matFileCloseTag(tag)">
                             {{tag}}
                         </el-tag>
-                        <el-input class="input-new-tag" v-if="metFileTagInputVisible" v-model="metFileTagInputValue"
-                            ref="metFileTagInputRef" size="small" @blur="metFileNewTagConfirm">
+                        <el-input class="input-new-tag" v-if="matFileTagInputVisible" v-model="matFileTagInputValue"
+                            ref="matFileTagInputRef" size="small" @blur="matFileNewTagConfirm">
                         </el-input>
-                        <el-button v-else class="button-new-tag" size="small" @click="metFileTagShowInput">新增
+                        <el-button v-else class="button-new-tag" size="small" @click="matFileTagShowInput">新增
                         </el-button>
                     </div>
 
@@ -179,22 +179,25 @@
                 <el-button type="primary" @click="preSave" :style="preSaveStyle">保存</el-button>
                 <el-button type="success" @click="preCommit">提交</el-button>
             </div>
-            <div class="vtDown" v-if="typeof(matFileBodyTableCurrentRow.type) != 'undefined'">
+            <div class="vtDown" v-if="typeof(matFileTableCurrentRow.type) != 'undefined'">
                 <div class="vtLeft">
                     <!-- 视频 -->
-                    <div title="视频" v-if="matFileBodyTableCurrentRow.type == '视频' && typeof(matFileInfo['matfile_full_path']) != 'undefined'">
+                    <div title="视频"
+                        v-if="matFileTableCurrentRow.type == '视频' && typeof(matFileInfo['matfile_full_path']) != 'undefined'">
                         <video ref="preVideoRef" :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])"></video>
                         <el-slider v-model="preVideoSliderValueCompute" :step="0.001" :show-tooltip="false"></el-slider>
                     </div>
                     <!-- 音频 -->
-                    <div title="音频" v-if="matFileBodyTableCurrentRow.type == '音频'">
+                    <div title="音频" v-if="matFileTableCurrentRow.type == '音频'">
                         <div id="preAudio"></div>
                     </div>
                     <!-- 图片 -->
-                    <div title="图片" v-if="matFileBodyTableCurrentRow.type == '图片' && typeof(matFileInfo['matfile_full_path']) != 'undefined'">
-                        <img :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])"/>
+                    <div title="图片"
+                        v-if="matFileTableCurrentRow.type == '图片' && typeof(matFileInfo['matfile_full_path']) != 'undefined'">
+                        <img :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])" />
                     </div>
-                    <div class="preContral" v-if="matFileBodyTableCurrentRow.type == '视频' || matFileBodyTableCurrentRow.type == '音频'">
+                    <div class="preContral"
+                        v-if="matFileTableCurrentRow.type == '视频' || matFileTableCurrentRow.type == '音频'">
                         <el-button icon="el-icon-d-arrow-left" @click="preTimeLeft" style="float:left" circle>
                         </el-button>
                         <el-input v-model="preTimeLeftValue" resize="none">
@@ -202,11 +205,12 @@
                         <el-button :icon="prePlayIco" @click="prePlay" style="vertical-align: top;" circle></el-button>
                         <el-input v-model="preTimeRightValue" resize="none">
                         </el-input>
-                        <el-button icon="el-icon-d-arrow-right" @click="preTimeRight" style="float:right"
-                            circle></el-button>
+                        <el-button icon="el-icon-d-arrow-right" @click="preTimeRight" style="float:right" circle>
+                        </el-button>
                     </div>
                     <div class="prePointInfo">
-                        <el-button v-for = "(item,index) in preMatMatchPointInfo" :key="index" :type="item" circle></el-button>
+                        <el-button v-for="(item,index) in preMatMatchPointInfo" :key="index" :type="item" circle>
+                        </el-button>
                     </div>
                 </div>
                 <div class="vtRight"></div>
@@ -219,7 +223,7 @@
 <template id="infoTemplate">
     <div id='info'>
         <span>{{infoType}}</span>
-        <el-card class="box-card" >
+        <el-card class="box-card">
             <div v-if="infoType=='素材文件'">
                 <div><span style="color:rgb(51, 51, 255)">id:</span>{{matFileInfo.matfile_id}}</div>
                 <div><span style="color:rgb(51, 51, 255)">路径:</span>{{matFileInfo.matfile_full_path}}</div>
@@ -243,16 +247,42 @@
 <template id="matTemplate">
     <div id='mat'>
         <el-card class="box-card ">
-            <!-- <el-table height="38vh" ref="matListRef" :data="matBodyTableData" border
-                    @current-change="matFileBodyTableHandleCurrentChange"
-                    @row-contextmenu="matFileBodyTableRowRClickChange" :show-header="false" highlight-current-row>
-                    <el-table-column property="type"  width="20%">
-                    </el-table-column>
-                    <el-table-column property="matFileName"  width="60%">
-                    </el-table-column>
-                    <el-table-column property="durationSecond" width="20%">
-                    </el-table-column>
-                </el-table> -->
+            <el-table height="38vh" ref="matListRef" :data="matTableData" border @current-change="matTableCurrentChange"
+                @row-contextmenu="matTableRowRClickChange" :show-header="false" highlight-current-row>
+                <el-table-column label="开始时间" property="startTime">
+                </el-table-column>
+                <el-table-column label="时长(s)" property="durationSecond">
+                </el-table-column>
+                <el-table-column label="卡点数" property="pointNum">
+                </el-table-column>
+            </el-table>
+
+            <!-- 素材右键菜单 -->
+            <el-card class="box-card" id="matRClickMenu" :style="matRClickMenuStyle">
+                <el-button size="medium" @click="matManageTags">标签管理</el-button>
+                <el-button size="medium" @click="matDelMat">删除</el-button>
+            </el-card>
+
+
+            <!-- 标签管理弹窗弹窗 -->
+            <el-card class="box-card" id="matManageTags" :style="matManageTagsStyle">
+                <div class="matManageTagEdic">
+                    <el-tag :key="tag" v-for="tag in matCurTags" closable :disable-transitions="false"
+                        @close="matCloseTag(tag)">
+                        {{tag}}
+                    </el-tag>
+                    <el-input class="input-new-tag" v-if="matTagInputVisible" v-model="matTagInputValue"
+                        ref="matTagInputRef" size="small" @blur="matNewTagConfirm">
+                    </el-input>
+                    <el-button v-else class="button-new-tag" size="small" @click="matTagShowInput">新增
+                    </el-button>
+                </div>
+
+
+                <el-button class="matManageTag" type="danger" @click="matManageTagCancel">取消</el-button>
+                <el-button class="matManageTag" type="primary" @click="matManageTagConfirm">确定</el-button>
+
+            </el-card>
         </el-card>
     </div>
 </template>
@@ -285,9 +315,9 @@
             <div class="settingSingleRow" style="display:inline-block;width:20%;text-align:center;">
                 <label>变速时长(s):</label>
             </div>
-            <el-input type="textarea" resize="none" placeholder="请输入内容" :rows="settingFreePointSecond.split('\n').length"
-                v-model="settingFreePointSecond" @change="settingChangeSettingValue('settingFreePointSecond')"
-                style="display:inline-block;width:75%; ">
+            <el-input type="textarea" resize="none" placeholder="请输入内容"
+                :rows="settingFreePointSecond.split('\n').length" v-model="settingFreePointSecond"
+                @change="settingChangeSettingValue('settingFreePointSecond')" style="display:inline-block;width:75%; ">
             </el-input>
             <div class="settingSingleRow" style="display:inline-block;width:20%;text-align:center;">
                 <label>入点快捷键:</label>

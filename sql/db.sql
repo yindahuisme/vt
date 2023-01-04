@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS vt.`vt_setting`(
    PRIMARY KEY ( `setting_key` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-insert into vt.`vt_setting` values('settingMatFilePath','D:\\vt_data\\metFilePath\\');
+insert into vt.`vt_setting` values('settingMatFilePath','D:\\vt_data\\matFilePath\\');
 insert into vt.`vt_setting` values('settingFreePointSecond','300');
 insert into vt.`vt_setting` values('settingInPointHotKey','a');
 insert into vt.`vt_setting` values('settingOutPointHotKey','d');

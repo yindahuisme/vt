@@ -5,6 +5,8 @@ new Vue({
             vtcomponent:vtComponent
         },
     beforeMount(){
+        console.log('初始化app组件(前)')
+
         // 注册全局方法
         //弹出提示信息
         Vue.prototype.$vtNotify = function(type, title, message) {
@@ -58,6 +60,15 @@ new Vue({
             return ''
         }
 
+    },
+    mounted(){
+        console.log('初始化app组件(前)')
+        window.onclick = () => {
+            // 点击关闭右键菜单
+            this.$store.state.matFileRClickMenuStyle.display = 'none'
+            this.$store.state.matRClickMenuStyle.display = 'none'
+
+        }
     },
     store
 })

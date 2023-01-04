@@ -424,6 +424,78 @@ body {
     height: 100%;
 }
 
+/*页面内容区-素材区-卡片-卡片body*/
+#mat>.el-card>.el-card__body {
+    height: 38vh;
+    padding: 1vh 2% 0vh 2%;
+}
+
+/*页面内容区-素材区-卡片-卡片body--空表数据页*/
+#mat>.el-card>.el-card__body .el-table__empty-block{
+    width: 100% !important;
+}
+
+/*页面内容区-素材区-卡片-卡片body-表*/
+#mat>.el-card>.el-card__body table {
+    width: 100% !important;
+}
+
+/*页面内容区-素材区-卡片-卡片body-表-列和单元格*/
+#mat>.el-card>.el-card__body table th, #mat>.el-card>.el-card__body table td, #mat>.el-card>.el-card__body table .cell{
+    padding: 0%;
+}
+
+/*页面内容区-素材区-卡片-卡片body-表body-右键菜单*/
+#mat>.el-card #matRClickMenu{
+    width:10%;
+    height:32vh;
+    position:fixed;
+}
+
+
+/*页面内容区-素材区-卡片-卡片body-表body-右键菜单-body*/
+#mat>.el-card #matRClickMenu>.el-card__body{
+    padding:1vh 1% 1vh 1%;
+}
+
+/*页面内容区-素材区-卡片-卡片body-表body-右键菜单-body-选项*/
+#mat>.el-card #matRClickMenu>.el-card__body>button{
+    display: block;
+    width: 100%;
+    height: 10vh;
+    margin-left: 0%;
+    padding:0%;
+}
+
+/*页面内容区-素材区-卡片-卡片body-表body-右键菜单-标签管理面板*/
+#mat>.el-card #matManageTags{
+    height:30vh;
+    width:50%;
+    position:fixed;
+}
+
+/*页面内容区-素材区-卡片-卡片body-表body-右键菜单-标签管理面板-编辑*/
+#mat>.el-card #matManageTags .matManageTagEdic{
+    width:100%;
+    height: 23vh;
+    overflow-y: scroll;
+    overflow-x: visible;
+}
+
+/*页面内容区-素材区-卡片-卡片body-表body-右键菜单-标签管理面板-body*/
+#mat>.el-card #matManageTags>.el-card__body{
+    padding:1vh 1% 1vh 1%;
+}
+
+/*页面内容区-素材区-卡片-卡片body-表body-右键菜单-标签管理面板-body-按钮*/
+#mat>.el-card #matManageTags>.el-card__body>.matManageTag{
+    margin:0%;
+    padding:0%;
+    width:20%;
+    height:5vh;
+    float:right;
+}
+
 /*设置*/
 #setting>button {
     width: 28px;

@@ -1,5 +1,3 @@
-
-
 var store = new Vuex.Store({
     state: {
 
@@ -10,20 +8,36 @@ var store = new Vuex.Store({
         axiosInstance: axios.create({
             baseURL: 'http://localhost:9999'
         }),
+
         //素材文件表格当前选项,信息
-        matFileBodyTableCurrentRow: {},
-        matFileInfo:{},
+        matFileTableCurrentRow: {},
+        matFileInfo: {},
         //素材表格当前选项,信息
-        matBodyTableCurrentRow: {},
-        matInfo:{},
+        matTableCurrentRow: {},
+        matInfo: {},
+        //素材文件列表项右键菜单style
+        matFileRClickMenuStyle: {
+            'display': 'none',
+            'z-index': '5000',
+            'top': '0px',
+            'left': '0px'
+        },
+        //素材列表项右键菜单style
+        matRClickMenuStyle: {
+            'display': 'none',
+            'z-index': '5000',
+            'top': '0px',
+            'left': '0px'
+        },
+
         //异步等待任务数量
         vtAsyncTaskNum: 0,
         //项目轨道素材信息
-        vtTrackMatInfo:{},
+        vtTrackMatInfo: {},
         //项目标题
         vtTitle: '-',
         // 当前详情展示类型,素材文件或素材
-        infoType:'',
+        infoType: '',
 
         //设置---------------------
         //素材文件目录
@@ -47,7 +61,7 @@ var store = new Vuex.Store({
     },
     //同步提交更改
     mutations: {
-        
+
 
     },
     // 异步的方式提交用这个
