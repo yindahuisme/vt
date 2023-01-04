@@ -80,7 +80,6 @@ const matFileComponent = Vue.extend({
         //当选中素材文件列表的某一项时触发
         matFileBodyTableHandleCurrentChange(val) {
             this.$store.state.matFileBodyTableCurrentRow = val
-            this.$store.state.infoType = '素材文件'
         },
         //当素材文件列表某一行右击时触发
         matFileBodyTableRowRClickChange(row, column, event) {
@@ -485,7 +484,7 @@ const preComponent = Vue.extend({
         },
         //待匹配点位信息
         preMatMatchPointInfo() {
-            if (this.preMatMatchInfo) {
+            if (typeof(this.preMatMatchInfo['pointInfo']) != 'undefined') {
                 var tmpPointArray = new Array(this.preMatMatchInfo['pointInfo'].length)
                 tmpPointArray.map((item, index) => index < this.prePointedList.length ? 'success' : '')
                 return tmpPointArray
@@ -539,14 +538,14 @@ const preComponent = Vue.extend({
             }
             //判断特使情况异常赋值
             if (!curValue) {
-                curValue = {}
                 this.$store.state.matFileBodyTableCurrentRow = {}
 
                 this.$store.state.infoType = ''
                 return
             }
 
-            if (typeof (this.$store.state.matFileBodyTableCurrentRow['id']) != 'undefined') {
+            if (typeof(curValue['id']) != 'undefined') {
+                this.$store.state.infoType = '素材文件'
                 //获得当前素材文件信息
                 this.$axiosAsyncExec(
                     '/vt/getMatFileInfo', {
@@ -562,12 +561,18 @@ const preComponent = Vue.extend({
                         }
                         if (curValue['type'] == '视频') {
                             this.preSaveStyle.display = 'block'
+                            //初始化视频播放进度
+                            this.preVideoSliderValue=0
                             this.$nextTick(() => {
                                 this.$refs.preVideoRef.onended = this.prePlay
                                 this.$refs.preVideoRef.ontimeupdate = () => {
-                                    var tmpSliderValue = Math.floor(this.$refs.preVideoRef.currentTime * 100000 / this.$refs.preVideoRef.duration) / 1000
-                                    this.preVideoSliderValueUpdateFlag = false
-                                    this.preVideoSliderValue = tmpSliderValue
+                                    var tmpVedioObj = this.$refs.preVideoRef
+                                    if (tmpVedioObj){
+                                        var tmpSliderValue = Math.floor(this.$refs.preVideoRef.currentTime * 100000 / this.$refs.preVideoRef.duration) / 1000
+                                        this.preVideoSliderValueUpdateFlag = false
+                                        this.preVideoSliderValue = tmpSliderValue
+
+                                    }
                                 }
                             })
 
