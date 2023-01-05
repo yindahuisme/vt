@@ -179,11 +179,11 @@
                 <el-button type="primary" @click="preSave" :style="preSaveStyle">保存</el-button>
                 <el-button type="success" @click="preCommit">提交</el-button>
             </div>
-            <div class="vtDown" v-if="typeof(matFileTableCurrentRow.type) != 'undefined'">
+            <div class="vtDown" v-if="matFileTableCurrentRow">
                 <div class="vtLeft">
                     <!-- 视频 -->
                     <div title="视频"
-                        v-if="matFileTableCurrentRow.type == '视频' && typeof(matFileInfo['matfile_full_path']) != 'undefined'">
+                        v-if="matFileTableCurrentRow.type == '视频' && matFileInfo">
                         <video ref="preVideoRef" :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])"></video>
                         <el-slider v-model="preVideoSliderValueCompute" :step="0.001" :show-tooltip="false"></el-slider>
                     </div>
@@ -193,7 +193,7 @@
                     </div>
                     <!-- 图片 -->
                     <div title="图片"
-                        v-if="matFileTableCurrentRow.type == '图片' && typeof(matFileInfo['matfile_full_path']) != 'undefined'">
+                        v-if="matFileTableCurrentRow.type == '图片' && matFileInfo">
                         <img :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])" />
                     </div>
                     <div class="preContral"
@@ -224,14 +224,14 @@
     <div id='info'>
         <span>{{infoType}}</span>
         <el-card class="box-card">
-            <div v-if="infoType=='素材文件'">
+            <div v-if="infoType=='素材文件' && matFileInfo">
                 <div><span style="color:rgb(51, 51, 255)">id:</span>{{matFileInfo.matfile_id}}</div>
                 <div><span style="color:rgb(51, 51, 255)">路径:</span>{{matFileInfo.matfile_full_path}}</div>
                 <div><span style="color:rgb(51, 51, 255)">大小(kb):</span>{{matFileInfo.size_kb}}</div>
                 <div><span style="color:rgb(51, 51, 255)">创建时间:</span>{{matFileInfo.create_time}}</div>
                 <div><span style="color:rgb(51, 51, 255)">标签:</span>{{matFileInfo.tags}}</div>
             </div>
-            <div v-if="infoType=='素材'">
+            <div v-if="infoType=='素材' && matInfo">
                 <div><span style="color:rgb(51, 51, 255)">id:</span>{{matFileInfo.matfile_id}}</div>
                 <div><span style="color:rgb(51, 51, 255)">路径:</span>{{matFileInfo.matfile_full_path}}</div>
                 <div><span style="color:rgb(51, 51, 255)">大小(kb):</span>{{matFileInfo.size_kb}}</div>

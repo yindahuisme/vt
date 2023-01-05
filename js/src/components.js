@@ -66,7 +66,7 @@ const matFileComponent = Vue.extend({
                 return this.$store.state.matFileRClickMenuStyle
             },
             set: function (value) {
-                this.$store.state.matFileRClickMenuStyle=value
+                this.$store.state.matFileRClickMenuStyle = value
             }
         }
 
@@ -293,7 +293,7 @@ const preComponent = Vue.extend({
             '/vt/getProjectTrackInfo', {
                 'proName': this.$store.state.vtTitle
             }, (res) => {
-                this.$store.state.vtTrackMatInfo = res
+                this.$store.state.preTrackMatInfo = res
             })
         //开启定时器，更新项目指针当前时间
         setInterval(this.updatePrTimeLineSecond, 500)
@@ -415,9 +415,9 @@ const preComponent = Vue.extend({
         //更新待匹配素材信息
         updateMatMatchInfo() {
             if (this.preMainTrackValue != '') {
-                var tmpMatList = this.$store.state.vtTrackMatInfo[this.preMainTrackValue]
-                if (typeof (tmpMatList) == 'undefined') {
-                    tmpMatList = []
+                var tmpMatList = []
+                if (this.$store.state.preTrackMatInfo) {
+                    tmpMatList = this.$store.state.preTrackMatInfo[this.preMainTrackValue]
                 }
                 var tmpMatListFilter = tmpMatList.filter(item => parseFloat(item[0]) <= this.vtPrTimeLineSecond)
 
@@ -425,7 +425,7 @@ const preComponent = Vue.extend({
                 tmpMatListFilter.forEach(item => tmpMatItem = tmpMatItem.length == 0 || parseFloat(item[0]) > parseFloat(tmpMatItem[0]) ? item : tmpMatItem)
 
                 if (tmpMatItem.length == 0) {
-                    this.preMatMatchInfo = {}
+                    this.preMatMatchInfo = null
                 } else {
                     //获取素材信息，更新待匹配素材信息
                     this.$axiosAsyncExec(
@@ -479,7 +479,7 @@ const preComponent = Vue.extend({
         },
         //待匹配点位信息
         preMatMatchPointInfo() {
-            if (typeof (this.preMatMatchInfo['pointInfo']) != 'undefined') {
+            if (this.preMatMatchInfo) {
                 var tmpPointArray = new Array(this.preMatMatchInfo['pointInfo'].length)
                 tmpPointArray.map((item, index) => index < this.prePointedList.length ? 'success' : '')
                 return tmpPointArray
@@ -515,7 +515,7 @@ const preComponent = Vue.extend({
             //是否可以更新视频进度条值
             preVideoSliderValueUpdateFlag: true,
             //当前待匹配素材信息
-            preMatMatchInfo: {},
+            preMatMatchInfo: null,
             //当前项目时间线指针当前停留时间
             vtPrTimeLineSecond: 0,
             //当前已打点列表
@@ -531,54 +531,51 @@ const preComponent = Vue.extend({
             if (this.prePlayStatus == 1) {
                 this.prePlay(oldValue['type'])
             }
-            //判断特使情况异常赋值
-            if (!curValue) {
-                this.$store.state.matFileTableCurrentRow = {}
-                this.$store.state.matFileInfo= {}
-                this.$store.state.infoType = ''
-                return
+
+            this.$store.state.infoType = '素材文件'
+
+            //素材文件id
+            var tmpMatFileId = '-1'
+            if (curValue){
+                tmpMatFileId = curValue['id'].toString()
             }
+            //获得当前素材文件信息
+            this.$axiosAsyncExec(
+                '/vt/getMatFileInfo', {
+                    'matFileId': tmpMatFileId
+                }, (res) => {
+                    this.$store.state.matFileInfo = res
+                    if (curValue && curValue['type'] == '音频') {
+                        this.preSaveStyle.display = 'block'
+                        this.preUpdateAudioWave()
 
-            if (typeof (curValue['id']) != 'undefined') {
-                this.$store.state.infoType = '素材文件'
-                //获得当前素材文件信息
-                this.$axiosAsyncExec(
-                    '/vt/getMatFileInfo', {
-                        'matFileId': curValue['id'].toString()
-                    }, (res) => {
-                        this.$store.state.matFileInfo = res
-                        if (curValue['type'] == '音频') {
-                            this.preSaveStyle.display = 'block'
-                            this.preUpdateAudioWave()
-
-                            //更新当前项目中的轨道
-                            this.preUpdateTraks()
-                        }
-                        if (curValue['type'] == '视频') {
-                            this.preSaveStyle.display = 'block'
-                            //初始化视频播放进度
-                            this.preVideoSliderValue = 0
-                            this.$nextTick(() => {
-                                this.$refs.preVideoRef.onended = this.prePlay
-                                this.$refs.preVideoRef.ontimeupdate = () => {
-                                    var tmpVedioObj = this.$refs.preVideoRef
-                                    if (tmpVedioObj) {
-                                        var tmpSliderValue = Math.floor(this.$refs.preVideoRef.currentTime * 100000 / this.$refs.preVideoRef.duration) / 1000
-                                        this.preVideoSliderValueUpdateFlag = false
-                                        this.preVideoSliderValue = tmpSliderValue
-
-                                    }
-                                }
-                            })
-
-                        }
-                        if (curValue['type'] == '图片') {
-                            this.preSaveStyle.display = 'none'
-
-                        }
+                        //更新当前项目中的轨道
+                        this.preUpdateTraks()
                     }
-                )
-            }
+                    if (curValue && curValue['type'] == '视频') {
+                        this.preSaveStyle.display = 'block'
+                        //初始化视频播放进度
+                        this.preVideoSliderValue = 0
+                        this.$nextTick(() => {
+                            this.$refs.preVideoRef.onended = this.prePlay
+                            this.$refs.preVideoRef.ontimeupdate = () => {
+                                var tmpVedioObj = this.$refs.preVideoRef
+                                if (tmpVedioObj) {
+                                    var tmpSliderValue = Math.floor(this.$refs.preVideoRef.currentTime * 100000 / this.$refs.preVideoRef.duration) / 1000
+                                    this.preVideoSliderValueUpdateFlag = false
+                                    this.preVideoSliderValue = tmpSliderValue
+
+                                }
+                            }
+                        })
+
+                    }
+                    if (curValue && curValue['type'] == '图片') {
+                        this.preSaveStyle.display = 'none'
+
+                    }
+                }
+            )
 
 
         },
@@ -595,12 +592,12 @@ const preComponent = Vue.extend({
     }
 })
 
-//详情组件
+//信息组件
 const infoComponent = Vue.extend({
     template: document.getElementById('infoTemplate').innerHTML,
     mounted() {
         //初始化
-        console.log('初始化详情组件')
+        console.log('初始化信息组件')
     },
     methods: {
 
@@ -610,11 +607,11 @@ const infoComponent = Vue.extend({
     },
     computed: {
         ...Vuex.mapState([
-            // 素材文件-表格当前选项
-            'matFileTableCurrentRow',
             // 当前素材文件信息
             'matFileInfo',
-            // 当前详情展示类型
+            // 当前素材信息
+            'matInfo',
+            // 当前信息展示类型
             'infoType'
         ])
     }
@@ -627,10 +624,10 @@ const matComponent = Vue.extend({
         //初始化
         console.log('初始化素材组件')
     },
-    computed:{
+    computed: {
         ...Vuex.mapState([
-            // 当前素材文件信息
-            'matFileInfo'
+            // 素材文件-表格当前选项
+            'matFileTableCurrentRow'
         ]),
         //素材列表项右键菜单style
         matRClickMenuStyle: {
@@ -638,15 +635,17 @@ const matComponent = Vue.extend({
                 return this.$store.state.matRClickMenuStyle
             },
             set: function (value) {
-                this.$store.state.matRClickMenuStyle=value
+                this.$store.state.matRClickMenuStyle = value
             }
         }
     },
-    watch:{
-        //当前素材文件信息
-        matFileInfo(curValue, oldValue) {
+    watch: {
+        //素材文件-表格当前选项
+        matFileTableCurrentRow(curValue, oldValue) {
             //更新素材列表
             this.matUpdateList()
+            
+
         }
     },
     methods: {
@@ -663,11 +662,15 @@ const matComponent = Vue.extend({
                 }
             )
         },
-        //更新素材列表
+        //更新素材列表todo
         matUpdateList() {
+            var tmpMatFileId='-1'
+            if(this.matFileTableCurrentRow){
+                tmpMatFileId=this.matFileTableCurrentRow['id']
+            }
             this.$axiosAsyncExec(
-                '/vt/getMatFromMatFile', {
-                    'matFileId': this.matSqlMenuCurObj['value']
+                '/vt/getMatViaMatFile', {
+                    'matFileId': tmpMatFileId
                 }, (res) => {
                     this.matTableData = res
                 }
