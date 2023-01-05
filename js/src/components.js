@@ -645,7 +645,8 @@ const matComponent = Vue.extend({
     watch:{
         //当前素材文件信息
         matFileInfo(curValue, oldValue) {
-
+            //更新素材列表
+            this.matUpdateList()
         }
     },
     methods: {
@@ -662,11 +663,11 @@ const matComponent = Vue.extend({
                 }
             )
         },
-        //更新素材列表todo
+        //更新素材列表
         matUpdateList() {
             this.$axiosAsyncExec(
-                '/vt/getSqlData', {
-                    'sqlStr': this.matSqlMenuCurObj['value']
+                '/vt/getMatFromMatFile', {
+                    'matFileId': this.matSqlMenuCurObj['value']
                 }, (res) => {
                     this.matTableData = res
                 }
