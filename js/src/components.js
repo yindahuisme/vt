@@ -534,7 +534,7 @@ const preComponent = Vue.extend({
             //判断特使情况异常赋值
             if (!curValue) {
                 this.$store.state.matFileTableCurrentRow = {}
-
+                this.$store.state.matFileInfo= {}
                 this.$store.state.infoType = ''
                 return
             }
@@ -628,6 +628,10 @@ const matComponent = Vue.extend({
         console.log('初始化素材组件')
     },
     computed:{
+        ...Vuex.mapState([
+            // 当前素材文件信息
+            'matFileInfo'
+        ]),
         //素材列表项右键菜单style
         matRClickMenuStyle: {
             get: function () {
@@ -636,6 +640,12 @@ const matComponent = Vue.extend({
             set: function (value) {
                 this.$store.state.matRClickMenuStyle=value
             }
+        }
+    },
+    watch:{
+        //当前素材文件信息
+        matFileInfo(curValue, oldValue) {
+
         }
     },
     methods: {
@@ -652,7 +662,7 @@ const matComponent = Vue.extend({
                 }
             )
         },
-        //更新素材列表 todo
+        //更新素材列表todo
         matUpdateList() {
             this.$axiosAsyncExec(
                 '/vt/getSqlData', {
