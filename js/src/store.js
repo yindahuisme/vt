@@ -27,8 +27,8 @@ var store = new Vuex.Store({
         matRClickMenuStyle: {
             'display': 'none',
             'z-index': '5000',
-            'top': '0px',
-            'left': '0px'
+            'bottom': '0px',
+            'right': '0px'
         },
         //vt-------------------------------------------
         //异步等待任务数量

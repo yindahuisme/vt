@@ -58,3 +58,5 @@ console.log(util.isDeepStrictEqual({
     'a': 1.234,
     'b': 'hi3'
 }))
+var tmpList=[{'point':1.1,'t':'11'},{'point':2.04335,'t':'11'}]
+console.log(tmpList.splice(tmpList.indexOf({'point':2.04335,'t':'11'}), 1))

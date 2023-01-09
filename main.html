@@ -182,8 +182,7 @@
             <div class="vtDown" v-if="matFileTableCurrentRow">
                 <div class="vtLeft">
                     <!-- 视频 -->
-                    <div title="视频"
-                        v-if="matFileTableCurrentRow.type == '视频' && matFileInfo">
+                    <div title="视频" v-if="matFileTableCurrentRow.type == '视频' && matFileInfo">
                         <video ref="preVideoRef" :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])"></video>
                         <el-slider v-model="preVideoSliderValueCompute" :step="0.001" :show-tooltip="false"></el-slider>
                     </div>
@@ -192,8 +191,7 @@
                         <div id="preAudio"></div>
                     </div>
                     <!-- 图片 -->
-                    <div title="图片"
-                        v-if="matFileTableCurrentRow.type == '图片' && matFileInfo">
+                    <div title="图片" v-if="matFileTableCurrentRow.type == '图片' && matFileInfo">
                         <img :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])" />
                     </div>
                     <div class="preContral"
@@ -209,11 +207,16 @@
                         </el-button>
                     </div>
                     <div class="prePointInfo">
-                        <el-button v-for="(item,index) in preMatMatchPointInfo" :key="index" :type="item" circle>
+                        <el-button icon="el-icon-timer" v-for="(item,index) in preMatMatchPointInfo" :key="index" :type="item" circle>
                         </el-button>
                     </div>
                 </div>
-                <div class="vtRight"></div>
+                <div class="vtRight">
+                    <el-tag style="display: block;" :key="item.point" v-for="item in prePointedListSorted" closable :disable-transitions="false"
+                        @close="preDelPoint(item)">
+                        {{item.point}}
+                    </el-tag>
+                </div>
             </div>
         </el-card>
     </div>
@@ -232,11 +235,10 @@
                 <div><span style="color:rgb(51, 51, 255)">标签:</span>{{matFileInfo.tags}}</div>
             </div>
             <div v-if="infoType=='素材' && matInfo">
-                <div><span style="color:rgb(51, 51, 255)">id:</span>{{matFileInfo.matfile_id}}</div>
-                <div><span style="color:rgb(51, 51, 255)">路径:</span>{{matFileInfo.matfile_full_path}}</div>
-                <div><span style="color:rgb(51, 51, 255)">大小(kb):</span>{{matFileInfo.size_kb}}</div>
-                <div><span style="color:rgb(51, 51, 255)">创建时间:</span>{{matFileInfo.create_time}}</div>
-                <div><span style="color:rgb(51, 51, 255)">标签:</span>{{matFileInfo.tags}}</div>
+                <div><span style="color:rgb(51, 51, 255)">id:</span>{{matInfo.mat_id}}</div>
+                <div><span style="color:rgb(51, 51, 255)">点位信息:</span>{{matInfo.point_info.join()}}</div>
+                <div><span style="color:rgb(51, 51, 255)">创建时间:</span>{{matInfo.create_time}}</div>
+                <div><span style="color:rgb(51, 51, 255)">标签:</span>{{matInfo.tags}}</div>
             </div>
 
         </el-card>

@@ -256,6 +256,7 @@ order by create_time asc
                     'matFileId': this.$store.state.matFileTableCurrentRow['id'],
                     'tags': this.matFileCurTags.join()
                 }, (res) => {
+                    this.$store.state.matFileInfo.tags = this.matFileCurTags.join()
                     this.$vtNotify('success', '提示', '更新标签成功')
 
                 }
@@ -264,6 +265,7 @@ order by create_time asc
         //当选中素材文件列表的某一项时触发
         matFileTableCurrentChange(val) {
             this.$store.state.matFileTableCurrentRow = val
+            this.$store.state.infoType = '素材文件'
         },
         //当素材文件列表某一行右击时触发
         matFileTableRowRClickChange(row, column, event) {
@@ -297,6 +299,9 @@ const preComponent = Vue.extend({
             })
         //开启定时器，更新项目指针当前时间
         setInterval(this.updatePrTimeLineSecond, 500)
+
+        //注册全局按钮事件，用于打点
+        document.onkeydown= this.preKeyDown
 
     },
     methods: {
@@ -448,6 +453,34 @@ const preComponent = Vue.extend({
                 }
 
             })
+        },
+        //删除打点触发
+        preDelPoint(pointItem) {
+            this.prePointedList.splice(this.prePointedList.indexOf(pointItem), 1);
+        },
+        //按键按下，触发打点
+        preKeyDown(event){
+            //屏蔽正在输入的情况
+            var curFocusTag=document.activeElement.tagName
+            if (curFocusTag=='INPUT' || curFocusTag=='TEXTAREA'){
+                return
+            }
+
+            //入点
+            if(event.keyCode==parseInt(this.$store.state.settingInPointHotKey)){
+                this.prePointedList.push(this.vtPrTimeLineSecond)
+
+            }
+            //出点
+            if(event.keyCode==parseInt(this.$store.state.settingOutPointHotKey)){
+                
+
+            }
+            //卡点
+            if(event.keyCode==parseInt(this.$store.state.settingPointHotKey)){
+                
+
+            }
         }
     },
     computed: {
@@ -486,6 +519,10 @@ const preComponent = Vue.extend({
             } else {
                 return []
             }
+        },
+        //当前已打点列表排序
+        prePointedListSorted(){
+            return this.prePointedList.sort()
         }
     },
     data() {
@@ -514,10 +551,10 @@ const preComponent = Vue.extend({
             preVideoSliderValue: 0,
             //是否可以更新视频进度条值
             preVideoSliderValueUpdateFlag: true,
-            //当前待匹配素材信息
-            preMatMatchInfo: null,
             //当前项目时间线指针当前停留时间
             vtPrTimeLineSecond: 0,
+            //当前待匹配素材信息
+            preMatMatchInfo: null,
             //当前已打点列表
             prePointedList: []
 
@@ -532,7 +569,6 @@ const preComponent = Vue.extend({
                 this.prePlay(oldValue['type'])
             }
 
-            this.$store.state.infoType = '素材文件'
 
             //素材文件id
             var tmpMatFileId = '-1'
@@ -662,7 +698,7 @@ const matComponent = Vue.extend({
                 }
             )
         },
-        //更新素材列表todo
+        //更新素材列表
         matUpdateList() {
             var tmpMatFileId='-1'
             if(this.matFileTableCurrentRow){
@@ -677,39 +713,10 @@ const matComponent = Vue.extend({
             )
 
         },
-        //素材重命名点击触发
-        matRename(event) {
-            this.matRenameStyle.top = String(event.clientY) + 'px'
-            this.matRenameStyle.left = String(event.clientX) + 'px'
-
-            this.matRenameText = this.$store.state.matTableCurrentRow['matName']
-            this.matRenameStyle.display = 'block'
-
-        },
-        //素材重命名取消时触发
-        matRenameCancel() {
-            this.matRenameStyle.display = 'none'
-        },
-        //素材重命名确定时触发
-        matRenameConfirm() {
-            this.$axiosAsyncExec(
-                '/vt/renameMat', {
-                    'matId': this.$store.state.matTableCurrentRow['id'],
-                    'newName': this.matRenameText
-                }, (res) => {
-                    this.$vtNotify('success', '提示', '重命名成功')
-
-                    this.matRenameStyle.display = 'none'
-                    //更新素材列表
-                    this.matUpdateList()
-
-                }
-            )
-        },
         //素材管理标签点击触发
         matManageTags(event) {
-            this.matManageTagsStyle.top = String(event.clientY) + 'px'
-            this.matManageTagsStyle.left = String(event.clientX) + 'px'
+            this.matManageTagsStyle.bottom = String(screen.height - event.clientY) + 'px'
+            this.matManageTagsStyle.right = String(screen.width - event.clientX) + 'px'
             this.matManageTagsStyle.display = 'block'
 
             //获得当前素材的标签
@@ -755,6 +762,7 @@ const matComponent = Vue.extend({
                     'matId': this.$store.state.matTableCurrentRow['id'],
                     'tags': this.matCurTags.join()
                 }, (res) => {
+                    this.$store.state.matInfo.tags = this.matCurTags.join()
                     this.$vtNotify('success', '提示', '更新标签成功')
 
                 }
@@ -763,14 +771,15 @@ const matComponent = Vue.extend({
         //当选中素材列表的某一项时触发
         matTableCurrentChange(val) {
             this.$store.state.matTableCurrentRow = val
+            this.$store.state.infoType = '素材'
         },
         //当素材列表某一行右击时触发
         matTableRowRClickChange(row, column, event) {
             //右键点击也会有选中效果
             this.$refs.matListRef.setCurrentRow(row)
             //显示右键菜单
-            this.matRClickMenuStyle.top = String(event.clientY) + 'px'
-            this.matRClickMenuStyle.left = String(event.clientX) + 'px'
+            this.matRClickMenuStyle.bottom = String(screen.height - event.clientY) + 'px'
+            this.matRClickMenuStyle.right = String(screen.width - event.clientX) + 'px'
             this.matRClickMenuStyle.display = 'block'
 
         }
@@ -786,8 +795,8 @@ const matComponent = Vue.extend({
             matManageTagsStyle: {
                 'display': 'none',
                 'z-index': '6000',
-                'top': '0px',
-                'left': '0px'
+                'bottom': '0px',
+                'right': '0px'
 
             },
             //素材当前标签

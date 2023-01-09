@@ -312,6 +312,7 @@ body {
 #pre>.el-card>.el-card__body .vtLeft {
     height: 42vh;
     width: 60%;
+    float:left;
 }
 
 /*页面内容区-预览区-卡片-卡片body-left-按钮*/
@@ -384,6 +385,9 @@ body {
 #pre>.el-card>.el-card__body .vtRight {
     height: 42vh;
     width: 40%;
+    float:right;
+    overflow-y:scroll;
+    word-wrap:break-word;
 }
 
 /*页面内容区-信息区*/
@@ -404,7 +408,7 @@ body {
 #info>.el-card {
     height: 30vh;
     overflow-y:scroll;
-    word-wrap:normal;
+    word-wrap:break-word;
 }
 
 /*页面内容区-信息区-卡片-body*/
