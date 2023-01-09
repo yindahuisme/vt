@@ -732,7 +732,7 @@ const matComponent = Vue.extend({
         },
         //关闭素材标签触发
         matCloseTag(tag) {
-            this.matCurTags.splice(this.matCurTags.indexOf(tag), 1);
+            this.matCurTags.splice(getIndexOfArrayObj(this.matCurTags,tag), 1);
         },
         //点击标签，展示素材标签新增输入框触发
         matTagShowInput() {
