@@ -49,14 +49,29 @@
 //     return true
 // }
 
-const util = require('util');
+// const util = require('util');
 
-console.log(util.isDeepStrictEqual({
-    'a': 1.234,
-    'b': 'hi'
-} , {
-    'a': 1.234,
-    'b': 'hi3'
-}))
-var tmpList=[{'point':1.1,'t':'11'},{'point':2.04335,'t':'11'}]
-console.log(tmpList.splice(tmpList.indexOf({'point':2.04335,'t':'11'}), 1))
+// console.log(util.isDeepStrictEqual({
+//     'a': 1.234,
+//     'b': 'hi'
+// } , {
+//     'a': 1.234,
+//     'b': 'hi3'
+// }))
+// var tmpList=[{'point':1.1,'t':'11'},{'point':2.04335,'t':'11'}]
+// console.log(tmpList.splice(tmpList.indexOf({'point':2.04335,'t':'11'}), 1))
+
+//获得json数组的指定一层对象
+const getJsonArrayObj = function(targetArr,key,value){
+    for (let item of targetArr){
+        if (item[key] == value){
+            return item
+        }
+    }
+    return null
+}
+
+var tmpArray=[{'1':1}]
+var tmpArray1=getJsonArrayObj(tmpArray,'1',1)
+tmpArray1={ '1': 2 }
+console.log(tmpArray)
