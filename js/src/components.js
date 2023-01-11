@@ -301,7 +301,7 @@ const preComponent = Vue.extend({
         setInterval(this.updatePrTimeLineSecond, 500)
 
         //注册全局按钮事件，用于打点
-        document.onkeydown= this.preKeyDown
+        document.onkeydown = this.preKeyDown
 
     },
     methods: {
@@ -347,11 +347,35 @@ const preComponent = Vue.extend({
                 })
             })
         },
-        //保存
+        //保存打点信息到素材
         preSave() {
+            if (this.prePointedList.length<2){
+                this.$vtNotify('error','错误','保存失败，打点应该大等于2个')
+                return
+            }
+            if (this.prePointedList.length != this.preMatMatchInfo['point_info'].length){
+                this.$vtNotify('error','错误','保存失败，打点个数不匹配')
+                return
+            }
 
+            var tmpPoint = this.prePointedList[0]
+
+            for( point in this.prePointedList){
+
+            }
+
+            //更新素材列表数据
+            this.matTableData.push({
+                'startTime':Array.min(this.prePointedList),
+                'durationSecond':Array.max(this.prePointedList)-Array.min(this.prePointedList),
+                'pointNum':this.prePointedList.length
+            })
+            //插入素材信息
+
+            //清空打点列表
+            this.prePointedList = []
         },
-        //提交
+        //提交打点信息到pr,并保存到素材
         preCommit() {
 
         },
@@ -421,7 +445,7 @@ const preComponent = Vue.extend({
         updateMatMatchInfo() {
             if (this.preMainTrackValue != '') {
                 var tmpMatList = []
-                if (this.$store.state.preTrackMatInfo) {
+                if (this.$store.state.preTrackMatInfo && this.preCurTrackValue!=this.preMainTrackValue) {
                     tmpMatList = this.$store.state.preTrackMatInfo[this.preMainTrackValue]
                 }
                 var tmpMatListFilter = tmpMatList.filter(item => parseFloat(item[0]) <= this.vtPrTimeLineSecond)
@@ -456,31 +480,44 @@ const preComponent = Vue.extend({
         },
         //删除打点触发
         preDelPoint(pointItem) {
-            this.prePointedList.splice(this.prePointedList.indexOf(pointItem), 1);
+            this.prePointedList.splice(getIndexOfArrayObj(this.prePointedList, pointItem), 1);
         },
         //按键按下，触发打点
-        preKeyDown(event){
+        preKeyDown(event) {
             //屏蔽正在输入的情况
-            var curFocusTag=document.activeElement.tagName
-            if (curFocusTag=='INPUT' || curFocusTag=='TEXTAREA'){
+            var curFocusTag = document.activeElement.tagName
+            if (curFocusTag == 'INPUT' || curFocusTag == 'TEXTAREA') {
                 return
             }
 
-            //入点
-            if(event.keyCode==parseInt(this.$store.state.settingInPointHotKey)){
-                this.prePointedList.push(this.vtPrTimeLineSecond)
+            if (this.preCurTrackValue != '' && this.preMainTrackValue != '') {
+                //入点
+                if (this.preCurTrackValue==this.preMainTrackValue && event.keyCode == parseInt(this.$store.state.settingInPointHotKey)) {
+                    this.prePointedList.push({
+                        'pointSecond': this.vtPrTimeLineSecond,
+                        'type': ''
+                    })
 
-            }
-            //出点
-            if(event.keyCode==parseInt(this.$store.state.settingOutPointHotKey)){
-                
+                }
+                //出点
+                if (this.preCurTrackValue==this.preMainTrackValue && event.keyCode == parseInt(this.$store.state.settingOutPointHotKey)) {
+                    this.prePointedList.push({
+                        'pointSecond': this.vtPrTimeLineSecond,
+                        'type': 'success'
+                    })
 
-            }
-            //卡点
-            if(event.keyCode==parseInt(this.$store.state.settingPointHotKey)){
-                
 
+                }
+                //卡点
+                if (this.preCurTrackValue!=this.preMainTrackValue && event.keyCode == parseInt(this.$store.state.settingPointHotKey)) {
+                    this.prePointedList.push({
+                        'pointSecond': this.vtPrTimeLineSecond,
+                        'type': 'info'
+                    })
+
+                }
             }
+
         }
     },
     computed: {
@@ -510,8 +547,8 @@ const preComponent = Vue.extend({
                 return this.preVideoSliderValue
             }
         },
-        //待匹配点位信息
-        preMatMatchPointInfo() {
+        //匹配点位是否完成状态列表
+        preMatMatchPointIsFinish() {
             if (this.preMatMatchInfo) {
                 var tmpPointArray = new Array(this.preMatMatchInfo['pointInfo'].length)
                 tmpPointArray.map((item, index) => index < this.prePointedList.length ? 'success' : '')
@@ -521,8 +558,8 @@ const preComponent = Vue.extend({
             }
         },
         //当前已打点列表排序
-        prePointedListSorted(){
-            return this.prePointedList.sort()
+        prePointedListSorted() {
+            return this.prePointedList.sort(function(a,b){return a['pointSecond']-b['pointSecond']})
         }
     },
     data() {
@@ -568,11 +605,16 @@ const preComponent = Vue.extend({
             if (this.prePlayStatus == 1) {
                 this.prePlay(oldValue['type'])
             }
+            //清除打点信息
+            this.prePointedList = []
+
+            //清除素材列表
+            this.$store.state.matTableCurrentRow = null
 
 
             //素材文件id
             var tmpMatFileId = '-1'
-            if (curValue){
+            if (curValue) {
                 tmpMatFileId = curValue['id'].toString()
             }
             //获得当前素材文件信息
@@ -673,6 +715,10 @@ const matComponent = Vue.extend({
             set: function (value) {
                 this.$store.state.matRClickMenuStyle = value
             }
+        },
+        //素材列表数据排序
+        matTableDataSorted(){
+            return this.matTableData.sort(function(a,b){return a['startTime']-b['startTime']})
         }
     },
     watch: {
@@ -680,7 +726,7 @@ const matComponent = Vue.extend({
         matFileTableCurrentRow(curValue, oldValue) {
             //更新素材列表
             this.matUpdateList()
-            
+
 
         }
     },
@@ -700,9 +746,9 @@ const matComponent = Vue.extend({
         },
         //更新素材列表
         matUpdateList() {
-            var tmpMatFileId='-1'
-            if(this.matFileTableCurrentRow){
-                tmpMatFileId=this.matFileTableCurrentRow['id']
+            var tmpMatFileId = '-1'
+            if (this.matFileTableCurrentRow) {
+                tmpMatFileId = this.matFileTableCurrentRow['id']
             }
             this.$axiosAsyncExec(
                 '/vt/getMatViaMatFile', {
@@ -732,7 +778,7 @@ const matComponent = Vue.extend({
         },
         //关闭素材标签触发
         matCloseTag(tag) {
-            this.matCurTags.splice(getIndexOfArrayObj(this.matCurTags,tag), 1);
+            this.matCurTags.splice(this.matCurTags.indexOf(tag), 1);
         },
         //点击标签，展示素材标签新增输入框触发
         matTagShowInput() {

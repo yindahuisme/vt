@@ -207,12 +207,12 @@
                         </el-button>
                     </div>
                     <div class="prePointInfo">
-                        <el-button icon="el-icon-timer" v-for="(item,index) in preMatMatchPointInfo" :key="index" :type="item" circle>
+                        <el-button icon="el-icon-timer" v-for="(item,index) in preMatMatchPointIsFinish" :key="index" :type="item" circle>
                         </el-button>
                     </div>
                 </div>
                 <div class="vtRight">
-                    <el-tag style="display: block;" :key="item.point" v-for="item in prePointedListSorted" closable :disable-transitions="false"
+                    <el-tag style="display: block;" :key="item.pointSecond" v-for="item in prePointedListSorted" :type="item.type" closable :disable-transitions="false"
                         @close="preDelPoint(item)">
                         {{item.point}}
                     </el-tag>
@@ -249,7 +249,7 @@
 <template id="matTemplate">
     <div id='mat'>
         <el-card class="box-card ">
-            <el-table height="38vh" ref="matListRef" :data="matTableData" border @current-change="matTableCurrentChange"
+            <el-table height="38vh" ref="matListRef" :data="matTableDataSorted" border @current-change="matTableCurrentChange"
                 @row-contextmenu="matTableRowRClickChange" :show-header="false" highlight-current-row>
                 <el-table-column label="开始时间" property="startTime">
                 </el-table-column>
