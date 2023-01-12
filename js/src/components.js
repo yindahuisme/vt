@@ -367,13 +367,24 @@ const preComponent = Vue.extend({
                 if (point['type'] != tmpPointType) {
                     tmpPointType = point['type']
 
-                    var tmpDurationSeconds = Array.max(tmpPointTimeList) - Array.min(tmpPointTimeList)
-
                     //提交操作到pr
                     if (isCommit) {
+                        //判断当前选中轨道和素材类型是否匹配
+                        if(this.matFileTableCurrentRow['type'] != this.preCurTrackValue.split(' ')[0] ){
+                            this.$vtNotify('error', '错误', '提交失败，当前轨道类型与素材类型不符')
+                            return
+                        }
+                        //判断提交为自由点还是卡点
+                        if(this.preMatMatchInfo){
+                            //卡点
+
+                        }else{
+                            //自由点
+
+                        }
 
                     }
-
+                    var tmpDurationSeconds = Array.max(tmpPointTimeList) - Array.min(tmpPointTimeList)
                     if (this.$store.state.infoType == '素材文件') {
                         //插入素材信息todo
                         this.$axiosAsyncExec(
@@ -504,6 +515,7 @@ const preComponent = Vue.extend({
                         '/vt/getMatInfo', {
                             'matId': tmpMatItem[1].toString()
                         }, (res) => {
+                            res['inPointTime'] = parseFloat(tmpMatItem[0])
                             this.preMatMatchInfo = res
 
                         })
