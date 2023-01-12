@@ -377,18 +377,28 @@ const preComponent = Vue.extend({
                         //判断提交为自由点还是卡点
                         if(this.preMatMatchInfo){
                             //卡点
+                            //更新项目数据库
+                            todo
+                            //添加素材到pr
+
+                            //修改项目轨道素材列表内存数据结构
 
                         }else{
                             //自由点
+                            //更新项目数据库
+
+                            //添加素材到pr
+
+                            //修改项目轨道素材列表内存数据结构
 
                         }
 
                     }
                     var tmpDurationSeconds = Array.max(tmpPointTimeList) - Array.min(tmpPointTimeList)
                     if (this.$store.state.infoType == '素材文件') {
-                        //插入素材信息todo
+                        //插入素材信息
                         this.$axiosAsyncExec(
-                            '/vt/insertMatInfo', {
+                            '/vt/insertMat', {
                                 'matType': this.matFileTableCurrentRow['type'],
                                 'durationSecond': tmpDurationSeconds,
                                 'matFileId': this.matFileTableCurrentRow['id'],
@@ -404,13 +414,11 @@ const preComponent = Vue.extend({
                         )
                     } 
                     if (this.$store.state.infoType == '素材') {
-                        //更新素材信息todo
+                        //更新素材信息
                         this.$axiosAsyncExec(
-                            '/vt/updateMatInfo', {
+                            '/vt/updateMat', {
                                 'matId': this.matTableCurrentRow['id'],
-                                'matType': this.matFileTableCurrentRow['type'],
                                 'durationSecond': tmpDurationSeconds,
-                                'matFileId': this.matFileTableCurrentRow['id'],
                                 'pointInfo': tmpPointTimeList.join()
                             }, (res) => {
                                 //更新素材列表数据
@@ -515,7 +523,7 @@ const preComponent = Vue.extend({
                         '/vt/getMatInfo', {
                             'matId': tmpMatItem[1].toString()
                         }, (res) => {
-                            res['inPointTime'] = parseFloat(tmpMatItem[0])
+                            res['outPointTime'] = parseFloat(tmpMatItem[0])
                             this.preMatMatchInfo = res
 
                         })
@@ -572,6 +580,10 @@ const preComponent = Vue.extend({
             }
 
 
+        },
+        //删除轨道素材
+        preDelTrackMat(){
+            todo
         }
     },
     computed: {
@@ -625,6 +637,10 @@ const preComponent = Vue.extend({
             get() {
                 return this.$store.state.prePointedList
             }
+        },
+        //pr光标是否处于轨道的某一素材上
+        preIsOnTrackMat(){
+            todo
         }
     },
     data() {

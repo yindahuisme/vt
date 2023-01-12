@@ -60,8 +60,7 @@ CREATE TABLE IF NOT EXISTS vt.`vt_project`(
    `pro_name` VARCHAR(32) NOT NULL,-- 项目名
    `track_name` VARCHAR(32) NOT NULL,-- 轨道名,格式（视频 1）
    `mat_id` INTEGER NOT NULL,-- 素材id
-   `in_point_time` VARCHAR(32) NOT NULL,-- 入点时间，秒
+   `out_point_time` VARCHAR(32) NOT NULL,-- 出点时间，秒
    `dep` VARCHAR(64) NOT NULL,-- 依赖,格式(视频 1#34.346),没有留空串
-   `deped` VARCHAR(128) NOT NULL,-- 被依赖,格式(视频 1#34.346,音频 1#3.346),没有留空串
    PRIMARY KEY ( `pro_name` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

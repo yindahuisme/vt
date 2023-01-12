@@ -178,6 +178,8 @@
                 </el-select>
                 <el-button type="primary" @click="preSave(false)" :style="preSaveStyle">保存</el-button>
                 <el-button type="success" @click="preSave(true)">提交</el-button>
+                <el-button v-if="preIsOnTrackMat" type="danger" @click="preDelTrackMat">删除轨道素材</el-button>
+
             </div>
             <div class="vtDown" v-if="matFileTableCurrentRow">
                 <div class="vtLeft">
