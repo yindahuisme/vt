@@ -5,7 +5,6 @@ new Vue({
             vtcomponent:vtComponent
         },
     beforeMount(){
-        console.log('初始化app组件(前)')
 
         // 注册全局方法
         //弹出提示信息
@@ -62,7 +61,6 @@ new Vue({
 
     },
     mounted(){
-        console.log('初始化app组件')
         window.onclick = () => {
             // 点击关闭右键菜单
             this.$store.state.matFileRClickMenuStyle.display = 'none'

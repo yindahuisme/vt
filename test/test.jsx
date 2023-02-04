@@ -44,13 +44,10 @@
 // var project = app.project
 // var project_items = project.rootItem.children
 
-// app.encoder.launchEncoder()
-// for (var i=0; i<project_items.length;i++){
-//     var tmp_item = project_items[i]
-//     alert(tmp_item.type.toString())
 // app.encoder.encodeProjectItem(tmp_item, 'C:\\Users\\Administrator\\Desktop\\pr_plugin\\samples\\out\\test1.mp4'
 //     , 'C:\\Users\\Administrator\\Documents\\Adobe\\Adobe Media Encoder\\15.0\\Presets\\test.epr', 0, 0)
-// }
+// app.encoder.launchEncoder()
+
 
 
 // app.encoder.startBatch()
@@ -70,3 +67,68 @@
 
 //ClientInfo.application
 //Component
+//--------------------------------------------------
+// var trackName = '视频 1'
+// app.enableQE()
+
+
+
+// var tmpActiveSequence = qe.project.getActiveSequence()
+// if (trackName.split(' ')[0] == '视频') {
+//     var tracksLength = tmpActiveSequence.numVideoTracks
+//     for (var i = tracksLength - 1; i >= 0; i--) {
+//         if (tmpActiveSequence.getVideoTrackAt(i).name == trackName) {
+//             var trackItemLength = tmpActiveSequence.getVideoTrackAt(i).numItems
+//             for (var j = trackItemLength - 1; j >= 0; j--) {
+//                 var curCursorTicks = tmpActiveSequence.CTI.ticks
+//                 var tmpItem = tmpActiveSequence.getVideoTrackAt(i).getItemAt(j)
+//                 if (curCursorTicks >= tmpItem.start.ticks && curCursorTicks <= tmpItem.end.ticks) {
+//                     tmpItem.remove()
+//                 }
+
+//             }
+
+//         }
+//     }
+
+// } else {
+//     if (trackName.split(' ')[0] == '音频') {
+//         var tracksLength = tmpActiveSequence.numAudioTracks
+//         for (var i = tracksLength - 1; i >= 0; i--) {
+//             if (tmpActiveSequence.getAudioTrackAt(i).name == trackName) {
+//                 var trackItemLength = tmpActiveSequence.getAudioTrackAt(i).numItems
+//                 for (var j = trackItemLength - 1; j >= 0; j--) {
+//                     var curCursorTicks = tmpActiveSequence.CTI.ticks
+//                     var tmpItem = tmpActiveSequence.getAudioTrackAt(i).getItemAt(j)
+//                     if (curCursorTicks >= tmpItem.start.ticks && curCursorTicks <= tmpItem.end.ticks) {
+//                         tmpItem.remove()
+//                     }
+//                 }
+
+//             }
+//         }
+//     }
+// }
+
+
+
+// (`${this.preCurTrackValue}#${tmpOutPointTime}#${tmpDepMatPointList}#${tmpPointTimeList.join()}#${this.$store.state.settingFreePointSecond}#${this.$store.state.matFileInfo['matfile_full_path']}`)
+
+var tmpMatInfo='视频 1#3#2,3#1,3#0.3#D:\\vt_data\\matFilePath\\search.mp4'
+
+app.project.importFiles(['D:\\vt_data\\matFilePath\\星辰大海.mp3'])
+
+
+
+
+
+var tmpActiveSequence = qe.project.getActiveSequence()
+
+
+var in_point = new Time()
+in_point.seconds = 1
+target_project_item.setInPoint(in_point)
+var out_point = new Time()
+out_point.seconds = 2
+target_project_item.setEndTime(out_point)
+app.project.activeSequence.videoTracks[0].insertClip(target_project_item,1)

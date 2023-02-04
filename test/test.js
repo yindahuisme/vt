@@ -61,17 +61,50 @@
 // var tmpList=[{'point':1.1,'t':'11'},{'point':2.04335,'t':'11'}]
 // console.log(tmpList.splice(tmpList.indexOf({'point':2.04335,'t':'11'}), 1))
 
-//获得json数组的指定一层对象
-const getJsonArrayObj = function(targetArr,key,value){
-    for (let item of targetArr){
-        if (item[key] == value){
-            return item
-        }
+// //获得json数组的指定一层对象
+// const getJsonArrayObj = function(targetArr,key,value){
+//     for (let item of targetArr){
+//         if (item[key] == value){
+//             return item
+//         }
+//     }
+//     return null
+// }
+
+// var tmpArray=[{'1':1}]
+// var tmpArray1=getJsonArrayObj(tmpArray,'1',1)
+// tmpArray1={ '1': 2 }
+// console.log(tmpArray)
+
+const util = require('util')
+
+//获得数组中指定元素的下标
+const getIndexOfArrayObj = function(targetArr,obj){
+    for (var i = 0; i < targetArr.length; i ++) {  
+        if (util.isDeepStrictEqual(targetArr[i],obj))  
+            {
+                return i
+            }
     }
-    return null
+    return -1
 }
 
-var tmpArray=[{'1':1}]
-var tmpArray1=getJsonArrayObj(tmpArray,'1',1)
-tmpArray1={ '1': 2 }
-console.log(tmpArray)
+var tmpList = [[1,'1'],[2,'2']]
+var tmpList2 = [2,'2']
+tmpList.splice(getIndexOfArrayObj(tmpList,tmpList2),1)
+// console.log(getIndexOfArrayObj(tmpList,tmpList2))
+console.log(tmpList)
+
+
+// function fun1(){
+//     var a=1
+//     fun2()
+
+//     function fun2(){
+//         console.log(a)
+//     }
+// }
+
+
+
+// fun1()

@@ -54,9 +54,13 @@
                 <div>{{vtTitle}}</div>
                 <!-- 设置 -->
                 <settingComponent></settingComponent>
-                <!-- 字幕 -->
+                <!-- 音乐背景 -->
                 <el-button circle>
-                    字幕
+                    乐景
+                </el-button>
+                <!-- 重做 -->
+                <el-button @click="vtRedoAllTrack" circle>
+                    重做
                 </el-button>
             </el-card>
 
@@ -176,9 +180,9 @@
                     <el-option v-for="item in preCurTrackOptions" :key="item" :label="item" :value="item">
                     </el-option>
                 </el-select>
-                <el-button type="primary" @click="preSave(false)" :style="preSaveStyle">保存</el-button>
-                <el-button type="success" @click="preSave(true)">提交</el-button>
-                <el-button v-if="preIsOnTrackMat" type="danger" @click="preDelTrackMat">删除轨道素材</el-button>
+                <el-button v-if="!preCursorOnTrackMat" type="primary" @click="preSave(false)" :style="preSaveStyle">保存</el-button>
+                <el-button v-if="!preCursorOnTrackMat" type="success" @click="preSave(true)">提交</el-button>
+                <el-button v-if="preCursorOnTrackMat" type="danger" @click="preDelTrackMat">删除轨道素材</el-button>
 
             </div>
             <div class="vtDown" v-if="matFileTableCurrentRow">
@@ -209,11 +213,11 @@
                         </el-button>
                     </div>
                     <div class="prePointInfo">
-                        <el-button icon="el-icon-timer" v-for="(item,index) in preMatMatchPointIsFinish" :key="index" :type="item" circle>
+                        <el-button icon="el-icon-timer" v-for="(item,index) in preMatMatchPointIsFinish" :key="index" :type="item" @click="preMatchPointClick(index)" circle>
                         </el-button>
                     </div>
                 </div>
-                <div class="vtRight">
+                <div class="vtRight" ref="vtRightScrollRef">
                     <el-tag style="display: block;" :key="item.pointSecond" v-for="item in prePointedListSorted" :type="item.type" closable :disable-transitions="false"
                         @close="preDelPoint(item)">
                         {{item.point}}
@@ -345,26 +349,6 @@
                 style="display:inline-block;width:75%; ">
             </el-input>
 
-            <el-divider content-position='center'>转场</el-divider>
-            <div class="settingSingleRow" style="display:inline-block;width:20%;text-align:center;">
-                <label>转场效果:</label>
-            </div>
-            <!-- 转场效果下拉框 -->
-            <el-select title="转场效果下拉框" size="mini" v-model="settingTransformEffectValue" filterable
-                @change="settingChangeSettingValue('settingTransformEffectValue')"
-                style="display:inline-block;width:75%; ">
-                <el-option v-for="item in settingTransformEffectOptions" :key="item" :label="item" :value="item">
-                </el-option>
-            </el-select>
-
-            <div class="settingSingleRow" style="display:inline-block;width:20%;text-align:center;">
-                <label>转场持续时间(ms):</label>
-            </div>
-            <el-input type="textarea" resize="none" placeholder="请输入内容"
-                :rows="settingTransformEffectMs.split('\n').length" v-model="settingTransformEffectMs"
-                @change="settingChangeSettingValue('settingTransformEffectMs')"
-                style="display:inline-block;width:75%; ">
-            </el-input>
 
         </el-dialog>
     </div>

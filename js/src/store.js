@@ -20,6 +20,8 @@ var store = new Vuex.Store({
             'left': '0px'
         },
         //素材---------------------------------------------
+        //素材列表数据
+        matTableData: [],
         //素材表格当前选项,信息
         matTableCurrentRow: null,
         matInfo: null,
@@ -56,13 +58,7 @@ var store = new Vuex.Store({
         //出点快捷键
         settingOutPointHotKey: '',
         //卡点快捷键
-        settingPointHotKey: '',
-        //转场效果下拉框值
-        settingTransformEffectValue: '',
-        //转场效果下拉框选项
-        settingTransformEffectOptions: [],
-        //转场持续时间(ms)
-        settingTransformEffectMs: ''
+        settingPointHotKey: ''
     },
     //同步提交更改
     mutations: {
