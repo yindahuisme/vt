@@ -264,6 +264,7 @@ order by create_time asc
         },
         //当选中素材文件列表的某一项时触发
         matFileTableCurrentChange(val) {
+            this.$refs.matFileListRef.setCurrentRow(val)
             this.$store.state.matFileTableCurrentRow = val
             this.$store.state.infoType = '素材文件'
             //清除打点信息
@@ -272,7 +273,7 @@ order by create_time asc
         //当素材文件列表某一行右击时触发
         matFileTableRowRClickChange(row, column, event) {
             //右键点击也会有选中效果
-            this.$refs.matFileListRef.setCurrentRow(row)
+            this.matFileTableCurrentChange(row)
             //显示右键菜单
             this.matFileRClickMenuStyle.top = String(event.clientY) + 'px'
             this.matFileRClickMenuStyle.left = String(event.clientX) + 'px'
@@ -405,10 +406,13 @@ const preComponent = Vue.extend({
                                 //更新素材列表数据
                                 var tmpMatObj = getJsonArrayObj(this.matTableData, 'id', this.matTableCurrentRow['id'])
                                 tmpMatObj['startTime'] = Math.min(...tmpPointTimeList)
-                                tmpMatObj['durationSecond'] = tmpDurationSeconds
+                                tmpMatObj['durationSecond'] = round(tmpDurationSeconds,3)
                                 tmpMatObj['pointNum'] = tmpPointTimeList.length
+                                todo:startTime会变化，但是另外两个不变
                             }
                         )
+                        //素材只保留第一段
+                        break
                     }
 
                     //提交操作到pr
@@ -444,7 +448,7 @@ const preComponent = Vue.extend({
                         //开始插入轨道素材
                         var tmpPrInsertArgs = `${this.preCurTrackValue}#${tmpOutPointTime}#${tmpDepMatPointList}#${tmpPointTimeList.join()}#${this.$store.state.settingFreePointSecond}#${this.$store.state.matFileInfo['matfile_full_path']}`
                         this.$jsxExec('insertTrackMats', tmpPrInsertArgs, (data) => {
-                            this.$vtNotify('info', '提示', '轨道素材新增成功')
+                            
                         })
                         //修改项目轨道素材列表内存数据结构
                         var tmpMatList = this.preTrackMatInfo[this.preCurTrackValue]
@@ -457,6 +461,11 @@ const preComponent = Vue.extend({
 
             //清空打点列表
             this.prePointedList = []
+            if(isCommit){
+                this.$vtNotify('success', '提示', '轨道素材新增成功')
+            }else{
+                this.$vtNotify('success', '提示', '保存素材成功')
+            }
         },
         //时间线向左移动
         preTimeLeft() {
@@ -654,7 +663,7 @@ const preComponent = Vue.extend({
                     'outPointTime': this.preCursorOnTrackMat[0],
                     'track': this.preCurTrackValue
                 }, (res) => {
-                    this.$vtNotify('info', '提示', '轨道素材删除成功')
+                    this.$vtNotify('success', '提示', '轨道素材删除成功')
                 }
             )
 
@@ -707,8 +716,12 @@ const preComponent = Vue.extend({
         ...Vuex.mapState([
             // 素材文件-表格当前选项
             'matFileTableCurrentRow',
+            // 素材文件-表格当前选项
+            'matTableCurrentRow',
             // 当前素材文件信息
-            'matFileInfo'
+            'matFileInfo',
+            //素材列表数据
+            'matTableData'
         ]),
         //播放按钮图标
         prePlayIco() {
@@ -799,7 +812,6 @@ const preComponent = Vue.extend({
             if (this.prePlayStatus == 1) {
                 this.prePlay(oldValue['type'])
             }
-
             //清除素材列表状态
             this.$store.state.matTableCurrentRow = null
 
@@ -1000,8 +1012,8 @@ const matComponent = Vue.extend({
         },
         //素材管理标签点击触发
         matManageTags(event) {
-            this.matManageTagsStyle.bottom = String(screen.height - event.clientY) + 'px'
-            this.matManageTagsStyle.right = String(screen.width - event.clientX) + 'px'
+            this.matManageTagsStyle.bottom = String(innerHeight - event.clientY) + 'px'
+            this.matManageTagsStyle.right = String(innerWidth - event.clientX) + 'px'
             this.matManageTagsStyle.display = 'block'
 
             //获得当前素材的标签
@@ -1055,7 +1067,7 @@ const matComponent = Vue.extend({
         },
         //当选中素材列表的某一项时触发
         matTableCurrentChange(val) {
-
+            this.$refs.matListRef.setCurrentRow(val)
             this.$store.state.matTableCurrentRow = val
             this.$store.state.infoType = '素材'
             //素材id
@@ -1080,12 +1092,11 @@ const matComponent = Vue.extend({
         //当素材列表某一行右击时触发
         matTableRowRClickChange(row, column, event) {
             //右键点击也会有选中效果
-            this.$refs.matListRef.setCurrentRow(row)
+            this.matTableCurrentChange(row)
             //显示右键菜单
-            this.matRClickMenuStyle.bottom = String(screen.height - event.clientY) + 'px'
-            this.matRClickMenuStyle.right = String(screen.width - event.clientX) + 'px'
+            this.matRClickMenuStyle.bottom = String(innerHeight - event.clientY) + 'px'
+            this.matRClickMenuStyle.right = String(innerWidth - event.clientX) + 'px'
             this.matRClickMenuStyle.display = 'block'
-
         }
 
     },
@@ -1235,7 +1246,7 @@ const vtComponent = Vue.extend({
             })
             this.$jsxExec('cleanProject', '', (data) => {
                 this.$jsxExec('insertTrackMats', trackMatInfoArgs.join('|'), (data) => {
-                    this.$vtNotify('info', '提示', '重做成功')
+                    this.$vtNotify('success', '提示', '重做成功')
                 })
             })
 
