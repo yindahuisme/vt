@@ -76,24 +76,24 @@
 // tmpArray1={ '1': 2 }
 // console.log(tmpArray)
 
-const util = require('util')
+// const util = require('util')
 
-//获得数组中指定元素的下标
-const getIndexOfArrayObj = function(targetArr,obj){
-    for (var i = 0; i < targetArr.length; i ++) {  
-        if (util.isDeepStrictEqual(targetArr[i],obj))  
-            {
-                return i
-            }
-    }
-    return -1
-}
+// //获得数组中指定元素的下标
+// const getIndexOfArrayObj = function(targetArr,obj){
+//     for (var i = 0; i < targetArr.length; i ++) {  
+//         if (util.isDeepStrictEqual(targetArr[i],obj))  
+//             {
+//                 return i
+//             }
+//     }
+//     return -1
+// }
 
-var tmpList = [[1,'1'],[2,'2']]
-var tmpList2 = [2,'2']
-tmpList.splice(getIndexOfArrayObj(tmpList,tmpList2),1)
-// console.log(getIndexOfArrayObj(tmpList,tmpList2))
-console.log(tmpList)
+// var tmpList = [[1,'1'],[2,'2']]
+// var tmpList2 = [2,'2']
+// tmpList.splice(getIndexOfArrayObj(tmpList,tmpList2),1)
+// // console.log(getIndexOfArrayObj(tmpList,tmpList2))
+// console.log(tmpList)
 
 
 // function fun1(){
@@ -108,3 +108,8 @@ console.log(tmpList)
 
 
 // fun1()
+
+prePointedList = [{'a':1}]
+for (let point in prePointedList) {
+console.log(point)
+}

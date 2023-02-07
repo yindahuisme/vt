@@ -345,37 +345,30 @@ const preComponent = Vue.extend({
         },
         //保存打点信息到素材
         preSave(isCommit) {
-            if (this.prePointedList.length < 2) {
+            if (this.prePointedListSorted.length < 2) {
                 this.$vtNotify('error', '错误', '失败, 打点应该大等于2个')
                 return
             }
-            if (this.prePointedList.length != this.preMatMatchInfo['point_info'].split(',').length) {
+            if (this.preMatMatchInfo && this.prePointedListSorted.length != this.preMatMatchInfo['point_info'].split(',').length) {
                 this.$vtNotify('error', '错误', '失败，打点个数不匹配')
-                return
-            }
-            if (Array.min(tmpPointTimeList) < parseFloat(this.$store.state.settingFreePointSecond)) {
-                this.$vtNotify('error', '错误', '失败，打点间隔必须大于卡点间隙时长:' + this.$store.state.settingFreePointSecond + 's')
                 return
             }
             if (this.matFileTableCurrentRow['type'] != this.preCurTrackValue.split(' ')[0]) {
                 this.$vtNotify('error', '错误', '失败，当前轨道类型与素材类型不符')
                 return
             }
-
-            var tmpPointType = this.prePointedList[0]['type']
+            var tmpPointType = this.prePointedListSorted[0]['type']
             var tmpPointTimeList = []
-            //pr插入轨道素材脚本参数
-            var tmpPrBatchInsertArgs = []
-            for (point in this.prePointedList) {
+            for (let point_ind in this.prePointedListSorted) {
+                var point = this.prePointedListSorted[point_ind]
                 tmpPointTimeList.push(point['pointSecond'])
                 if (point['type'] != tmpPointType) {
                     //打点类型
                     tmpPointType = point['type']
                     //打点时长
-                    var tmpDurationSeconds = Array.max(tmpPointTimeList) - Array.min(tmpPointTimeList)
+                    var tmpDurationSeconds = Math.max(...tmpPointTimeList) - Math.min(...tmpPointTimeList)
                     //当前打点保存的素材id
-                    var tmpCurPointMatId = null
-
+                    var tmpCurPointMatId = ''
                     //保存素材
                     if (this.$store.state.infoType == '素材文件') {
                         //插入素材信息
@@ -411,7 +404,7 @@ const preComponent = Vue.extend({
                             }, (res) => {
                                 //更新素材列表数据
                                 var tmpMatObj = getJsonArrayObj(this.matTableData, 'id', this.matTableCurrentRow['id'])
-                                tmpMatObj['startTime'] = Array.min(tmpPointTimeList)
+                                tmpMatObj['startTime'] = Math.min(...tmpPointTimeList)
                                 tmpMatObj['durationSecond'] = tmpDurationSeconds
                                 tmpMatObj['pointNum'] = tmpPointTimeList.length
                             }
@@ -445,25 +438,22 @@ const preComponent = Vue.extend({
                                 'outPointTime': tmpOutPointTime,
                                 'dep': tmpDepMatPointList
                             }, (res) => {
-                                
+
                             }
                         )
-                        //添加素材到pr
-                        tmpPrBatchInsertArgs.push(`${this.preCurTrackValue}#${tmpOutPointTime}#${tmpDepMatPointList}#${tmpPointTimeList.join()}#${this.$store.state.settingFreePointSecond}#${this.$store.state.matFileInfo['matfile_full_path']}`)
-
+                        //开始插入轨道素材
+                        var tmpPrInsertArgs = `${this.preCurTrackValue}#${tmpOutPointTime}#${tmpDepMatPointList}#${tmpPointTimeList.join()}#${this.$store.state.settingFreePointSecond}#${this.$store.state.matFileInfo['matfile_full_path']}`
+                        this.$jsxExec('insertTrackMats', tmpPrInsertArgs, (data) => {
+                            this.$vtNotify('info', '提示', '轨道素材新增成功')
+                        })
                         //修改项目轨道素材列表内存数据结构
                         var tmpMatList = this.preTrackMatInfo[this.preCurTrackValue]
                         tmpMatList.push([tmpOutPointTime, tmpCurPointMatId, tmpDepMatPointList, tmpPointTimeList.join(), this.$store.state.matFileInfo['matfile_full_path']])
 
                     }
+                    tmpPointTimeList = [point['pointSecond']]
                 }
-                tmpPointTimeList = [point['pointSecond']]
             }
-
-            //开始插入轨道素材
-            this.$jsxExec('insertTrackMats', tmpPrBatchInsertArgs.join('|'), (data) => {
-                this.$vtNotify('info', '提示', '轨道素材新增成功')
-            })
 
             //清空打点列表
             this.prePointedList = []
@@ -567,11 +557,11 @@ const preComponent = Vue.extend({
             //当前打的最后一个点位置
             var tmpLastPoint = 0
             //打点的个数
-            var tmpPointLength = this.prePointedList.length
+            var tmpPointLength = this.prePointedListSorted.length
             //待匹配点位个数
             var tmpMatchPointList = this.preMatMatchInfo['point_info'].split(',')
             if (tmpPointLength != 0) {
-                tmpFirstPoint = this.prePointedList[tmpPointLength - 1]['pointSecond']
+                tmpFirstPoint = this.prePointedListSorted[tmpPointLength - 1]['pointSecond']
             }
             if (tmpPointLength < tmpMatchPointList.length) {
                 var tmpDurationSeconds = this.$refs.preVideoRef.duration
@@ -600,18 +590,28 @@ const preComponent = Vue.extend({
             if (curFocusTag == 'INPUT' || curFocusTag == 'TEXTAREA') {
                 return
             }
-            //滚动到底部
-            this.$refs.vtRightScrollRef.scrollTop = this.$refs.vtRightScrollRef.scrollHeight
             //确定打点时间
             var tmpTime = 0
             if (this.matFileTableCurrentRow['type'] == '视频') {
-                tmpTime = this.preVideoSliderValue * this.$refs.preVideoRef.duration
+                tmpTime = (this.preVideoSliderValue * this.$refs.preVideoRef.duration / 100).toFixed(3)
             } else if (this.matFileTableCurrentRow['type'] == '音频') {
-                tmpTime = this.preAudioWavesurfer.getCurrentTime()
+                tmpTime = (this.preAudioWavesurfer.getCurrentTime()).toFixed(3)
             } else {
                 this.$vtNotify('error', '错误', '当前素材不支持打点')
+                return
             }
 
+            //控制打点间隔
+            var tmpPointBef = -999
+            var tmpFilterPointList = this.prePointedListSorted.map(v => parseFloat(v['pointSecond'])).filter(v => v <= tmpTime)
+            if (tmpFilterPointList.length > 0) {
+                var tmpPointBef = Math.max(...tmpFilterPointList)
+            }
+
+            if (tmpTime - tmpPointBef < parseFloat(this.$store.state.settingFreePointSecond)) {
+                this.$vtNotify('error', '错误', '失败，打点间隔必须大于卡点间隙时长:' + this.$store.state.settingFreePointSecond + 's')
+                return
+            }
 
             //入点
             if (!this.preMatMatchInfo && event.keyCode == parseInt(this.$store.state.settingInPointHotKey)) {
@@ -638,6 +638,11 @@ const preComponent = Vue.extend({
                 })
 
             }
+            this.$nextTick(function () {
+                //滚动到底部
+                this.$refs.vtRightScrollRef.scrollTop = this.$refs.vtRightScrollRef.scrollHeight
+            })
+
 
 
         },
@@ -657,7 +662,7 @@ const preComponent = Vue.extend({
             var tmpPointList = map(function (val) {
                 return parseFloat(val)
             }, this.preCursorOnTrackMat[3].split(','))
-            var tmpDurationSeconds = Array.max(tmpPointList) - Array.min(tmpPointList)
+            var tmpDurationSeconds = Math.max(...tmpPointList) - Math.min(...tmpPointList)
             this.$jsxExec('delTrackMats', `${this.preCurTrackValue}#${this.preCursorOnTrackMat[0]-tmpDurationSeconds}#${this.preCursorOnTrackMat[0]}`, (data) => {
 
             })
@@ -677,12 +682,25 @@ const preComponent = Vue.extend({
                 this.preCursorOnTrackMat = null
             }
 
-            for (item in tmpMatList) {
+            for (let item_ind in tmpMatList) {
+                var item = tmpMatList[item_ind]
                 if (this.vtPrTimeLineSecond <= item[0] && this.vtPrTimeLineSecond >= item[0] - item[3]) {
                     this.preCursorOnTrackMat = item
                 }
             }
             this.preCursorOnTrackMat = null
+        },
+        //改变进度
+        preSliderValueChangeClick(val) {
+            if (this.matFileTableCurrentRow['type'] == '视频') {
+                this.preVideoSliderValue = val / this.$refs.preVideoRef.duration * 100
+            } else if (this.matFileTableCurrentRow['type'] == '音频') {
+                var tmpDurationSeconds = this.preAudioWavesurfer.getDuration()
+                var tmpProgress = val / tmpDurationSeconds
+                this.preAudioWavesurfer.seekTo(Math.max(Math.min(tmpProgress, 1), 0))
+            } else {
+                return
+            }
         }
     },
     computed: {
@@ -716,7 +734,7 @@ const preComponent = Vue.extend({
         preMatMatchPointIsFinish() {
             if (this.preMatMatchInfo) {
                 var tmpPointArray = new Array(this.preMatMatchInfo['point_info'].split(',').length)
-                tmpPointArray.map((item, index) => index < this.prePointedList.length ? 'success' : '')
+                tmpPointArray.map((item, index) => index < this.prePointedListSorted.length ? 'success' : '')
                 return tmpPointArray
             } else {
                 return []
@@ -782,7 +800,7 @@ const preComponent = Vue.extend({
                 this.prePlay(oldValue['type'])
             }
 
-            //清除素材列表
+            //清除素材列表状态
             this.$store.state.matTableCurrentRow = null
 
 
@@ -812,8 +830,8 @@ const preComponent = Vue.extend({
                             this.$refs.preVideoRef.onended = this.prePlay
                             this.$refs.preVideoRef.ontimeupdate = () => {
                                 var tmpVedioObj = this.$refs.preVideoRef
-                                if (tmpVedioObj) {
-                                    var tmpSliderValue = Math.floor(this.$refs.preVideoRef.currentTime * 100000 / this.$refs.preVideoRef.duration) / 1000
+                                if (tmpVedioObj.currentTime) {
+                                    var tmpSliderValue = Math.floor(tmpVedioObj.currentTime * 100000 / tmpVedioObj.duration) / 1000
                                     this.preVideoSliderValueUpdateFlag = false
                                     this.preVideoSliderValue = tmpSliderValue
 
@@ -856,17 +874,17 @@ const preComponent = Vue.extend({
             deep: true
         },
         //待匹配素材信息改变时触发
-        preMatMatchInfo(){
+        preMatMatchInfo() {
             //当素材文件类型为图片时，自动填充打点
-            if(this.matFileTableCurrentRow['type']=='图片' && this.preMatMatchInfo){
+            if (this.matFileTableCurrentRow['type'] == '图片' && this.preMatMatchInfo) {
                 var tmpPointList = []
-                for(var item in this.preMatMatchInfo['point_info'].split(',')){
+                for (let item in this.preMatMatchInfo['point_info'].split(',')) {
                     tmpPointList.push({
                         'pointSecond': parseFloat(item),
                         'type': 'info'
                     })
                 }
-                this.prePointedList=tmpPointList
+                this.prePointedList = tmpPointList
             }
 
         }
@@ -908,7 +926,9 @@ const matComponent = Vue.extend({
     computed: {
         ...Vuex.mapState([
             // 素材文件-表格当前选项
-            'matFileTableCurrentRow'
+            'matFileTableCurrentRow',
+            // 素材-表格当前选项
+            'matTableCurrentRow'
         ]),
         //素材列表项右键菜单style
         matRClickMenuStyle: {
@@ -945,18 +965,8 @@ const matComponent = Vue.extend({
         },
         //素材-表格当前选项
         matTableCurrentRow(curValue, oldValue) {
-            //素材id
-            var tmpMatId = '-1'
-            if (curValue) {
-                tmpMatId = curValue['id'].toString()
-            }
-            //获得当前素材信息
-            this.$axiosAsyncExec(
-                '/vt/getMatInfo', {
-                    'matId': tmpMatId
-                }, (res) => {
-                    this.$store.state.matInfo = res
-                })
+
+
         }
     },
     methods: {
@@ -1045,10 +1055,27 @@ const matComponent = Vue.extend({
         },
         //当选中素材列表的某一项时触发
         matTableCurrentChange(val) {
-            //清除打点信息
-            this.$store.state.prePointedList = []
+
             this.$store.state.matTableCurrentRow = val
             this.$store.state.infoType = '素材'
+            //素材id
+            var tmpMatId = val['id'].toString()
+
+            //获得当前素材信息
+            this.$axiosAsyncExec(
+                '/vt/getMatInfo', {
+                    'matId': tmpMatId
+                }, (res) => {
+                    this.$store.state.matInfo = res
+                    //改变打点信息
+                    this.$store.state.prePointedList = this.$store.state.matInfo['point_info'].split(',')
+                        .map((v,i,a) => {
+                            return {
+                                'pointSecond': parseFloat(v),
+                                'type': i==a.length-1?'success':''
+                            }
+                        })
+                })
         },
         //当素材列表某一行右击时触发
         matTableRowRClickChange(row, column, event) {
@@ -1202,7 +1229,7 @@ const vtComponent = Vue.extend({
             //拼接轨道素材信息参数
             var trackMatInfoArgs = []
             this.$store.state.preTrackMatInfo.forEach((key, val) => {
-                for (var item in val) {
+                for (let item in val) {
                     trackMatInfoArgs.push(`${key}#${item[0]}#${item[2]}#${item[3]}#${this.$store.state.settingFreePointSecond}#${item[4]}`)
                 }
             })

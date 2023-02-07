@@ -108,7 +108,7 @@
             <!-- 卡片body -->
             <div>
                 <el-table height="42vh" ref="matFileListRef" :data="matFileTableData" border
-                    @current-change="matFileTableCurrentChange" @row-contextmenu="matFileTableRowRClickChange"
+                    @row-click="matFileTableCurrentChange" @row-contextmenu="matFileTableRowRClickChange"
                     :show-header="false" highlight-current-row>
                     <el-table-column property="type" width="20%">
                     </el-table-column>
@@ -218,9 +218,10 @@
                     </div>
                 </div>
                 <div class="vtRight" ref="vtRightScrollRef">
-                    <el-tag style="display: block;" :key="item.pointSecond" v-for="item in prePointedListSorted" :type="item.type" closable :disable-transitions="false"
-                        @close="preDelPoint(item)">
-                        {{item.point}}
+                    <el-tag style="display: block;" :key="index" v-for="(item,index) in prePointedListSorted" :type="item.type" closable :disable-transitions="false"
+                        @close="preDelPoint(item)"
+                        @click="preSliderValueChangeClick(item.pointSecond)">
+                        {{item.pointSecond}}
                     </el-tag>
                 </div>
             </div>
@@ -242,7 +243,7 @@
             </div>
             <div v-if="infoType=='素材' && matInfo">
                 <div><span style="color:rgb(51, 51, 255)">id:</span>{{matInfo.mat_id}}</div>
-                <div><span style="color:rgb(51, 51, 255)">点位信息:</span>{{matInfo.point_info.join()}}</div>
+                <div><span style="color:rgb(51, 51, 255)">点位信息:</span>{{matInfo.point_info}}</div>
                 <div><span style="color:rgb(51, 51, 255)">创建时间:</span>{{matInfo.create_time}}</div>
                 <div><span style="color:rgb(51, 51, 255)">标签:</span>{{matInfo.tags}}</div>
             </div>
@@ -255,8 +256,8 @@
 <template id="matTemplate">
     <div id='mat'>
         <el-card class="box-card ">
-            <el-table height="38vh" ref="matListRef" :data="matTableDataSorted" border @current-change="matTableCurrentChange"
-                @row-contextmenu="matTableRowRClickChange" :show-header="false" highlight-current-row>
+            <el-table height="38vh" ref="matListRef" :data="matTableDataSorted" border @row-click="matTableCurrentChange"
+                @row-contextmenu="matTableRowRClickChange" :show-header="true" highlight-current-row>
                 <el-table-column label="开始时间" property="startTime">
                 </el-table-column>
                 <el-table-column label="时长(s)" property="durationSecond">
