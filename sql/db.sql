@@ -1,6 +1,31 @@
 create databases vt;
 
 
+-- 分割字符串，返回分割后字串个数
+DELIMITER $$
+CREATE
+    FUNCTION vt.strSplitLength(str varchar(1000),delimiter varchar(1000)) RETURNS int(10)
+    BEGIN
+declare returnInt int(11);
+if length(delimiter)=2 then
+return 1+(length(str) - length(replace(str,delimiter,'')))/2;
+else
+return 1+(length(str) - length(replace(str,delimiter,'')));
+end if;
+END$$
+DELIMITER ;
+
+-- 得到第i个分割后的字符串，1基的
+DELIMITER $$
+CREATE
+    FUNCTION vt.strSplitGetResult(str varchar(1000),delimiter varchar(1000),i int(10)) RETURNS varchar(1000)
+    BEGIN
+declare result varchar(1000) default '';
+set result = reverse(substring_index(reverse(substring_index(str,delimiter ,i)),delimiter ,1));
+return result;
+END$$
+DELIMITER ;
+
 -- 项目配置表
 drop table if exists vt.`vt_setting`;
 CREATE TABLE IF NOT EXISTS vt.`vt_setting`(
@@ -22,7 +47,7 @@ CREATE TABLE IF NOT EXISTS vt.`vt_matfile`(
    `matfile_id` INTEGER AUTO_INCREMENT,-- 素材文件id
    `matfile_type` VARCHAR(32) NOT NULL,-- 素材文件类型（视频，音频，图片）
    `matfile_full_path` VARCHAR(256) NOT NULL,-- 文件全名，例如D:\test.mp4
-   `duration_second` float NOT NULL,-- 时长（秒）,如果为图片，留空串
+   `duration_second` decimal(16,3) NOT NULL,-- 时长（秒）,如果为图片，留空串
    `size_kb` integer NOT NULL,-- 大小（kb）,如235343
    `create_time` VARCHAR(32) NOT NULL,-- 创建时间，格式（yyyy-MM-dd hh:mm:ss）
    `tags` VARCHAR(256) NOT NULL,-- 标签，格式(tag1,tag2)
@@ -34,7 +59,6 @@ drop table if exists vt.`vt_mat`;
 CREATE TABLE IF NOT EXISTS vt.`vt_mat`(
    `mat_id` INTEGER AUTO_INCREMENT,-- 素材id
    `mat_type` VARCHAR(32) NOT NULL,-- 素材类型（视频，音频）
-   `duration_second` float NOT NULL,-- 时长（秒）
    `create_time` VARCHAR(32) NOT NULL,-- 创建时间，格式（yyyy-MM-dd hh:mm:ss）
    `matfile_id` INTEGER NOT NULL,-- 依赖的素材文件id
    `point_info` VARCHAR(256) NOT NULL,-- 点位信息，格式(2.654,7.543)
@@ -56,8 +80,8 @@ drop table if exists vt.`vt_project`;
 CREATE TABLE IF NOT EXISTS vt.`vt_project`(
    `pro_name` VARCHAR(32) NOT NULL,-- 项目名
    `track_name` VARCHAR(32) NOT NULL,-- 轨道名,格式（视频 1）
-   `mat_id` INTEGER NOT NULL,-- 素材id
-   `out_point_time` float NOT NULL,-- 出点时间，秒
-   `dep` VARCHAR(64) NOT NULL,-- 依赖点位,没有留空串
-   PRIMARY KEY ( `pro_name` )
+   `point_info` INTEGER NOT NULL,-- 打点位置
+   `matfile_full_path` INTEGER NOT NULL,-- 素材文件路径
+   `match_point` VARCHAR(64) NOT NULL,-- 匹配点位
+   `create_time` VARCHAR(32) NOT NULL-- 创建时间，格式（yyyy-MM-dd hh:mm:ss）
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

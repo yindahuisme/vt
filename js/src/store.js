@@ -60,6 +60,18 @@ var store = new Vuex.Store({
         //卡点快捷键
         settingPointHotKey: ''
     },
+    getters: {
+        preTrackMatList(state) {
+            return function (trackName) {
+                var tmpList = state.preTrackMatInfo[trackName]
+                if (tmpList == undefined) {
+                    tmpList = []
+                    state.preTrackMatInfo[trackName] = tmpList
+                }
+                return tmpList
+            }
+        }
+    },
     //同步提交更改
     mutations: {
 

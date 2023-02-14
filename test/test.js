@@ -109,7 +109,21 @@
 
 // fun1()
 
-prePointedList = [{'a':1}]
-for (let point in prePointedList) {
-console.log(point)
-}
+// prePointedList = [['a','b'],['c','a'],['b','c']]
+
+// console.log(prePointedList.sort().map(v=>v[1]))
+
+// var a = {'a':1}
+
+// var b = {...a}
+
+// b['a']=b['a'].toFixed(3)
+// console.log(b)
+
+// var a = [1,2,'34']
+// var b=[...a]
+// console.log(b)
+
+
+
+console.log((new Date().getTime()).toString())
