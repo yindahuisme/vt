@@ -289,6 +289,12 @@ body {
 }
 
 /*页面内容区-预览区-卡片-卡片body-up-输入框*/
+#pre>.el-card>.el-card__body .vtUp>.el-input {
+    padding: 0% !important;
+    width:10%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-up-下拉输入框*/
 #pre>.el-card>.el-card__body .vtUp input {
     padding: 0% !important;
 }
@@ -296,7 +302,7 @@ body {
 /*页面内容区-预览区-卡片-卡片body-up-button*/
 #pre>.el-card>.el-card__body .vtUp button {
     height: 5vh;
-    width:15%;
+    width:10%;
     padding: 0%;
     overflow: hidden;
     float: right;

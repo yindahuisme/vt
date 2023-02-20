@@ -35,10 +35,8 @@ CREATE TABLE IF NOT EXISTS vt.`vt_setting`(
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 insert into vt.`vt_setting` values('settingMatFilePath','D:\\vt_data\\matFilePath\\');
-insert into vt.`vt_setting` values('settingFreePointSecond','0.5');
 insert into vt.`vt_setting` values('settingInPointHotKey','65');
 insert into vt.`vt_setting` values('settingOutPointHotKey','68');
-insert into vt.`vt_setting` values('settingPointHotKey','83');
 insert into vt.`vt_setting` values('settingMogrtPath','D:\\vt_data\\mogrtPath\\');
 
 -- 素材文件表
@@ -61,7 +59,7 @@ CREATE TABLE IF NOT EXISTS vt.`vt_mat`(
    `mat_type` VARCHAR(32) NOT NULL,-- 素材类型（视频，音频）
    `create_time` VARCHAR(32) NOT NULL,-- 创建时间，格式（yyyy-MM-dd hh:mm:ss）
    `matfile_id` INTEGER NOT NULL,-- 依赖的素材文件id
-   `point_info` VARCHAR(256) NOT NULL,-- 点位信息，格式(2.654,7.543)
+   `point_info` VARCHAR(2560) NOT NULL,-- 点位信息，格式(2.654,7.543)
    `tags` VARCHAR(64) NOT NULL,-- 标签，格式(tag1,tag2)
    PRIMARY KEY ( `mat_id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -80,8 +78,9 @@ drop table if exists vt.`vt_project`;
 CREATE TABLE IF NOT EXISTS vt.`vt_project`(
    `pro_name` VARCHAR(32) NOT NULL,-- 项目名
    `track_name` VARCHAR(32) NOT NULL,-- 轨道名,格式（视频 1）
-   `point_info` INTEGER NOT NULL,-- 打点位置
-   `matfile_full_path` INTEGER NOT NULL,-- 素材文件路径
-   `match_point` VARCHAR(64) NOT NULL,-- 匹配点位
+   `point_info` VARCHAR(2560) NOT NULL,-- 打点位置
+   `matfile_full_path` VARCHAR(256) NOT NULL,-- 素材文件路径
+   `match_point` VARCHAR(2560) NOT NULL,-- 匹配点位
+   `free_point_second` decimal(16,3) NOT NULL,-- 卡点变速时长（秒）
    `create_time` VARCHAR(32) NOT NULL-- 创建时间，格式（yyyy-MM-dd hh:mm:ss）
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

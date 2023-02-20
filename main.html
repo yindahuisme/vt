@@ -180,16 +180,22 @@
                     <el-option v-for="item in preCurTrackOptions" :key="item" :label="item" :value="item">
                     </el-option>
                 </el-select>
+                <el-input v-model="freePointSecond" size="small">
+                </el-input>
+
                 <el-button v-if="!preCursorOnTrackMat" type="primary" @click="preSave(false)" :style="preSaveStyle">保存</el-button>
                 <el-button v-if="!preCursorOnTrackMat" type="success" @click="preSave(true)">提交</el-button>
-                <el-button v-if="preCursorOnTrackMat" type="danger" @click="preDelTrackMat">删除轨道素材</el-button>
+                <el-button v-if="preCursorOnTrackMat" type="danger" @click="preDelTrackMat">删除</el-button>
 
             </div>
             <div class="vtDown" v-if="matFileTableCurrentRow">
                 <div class="vtLeft">
                     <!-- 视频 -->
                     <div title="视频" v-if="matFileTableCurrentRow.type == '视频' && matFileInfo">
-                        <video ref="preVideoRef" :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])"></video>
+                        <!-- url方式 -->
+                        <!-- <video ref="preVideoRef" :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])"></video> -->
+
+                        <video ref="preVideoRef" :src="matFileInfo['matfile_full_path'].replace('\\','/')"></video>
                         <el-slider v-model="preVideoSliderValueCompute" :step="0.001" :show-tooltip="false"></el-slider>
                     </div>
                     <!-- 音频 -->
@@ -198,7 +204,10 @@
                     </div>
                     <!-- 图片 -->
                     <div title="图片" v-if="matFileTableCurrentRow.type == '图片' && matFileInfo">
-                        <img :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])" />
+                        <!-- url方式 -->
+                        <!-- <img :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])" /> -->
+
+                        <img :src="matFileInfo['matfile_full_path'].replace('\\','/')" />
                     </div>
                     <div class="preContral"
                         v-if="matFileTableCurrentRow.type == '视频' || matFileTableCurrentRow.type == '音频'">
@@ -322,13 +331,6 @@
 
             <el-divider content-position='center'>卡点</el-divider>
             <div class="settingSingleRow" style="display:inline-block;width:20%;text-align:center;">
-                <label>变速时长(>0.1s):</label>
-            </div>
-            <el-input type="textarea" resize="none" placeholder="请输入内容"
-                :rows="settingFreePointSecond.split('\n').length" v-model="settingFreePointSecond"
-                @change="settingChangeSettingValue('settingFreePointSecond')" style="display:inline-block;width:75%; ">
-            </el-input>
-            <div class="settingSingleRow" style="display:inline-block;width:20%;text-align:center;">
                 <label>入点快捷键:</label>
             </div>
             <el-input type="textarea" resize="none" placeholder="请输入内容" :rows="settingInPointHotKey.split('\n').length"
@@ -340,13 +342,6 @@
             </div>
             <el-input type="textarea" resize="none" placeholder="请输入内容" :rows="settingOutPointHotKey.split('\n').length"
                 v-model="settingOutPointHotKey" @change="settingChangeSettingValue('settingOutPointHotKey')"
-                style="display:inline-block;width:75%; ">
-            </el-input>
-            <div class="settingSingleRow" style="display:inline-block;width:20%;text-align:center;">
-                <label>卡点快捷键:</label>
-            </div>
-            <el-input type="textarea" resize="none" placeholder="请输入内容" :rows="settingPointHotKey.split('\n').length"
-                v-model="settingPointHotKey" @change="settingChangeSettingValue('settingPointHotKey')"
                 style="display:inline-block;width:75%; ">
             </el-input>
 

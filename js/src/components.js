@@ -343,18 +343,54 @@ const preComponent = Vue.extend({
                 this.$vtNotify('error', '错误', '失败, 打点应该大等于2个')
                 return
             }
-            if (this.preMatMatchInfo && this.prePointedListSorted.length != this.preMatMatchInfo['point_info'].split(',').length) {
+            if (this.preMatMatchInfo && this.prePointedListSorted.length != this.preMatMatchInfo[1].split(',').length) {
                 this.$vtNotify('error', '错误', '失败，打点个数不匹配')
                 return
             }
-            if (this.matFileTableCurrentRow['type'] != this.preCurTrackValue.split(' ')[0]) {
+            var curType = {
+                '视频': '视频,音频',
+                '图片': '视频',
+                '音频': '音频'
+            } [this.matFileTableCurrentRow['type']]
+            if (!curType.includes(this.preCurTrackValue.split(' ')[0])) {
                 this.$vtNotify('error', '错误', '失败，当前轨道类型与素材类型不符')
                 return
             }
-            var tmpPointType = this.prePointedListSorted[0]['type']
+            //轨道素材入点
+            var tmpTrackMatInPointTime = 0
+            //轨道素材点位列表
+            var tmpTrackMatPointList = []
+
+            //当前批次打点段
             var tmpPointTimeList = []
+            //判断提交为自由点还是卡点
+            if (this.preMatMatchInfo) {
+                //卡点
+                tmpTrackMatInPointTime = Math.min(...this.preMatMatchInfo[0].split(',').map(v => parseFloat(v)))
+                tmpTrackMatPointList = this.preMatMatchInfo[1].split(',').map(v => parseFloat(v))
+            } else {
+                //自由点
+                tmpTrackMatInPointTime = parseFloat(this.vtPrTimeLineSecond)
+                tmpTrackMatPointList = this.prePointedListSorted.map(v=>v['pointSecond'])
+            }
+            //卡点变速时长不能大于待匹配时长
+            for(var ind =1; ind<tmpTrackMatPointList.length;ind++){
+                var tmpMatchDuration = tmpTrackMatPointList[i]-tmpTrackMatPointList[i-1]
+                if(parseFloat(this.freePointSecond)>tmpMatchDuration){
+                    this.$vtNotify('error', '错误', `失败，卡点变速时长不能大于待匹配时长:${tmpMatchDuration}s`)
+                    return
+
+                }
+            }
+            var tmpPointType = this.prePointedListSorted[0]['type']
             for (let point_ind in this.prePointedListSorted) {
                 var point = this.prePointedListSorted[point_ind]
+
+                //自由点根据打点间隔插入轨道
+                if (!this.preMatMatchInfo) {
+                    tmpTrackMatPointList = tmpPointTimeList
+                }
+
                 tmpPointTimeList.push(point['pointSecond'])
                 if (point['type'] != tmpPointType) {
                     //打点类型
@@ -363,74 +399,63 @@ const preComponent = Vue.extend({
                     var tmpDurationSeconds = Math.max(...tmpPointTimeList) - Math.min(...tmpPointTimeList)
 
                     //保存素材
-                    if (this.$store.state.infoType == '素材文件') {
-                        //插入素材信息
-                        this.$axiosAsyncExec(
-                            '/vt/insertMat', {
-                                'matType': this.matFileTableCurrentRow['type'],
-                                'matFileId': this.matFileTableCurrentRow['id'],
-                                'pointInfo': tmpPointTimeList.join()
-                            }, (res) => {
+                    if (!isCommit) {
+                        if (this.$store.state.infoType == '素材文件') {
+                            //插入素材信息
+                            this.$axiosAsyncExec(
+                                '/vt/insertMat', {
+                                    'matType': this.matFileTableCurrentRow['type'],
+                                    'matFileId': this.matFileTableCurrentRow['id'],
+                                    'pointInfo': tmpPointTimeList.join()
+                                }, (res) => {
 
-                                //更新素材列表数据
-                                this.$axiosAsyncExec(
-                                    '/vt/getMatViaMatFile', {
-                                        'matFileId': this.matFileTableCurrentRow['id']
-                                    }, (res) => {
-                                        this.$store.state.matTableData = res
-                                    }
-                                )
-                            }
-                        )
-                    }
-                    if (this.$store.state.infoType == '素材') {
-                        var tmpCurPointMatId = this.matTableCurrentRow['id']
-
-                        //更新素材信息
-                        this.$axiosAsyncExec(
-                            '/vt/updateMat', {
-                                'matId': tmpCurPointMatId,
-                                'pointInfo': tmpPointTimeList.join()
-                            }, (res) => {
-
-                            }
-                        )
-
-                        //更新素材列表数据
-                        this.$store.state.matTableData = this.matTableData.map(v => {
-                            if (v['id'] == this.matTableCurrentRow['id']) {
-                                v['startTime'] = Math.min(...tmpPointTimeList)
-                                v['durationSecond'] = tmpDurationSeconds.toFixed(3)
-                                v['pointNum'] = tmpPointTimeList.length
-                            }
-                            return v
-                        })
-
-                    }
-
-                    //提交操作到pr
-                    if (isCommit) {
-                        //轨道素材入点
-                        var tmpTrackMatInPointTime = 0
-                        //轨道素材点位列表
-                        var tmpTrackMatPointList = tmpPointTimeList
-
-
-                        //判断提交为自由点还是卡点
-                        if (this.preMatMatchInfo) {
-                            //卡点
-                            tmpTrackMatInPointTime = Math.min(...this.preMatMatchInfo[0].split(',').map(v => parseFloat(v)))
-                            tmpTrackMatPointList = this.preMatMatchInfo['point_info'].split(',').map(v => parseFloat(v))
-                        } else {
-                            //自由点
-                            tmpTrackMatInPointTime = this.vtPrTimeLineSecond
+                                    //更新素材列表数据
+                                    this.$axiosAsyncExec(
+                                        '/vt/getMatViaMatFile', {
+                                            'matFileId': this.matFileTableCurrentRow['id']
+                                        }, (res) => {
+                                            this.$store.state.matTableData = res
+                                        }
+                                    )
+                                }
+                            )
                         }
+                        if (this.$store.state.infoType == '素材') {
+                            var tmpCurPointMatId = this.matTableCurrentRow['id']
+
+                            //更新素材信息
+                            this.$axiosAsyncExec(
+                                '/vt/updateMat', {
+                                    'matId': tmpCurPointMatId,
+                                    'pointInfo': tmpPointTimeList.join()
+                                }, (res) => {
+
+                                }
+                            )
+
+                            //更新素材列表数据
+                            this.$store.state.matTableData = this.matTableData.map(v => {
+                                if (v['id'] == this.matTableCurrentRow['id']) {
+                                    v['startTime'] = Math.min(...tmpPointTimeList)
+                                    v['durationSecond'] = tmpDurationSeconds.toFixed(3)
+                                    v['pointNum'] = tmpPointTimeList.length
+                                }
+                                return v
+                            })
+
+                        }
+                    } 
+                    //提交操作到pr
+                    else {
 
                         //轨道match点位
                         var tmpTrackMatchInfo = []
-                        for (var point of tmpTrackMatPointList) {
-                            tmpTrackMatchInfo.push(tmpTrackMatInPointTime + point - tmpTrackMatPointList[0])
+                        var tmpDelta = 0
+                        for (var matchPoint of tmpTrackMatPointList) {
+                            tmpDelta = matchPoint - tmpTrackMatPointList[0]
+                            tmpTrackMatchInfo.push((tmpTrackMatInPointTime + tmpDelta).toFixed(3))
                         }
+                        tmpTrackMatInPointTime += tmpDelta
                         //当前毫秒时间戳
                         var tmpCurMilTimeStamp = (new Date().getTime()).toString()
                         //更新项目数据库
@@ -438,16 +463,17 @@ const preComponent = Vue.extend({
                             '/vt/insertProTrackMat', {
                                 'proName': this.$store.state.vtTitle,
                                 'trackName': this.preCurTrackValue,
-                                'point_info': tmpPointTimeList.join(','),
-                                'matfile_full_path': this.$store.state.matFileInfo['matfile_full_path'],
-                                'match_point': tmpTrackMatchInfo.join(','),
+                                'pointInfo': tmpPointTimeList.join(','),
+                                'matfileFullPath': this.$store.state.matFileInfo['matfile_full_path'],
+                                'matchPoint': tmpTrackMatchInfo.join(','),
+                                'freePointSecond': this.freePointSecond,
                                 'curTimeStamp': tmpCurMilTimeStamp
                             }, (res) => {
 
                             }
                         )
                         //开始插入轨道素材
-                        var tmpPrInsertArgs = `${this.preCurTrackValue}#${tmpTrackMatchInfo.join(',')}#${tmpPointTimeList.join(',')}#${this.$store.state.matFileInfo['matfile_full_path']}#${this.$store.state.settingFreePointSecond}#${tmpCurMilTimeStamp}`
+                        var tmpPrInsertArgs = `${this.preCurTrackValue}#${tmpTrackMatchInfo.join(',')}#${tmpPointTimeList.join(',')}#${this.$store.state.matFileInfo['matfile_full_path']}#${this.freePointSecond}#${tmpCurMilTimeStamp}`
                         this.$jsxExec('insertTrackMats', tmpPrInsertArgs.replace(/\\/g, '\\\\'), (data) => {
 
                         })
@@ -609,9 +635,9 @@ const preComponent = Vue.extend({
             //确定打点时间
             var tmpTime = 0
             if (this.matFileTableCurrentRow['type'] == '视频') {
-                tmpTime = (this.preVideoSliderValue * this.$refs.preVideoRef.duration / 100).toFixed(3)
+                tmpTime = parseFloat((this.preVideoSliderValue * this.$refs.preVideoRef.duration / 100).toFixed(3))
             } else if (this.matFileTableCurrentRow['type'] == '音频') {
-                tmpTime = (this.preAudioWavesurfer.getCurrentTime()).toFixed(3)
+                tmpTime = parseFloat((this.preAudioWavesurfer.getCurrentTime()).toFixed(3))
             } else {
                 this.$vtNotify('error', '错误', '当前素材不支持打点')
                 return
@@ -624,13 +650,13 @@ const preComponent = Vue.extend({
                 var tmpPointBef = Math.max(...tmpFilterPointList)
             }
 
-            if (tmpTime - tmpPointBef < parseFloat(this.$store.state.settingFreePointSecond)) {
-                this.$vtNotify('error', '错误', '失败，打点间隔必须大于卡点间隙时长:' + this.$store.state.settingFreePointSecond + 's')
+            if (tmpTime - tmpPointBef < parseFloat(this.freePointSecond)) {
+                this.$vtNotify('error', '错误', '失败，打点间隔必须大于卡点间隙时长:' + this.freePointSecond + 's')
                 return
             }
 
             //入点
-            if (!this.preMatMatchInfo && event.keyCode == parseInt(this.$store.state.settingInPointHotKey)) {
+            if (event.keyCode == parseInt(this.$store.state.settingInPointHotKey)) {
                 this.prePointedList.push({
                     'pointSecond': tmpTime,
                     'type': ''
@@ -638,20 +664,12 @@ const preComponent = Vue.extend({
 
             }
             //出点
-            if (!this.preMatMatchInfo && event.keyCode == parseInt(this.$store.state.settingOutPointHotKey)) {
+            if (event.keyCode == parseInt(this.$store.state.settingOutPointHotKey)) {
                 this.prePointedList.push({
                     'pointSecond': tmpTime,
                     'type': 'success'
                 })
 
-
-            }
-            //卡点
-            if (this.preMatMatchInfo && event.keyCode == parseInt(this.$store.state.settingPointHotKey)) {
-                this.prePointedList.push({
-                    'pointSecond': tmpTime,
-                    'type': 'info'
-                })
 
             }
             this.$nextTick(function () {
@@ -725,6 +743,7 @@ const preComponent = Vue.extend({
                 return
             }
         }
+
     },
     computed: {
         ...Vuex.mapState([
@@ -762,8 +781,8 @@ const preComponent = Vue.extend({
         //匹配点位是否完成状态列表
         preMatMatchPointIsFinish() {
             if (this.preMatMatchInfo) {
-                var tmpPointArray = new Array(this.preMatMatchInfo[0].split(',').length)
-                tmpPointArray.map((item, index) => index < this.prePointedListSorted.length ? 'success' : '')
+                var tmpPointArray = new Array(this.preMatMatchInfo[0].split(',').length).fill('')
+                tmpPointArray = tmpPointArray.map((item, index) => index < this.prePointedListSorted.length ? 'success' : '')
                 return tmpPointArray
             } else {
                 return []
@@ -782,6 +801,15 @@ const preComponent = Vue.extend({
             },
             get() {
                 return this.$store.state.prePointedList
+            }
+        },
+        //卡点变速时长
+        freePointSecond: {
+            set(value) {
+                this.$store.state.freePointSecond = value
+            },
+            get() {
+                return this.$store.state.freePointSecond
             }
         }
     },
@@ -870,7 +898,20 @@ const preComponent = Vue.extend({
                     }
                     if (curValue && curValue['type'] == '图片') {
                         this.preSaveStyle.display = 'none'
+                        //当素材文件类型为图片时，自动填充打点
+                        if (this.preMatMatchInfo) {
+                            var tmpPointList = []
 
+                            var tmpMatchPointList = this.preMatMatchInfo[0].split(',').map(v => parseFloat(v))
+                            for (let point_ind in tmpMatchPointList) {
+                                var point = tmpMatchPointList[point_ind]
+                                tmpPointList.push({
+                                    'pointSecond': point - tmpMatchPointList[0],
+                                    'type': point_ind == tmpMatchPointList.length - 1 ? 'success' : ''
+                                })
+                            }
+                            this.prePointedList = tmpPointList
+                        }
                     }
                 }
             )
@@ -885,6 +926,7 @@ const preComponent = Vue.extend({
         //当前轨道值改变时触发
         preCurTrackValue(curValue, oldValue) {
             this.preUpdateCursorOnTrackMat()
+            this.updateMatMatchInfo()
 
         },
         //项目时间轴指针时间改变时触发
@@ -899,24 +941,7 @@ const preComponent = Vue.extend({
                 this.updateMatMatchInfo()
                 this.preUpdateCursorOnTrackMat()
             },
-            deep: true
-        },
-        //待匹配素材信息改变时触发
-        preMatMatchInfo() {
-            //当素材文件类型为图片时，自动填充打点
-            if (this.matFileTableCurrentRow['type'] == '图片' && this.preMatMatchInfo) {
-                var tmpPointList = []
-
-                var tmpMatchPointList = this.preMatMatchInfo[0].split(',').map(v=>parseFloat(v))
-                for (let point of tmpMatchPointList) {
-                    tmpPointList.push({
-                        'pointSecond': point - tmpMatchPointList[0],
-                        'type': 'info'
-                    })
-                }
-                this.prePointedList = tmpPointList
-            }
-
+            deep: false
         }
     }
 })
@@ -1155,10 +1180,8 @@ const settingComponent = Vue.extend({
                 var settingProperties = res
                 //初始化配置
                 this.$store.state.settingMatFilePath = settingProperties.settingMatFilePath
-                this.$store.state.settingFreePointSecond = settingProperties.settingFreePointSecond
                 this.$store.state.settingInPointHotKey = settingProperties.settingInPointHotKey
                 this.$store.state.settingOutPointHotKey = settingProperties.settingOutPointHotKey
-                this.$store.state.settingPointHotKey = settingProperties.settingPointHotKey
                 this.$store.state.settingMogrtPath = settingProperties.settingMogrtPath
             }
         )
@@ -1206,14 +1229,6 @@ const settingComponent = Vue.extend({
                 return this.$store.state.settingMogrtPath
             }
         },
-        settingFreePointSecond: {
-            set: function (value) {
-                this.settingUpdateProperty(value, 'settingFreePointSecond')
-            },
-            get: function () {
-                return this.$store.state.settingFreePointSecond
-            }
-        },
         settingInPointHotKey: {
             set: function (value) {
                 this.settingUpdateProperty(value, 'settingInPointHotKey')
@@ -1228,14 +1243,6 @@ const settingComponent = Vue.extend({
             },
             get: function () {
                 return this.$store.state.settingOutPointHotKey
-            }
-        },
-        settingPointHotKey: {
-            set: function (value) {
-                this.settingUpdateProperty(value, 'settingPointHotKey')
-            },
-            get: function () {
-                return this.$store.state.settingPointHotKey
             }
         }
     }
@@ -1263,18 +1270,23 @@ const vtComponent = Vue.extend({
                     this.$store.state.preTrackMatInfo = res
                     //拼接轨道素材信息参数
                     var trackMatInfoArgs = []
-                    this.$store.state.preTrackMatInfo.forEach((key, val) => {
-                        for (let item in val) {
-                            trackMatInfoArgs.push([item[3], `${key}#${item[0]}#${item[1]}#${item[2]}#${this.$store.state.settingFreePointSecond}#${item[3]}`])
+                    for (let key in this.$store.state.preTrackMatInfo) {
+                        var val = this.$store.state.preTrackMatInfo[key]
+                        for (let item of val) {
+                            trackMatInfoArgs.push([item[3], `${key}#${item[0]}#${item[1]}#${item[2]}#${item[4]}#${item[3]}`])
+                        }
+                    }
+                    this.$jsxExec('cleanProject', '', (data) => {
+                        if (trackMatInfoArgs.length != 0) {
+                            this.$jsxExec('insertTrackMats', trackMatInfoArgs.sort().map(v => v[1])
+                                .join('|')
+                                .replace(/\\/g, '\\\\'), (data) => {
+
+                                })
                         }
                     })
-                    this.$jsxExec('cleanProject', '', (data) => {
-                        this.$jsxExec('insertTrackMats', trackMatInfoArgs.sort().map(v => v[1])
-                            .join('|')
-                            .replace(/\\/g, '\\\\'), (data) => {
-                                this.$vtNotify('success', '提示', '重做成功')
-                            })
-                    })
+
+                    this.$vtNotify('success', '提示', '重做成功')
                 })
 
 

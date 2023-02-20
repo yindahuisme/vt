@@ -112,7 +112,6 @@
 
 
 
-// (`${this.preCurTrackValue}#${tmpOutPointTime}#${tmpDepMatPointList}#${tmpPointTimeList.join()}#${this.$store.state.settingFreePointSecond}#${this.$store.state.matFileInfo['matfile_full_path']}`)
 
 var tmpMatInfo='视频 1#3#2,3#1,3#0.3#D:\\vt_data\\matFilePath\\search.mp4'
 
@@ -132,3 +131,9 @@ var out_point = new Time()
 out_point.seconds = 2
 target_project_item.setEndTime(out_point)
 app.project.activeSequence.videoTracks[0].insertClip(target_project_item,1)
+
+
+
+if(pointSpeed<1){
+    getQeTrackItemByName(trackName, tmpClipName).setEndPosition(1)
+    }

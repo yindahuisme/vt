@@ -103,43 +103,66 @@ function insertTrackMats(args) {
             var tmp1Speed = 1
             //第一段打点时长
             var tmp1PointDuration = 0
-            if (tmpPointDuration <= tmpMatchDuration) {
-                tmp1PointDuration = tmpPointDuration - tmp2Duration
-                tmp1Speed = tmp1PointDuration / tmp1Duration
-            }
             //第二段加速倍率
             var tmp2Speed = 1
             //第二段打点时长
             var tmp2PointDuration = 0
-            if (tmpPointDuration >= tmpMatchDuration) {
-                tmp2PointDuration = tmpPointDuration - tmp1Duration
-                tmp2Speed = tmp2PointDuration / tmp2Duration
+            if (tmp2Duration > 0) {
+                if (tmpPointDuration <= tmpMatchDuration) {
+                    tmp2PointDuration = tmp2Duration
+
+                    tmp1PointDuration = tmpPointDuration - tmp2PointDuration
+                    tmp1Speed = tmp1PointDuration / tmp1Duration
+                } else {
+                    tmp1PointDuration = tmp1Duration
+
+                    tmp2PointDuration = tmpPointDuration - tmp1PointDuration
+                    tmp2Speed = tmp2PointDuration / tmp2Duration
+
+                }
+            } else {
+                tmp1PointDuration = tmpPointDuration
+                tmp1Speed = tmp1PointDuration / tmp1Duration
             }
 
             var inTime = parseFloat(matPointList[i])
             var inPointTime = parseFloat(matFilePointList[i])
-            insertMatToTrack(tmp1PointDuration, tmp1Speed, trackName)
+            insertMatToTrack(tmp1Duration, tmp1Speed, trackName)
             inTime += tmp1Duration
             inPointTime += tmp1PointDuration
-            insertMatToTrack(tmp2PointDuration, tmp2Speed, trackName)
+            if (tmp2Duration > 0) {
+                insertMatToTrack(tmp2Duration, tmp2Speed, trackName)
+
+            }
         }
     }
 
     //-----------------------
-    function insertMatToTrack(pointDuration, pointSpeed, trackName) {
+    function insertMatToTrack(matchDuration, pointSpeed, trackName) {
 
         //待插入track
         var tmpTrack = getTrackByName(trackName)
         //clip开始结束
         var tmpSpeedStart = inPointTime
-        var tmpSpeedEnd = inPointTime + pointDuration
+        var tmpSpeedEnd = inPointTime + 0.1
         // 生成临时名
         var tmpClipName = target_project_item.name.replace('\.', '_') + '_片段' + curTimeStamp
         //插入素材到轨道
-        var tmpClip = target_project_item.createSubClip(tmpClipName, tmpSpeedStart, tmpSpeedEnd, 1, 1, trackName.split(' ')[0] == '视频' ? 0 : 1, 1)
+        var tmpIsAudio = trackName.split(' ')[0] == '视频' ? 0 : 1
+        var tmpIsVideo = trackName.split(' ')[0] == '视频' ? 1 : 0
+        var tmpClip = target_project_item.createSubClip(tmpClipName, tmpSpeedStart, tmpSpeedEnd, 0, tmpIsVideo, tmpIsAudio)
         tmpTrack.overwriteClip(tmpClip, inTime)
         //变速
         getQeTrackItemByName(trackName, tmpClipName).setSpeed(pointSpeed, '', false, false, false)
+        //拉升
+        var tmpTrackItem = getTrackItemByName(trackName, tmpClipName)
+        var tmpEndTime = new Time()
+        tmpEndTime.seconds = inTime + matchDuration
+        try {
+            tmpTrackItem.end = tmpEndTime
+        } catch (e) {
+            //效果达到，但是会报错，捕获
+        }
     }
 
     function getProjectByPath(file_path) {
@@ -166,6 +189,18 @@ function insertTrackMats(args) {
         }
     }
 
+    function getTrackItemByName(trackName, clipName) {
+        var tmpTrack = getTrackByName(trackName)
+
+        for (var i = tmpTrack.clips.numItems - 1; i >= 0; i--) {
+            var tmpItem = tmpTrack.clips[i]
+            if (tmpItem.name == clipName) {
+                return tmpItem
+            }
+        }
+
+    }
+
     function getQeTrackItemByName(trackName, clipName) {
         var tmpTrack
         if (trackName.split(' ')[0] == '视频') {
@@ -174,6 +209,7 @@ function insertTrackMats(args) {
                 var tmpVideoTrack = qe.project.getActiveSequence().getVideoTrackAt(i)
                 if (tmpVideoTrack.name == trackName) {
                     tmpTrack = tmpVideoTrack
+                    break
                 }
             }
         } else {
@@ -182,6 +218,7 @@ function insertTrackMats(args) {
                 var tmpAudioTrack = qe.project.getActiveSequence().getAudioTrackAt(i)
                 if (tmpAudioTrack.name == trackName) {
                     tmpTrack = tmpAudioTrack
+                    break
                 }
             }
         }
@@ -214,7 +251,7 @@ function delTrackMats(args) {
                 for (var j = trackItemLength - 1; j >= 0; j--) {
                     var tmpItem = tmpActiveSequence.getVideoTrackAt(i).getItemAt(j)
                     // 判断clipName
-                    if (tmpItem.getProjectItem() != null && tmpItem.name.endsWith(curTimeStamp)) {
+                    if (tmpItem.getProjectItem() != null && tmpItem.name.split('_片段')[1] == curTimeStamp) {
                         tmpItem.remove()
                     }
 
@@ -232,7 +269,7 @@ function delTrackMats(args) {
                 for (var j = trackItemLength - 1; j >= 0; j--) {
                     var tmpItem = tmpActiveSequence.getAudioTrackAt(i).getItemAt(j)
                     // 判断clipName
-                    if (tmpItem.getProjectItem() != null && tmpItem.name.endsWith(curTimeStamp)) {
+                    if (tmpItem.getProjectItem() != null && tmpItem.name.split('_片段')[1] == curTimeStamp) {
                         tmpItem.remove()
                     }
                 }

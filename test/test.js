@@ -124,6 +124,9 @@
 // var b=[...a]
 // console.log(b)
 
+// var b=new Array(2)
+// var a = b.map((v,i)=>i>[1].length?'true':'false')
+// console.log(a)
 
-
-console.log((new Date().getTime()).toString())
+var a = parseFloat((30 * 1.2 / 100).toFixed(3))
+console.log(a)
