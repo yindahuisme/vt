@@ -180,7 +180,7 @@
                     <el-option v-for="item in preCurTrackOptions" :key="item" :label="item" :value="item">
                     </el-option>
                 </el-select>
-                <el-input v-model="preFreePointSecond" size="small">
+                <el-input v-model="preFreePointSpeed" size="small">
                 </el-input>
 
                 <el-button v-if="!preCursorOnTrackMat" type="primary" @click="preSave(false)" :style="preSaveStyle">保存</el-button>

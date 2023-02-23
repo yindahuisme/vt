@@ -364,15 +364,6 @@ const preComponent = Vue.extend({
                 tmpTrackMatInPointTime = parseFloat(this.vtPrTimeLineSecond)
                 tmpTrackMatPointList = this.prePointedListSorted.map(v=>v['pointSecond'])
             }
-            //卡点变速时长不能大于待匹配时长
-            for(var ind =1; ind<tmpTrackMatPointList.length;ind++){
-                var tmpMatchDuration = tmpTrackMatPointList[ind]-tmpTrackMatPointList[ind-1]
-                if(parseFloat(this.preFreePointSecond)>tmpMatchDuration){
-                    this.$vtNotify('error', '错误', `失败，卡点变速时长不能大于待匹配时长:${tmpMatchDuration}s`)
-                    return
-
-                }
-            }
             var tmpPointType = this.prePointedListSorted[0]['type']
             for (let point_ind in this.prePointedListSorted) {
                 var point = this.prePointedListSorted[point_ind]
@@ -466,14 +457,14 @@ const preComponent = Vue.extend({
                                 'pointInfo': tmpPointTimeList.join(','),
                                 'matfileFullPath': this.$store.state.matFileInfo['matfile_full_path'],
                                 'matchPoint': tmpTrackMatchInfo.join(','),
-                                'freePointSecond': this.preFreePointSecond,
+                                'freePointSpeed': this.preFreePointSpeed,
                                 'curTimeStamp': tmpCurMilTimeStamp
                             }, (res) => {
 
                             }
                         )
                         //开始插入轨道素材
-                        var tmpPrInsertArgs = `${this.preCurTrackValue}#${tmpTrackMatchInfo.join(',')}#${tmpPointTimeList.join(',')}#${this.$store.state.matFileInfo['matfile_full_path']}#${this.preFreePointSecond}#${tmpCurMilTimeStamp}`
+                        var tmpPrInsertArgs = `${this.preCurTrackValue}#${tmpTrackMatchInfo.join(',')}#${tmpPointTimeList.join(',')}#${this.$store.state.matFileInfo['matfile_full_path']}#${this.preFreePointSpeed}#${tmpCurMilTimeStamp}`
                         this.$jsxExec('insertTrackMats', tmpPrInsertArgs.replace(/\\/g, '\\\\'), (data) => {
 
                         })
@@ -633,8 +624,8 @@ const preComponent = Vue.extend({
                 var tmpPointBef = Math.max(...tmpFilterPointList)
             }
 
-            if (tmpTime - tmpPointBef < parseFloat(this.preFreePointSecond)) {
-                this.$vtNotify('error', '错误', '失败，打点间隔必须大于卡点间隙时长:' + this.preFreePointSecond + 's')
+            if (tmpTime - tmpPointBef < 0.1 ) {
+                this.$vtNotify('error', '错误', '失败，打点间隔必须大于0.1s')
                 return
             }
 
@@ -790,13 +781,13 @@ const preComponent = Vue.extend({
                 return this.$store.state.prePointedList
             }
         },
-        //卡点变速时长
-        preFreePointSecond: {
+        //卡点变速
+        preFreePointSpeed: {
             set(value) {
-                this.$store.state.preFreePointSecond = value
+                this.$store.state.preFreePointSpeed = value
             },
             get() {
-                return this.$store.state.preFreePointSecond
+                return this.$store.state.preFreePointSpeed
             }
         }
     },

@@ -72,8 +72,8 @@ function insertTrackMats(args) {
         var matFilePointList = tmpMatInfoList[2].split(',')
         //素材文件路径
         var file_path = tmpMatInfoList[3]
-        //卡点间隙时长，秒
-        var freePointSeconds = parseFloat(tmpMatInfoList[4])
+        //卡点变速
+        var freePointSpeed = parseFloat(tmpMatInfoList[4])
         //当前毫秒时间戳
         var curTimeStamp = tmpMatInfoList[5]
 
@@ -95,42 +95,32 @@ function insertTrackMats(args) {
             //待匹配时长
             var tmpMatchDuration = parseFloat(matPointList[i + 1]) - parseFloat(matPointList[i])
 
-            //第一段匹配时长
-            var tmp1Duration = tmpMatchDuration - freePointSeconds
-            //第二段匹配时长
-            var tmp2Duration = freePointSeconds
-            //第一段加速倍率
-            var tmp1Speed = 1
-            //第一段打点时长
-            var tmp1PointDuration = 0
             //第二段加速倍率
-            var tmp2Speed = 1
+            var tmp2Speed = freePointSpeed
+            //第二段匹配时长
+            var tmp2Duration = 0
             //第二段打点时长
             var tmp2PointDuration = 0
-            if (tmp2Duration > 0) {
-                if (tmpPointDuration <= tmpMatchDuration) {
-                    tmp2PointDuration = tmp2Duration
-
-                    tmp1PointDuration = tmpPointDuration - tmp2PointDuration
-                    tmp1Speed = tmp1PointDuration / tmp1Duration
-                } else {
-                    tmp1PointDuration = tmp1Duration
-
-                    tmp2PointDuration = tmpPointDuration - tmp1PointDuration
-                    tmp2Speed = tmp2PointDuration / tmp2Duration
-
-                }
-            } else {
-                tmp1PointDuration = tmpPointDuration
-                tmp1Speed = tmp1PointDuration / tmp1Duration
+            if(tmp2Speed!=0){
+                var tmpMinDuration = Math.min(tmpPointDuration,tmpMatchDuration)
+                tmp2PointDuration = Math.min(tmpMinDuration/tmp2Speed*Math.max(0.3,1-tmpMinDuration),0.3)*tmp2Speed
+                tmp2Duration = tmp2PointDuration/tmp2Speed
             }
+
+            //第一段匹配时长
+            var tmp1Duration = tmpMatchDuration - tmp2Duration
+            //第一段打点时长
+            var tmp1PointDuration = tmpPointDuration - tmp2PointDuration
+            //第一段加速倍率
+            var tmp1Speed = tmp1PointDuration/tmp1Duration
+            
 
             var inTime = parseFloat(matPointList[i])
             var inPointTime = parseFloat(matFilePointList[i])
             insertMatToTrack(tmp1Duration, tmp1Speed, trackName)
             inTime += tmp1Duration
             inPointTime += tmp1PointDuration
-            if (tmp2Duration > 0) {
+            if (tmp2Speed != 0) {
                 insertMatToTrack(tmp2Duration, tmp2Speed, trackName)
 
             }
@@ -144,7 +134,7 @@ function insertTrackMats(args) {
         var tmpTrack = getTrackByName(trackName)
         //clip开始结束
         var tmpSpeedStart = inPointTime
-        var tmpSpeedEnd = inPointTime + 0.1
+        var tmpSpeedEnd = inPointTime + app.project.activeSequence.timebase/254016000000
         // 生成临时名
         var tmpClipName = target_project_item.name.replace('\.', '_') + '_片段' + curTimeStamp
         //插入素材到轨道
