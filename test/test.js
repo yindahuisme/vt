@@ -128,5 +128,8 @@
 // var a = b.map((v,i)=>i>[1].length?'true':'false')
 // console.log(a)
 
-var a = parseFloat((30 * 1.2 / 100).toFixed(3))
-console.log(a)
+// var a = parseFloat((30 * 1.2 / 100).toFixed(3))
+// console.log(a)
+
+var a = []
+console.log(a?'a':'b')

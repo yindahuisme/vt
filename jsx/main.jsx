@@ -154,6 +154,8 @@ function insertTrackMats(args) {
         tmpTrack.overwriteClip(tmpClip, inTime)
         //变速
         getQeTrackItemByName(trackName, tmpClipName).setSpeed(pointSpeed, '', false, false, false)
+        //适应屏幕
+        getQeTrackItemByName(trackName, tmpClipName).setScaleToFrameSize(true)
         //拉升
         var tmpTrackItem = getTrackItemByName(trackName, tmpClipName)
         var tmpEndTime = new Time()

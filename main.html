@@ -180,7 +180,7 @@
                     <el-option v-for="item in preCurTrackOptions" :key="item" :label="item" :value="item">
                     </el-option>
                 </el-select>
-                <el-input v-model="freePointSecond" size="small">
+                <el-input v-model="preFreePointSecond" size="small">
                 </el-input>
 
                 <el-button v-if="!preCursorOnTrackMat" type="primary" @click="preSave(false)" :style="preSaveStyle">保存</el-button>
@@ -191,7 +191,7 @@
             <div class="vtDown" v-if="matFileTableCurrentRow">
                 <div class="vtLeft">
                     <!-- 视频 -->
-                    <div title="视频" v-if="matFileTableCurrentRow.type == '视频' && matFileInfo">
+                    <div title="视频" v-if="matFileTableCurrentRow.type == '视频' && matFileInfo" style="font-size: 0;">
                         <!-- url方式 -->
                         <!-- <video ref="preVideoRef" :src="this.$getMatFileUrl(matFileInfo['matfile_full_path'])"></video> -->
 
@@ -222,8 +222,11 @@
                         </el-button>
                     </div>
                     <div class="prePointInfo">
-                        <el-button icon="el-icon-timer" v-for="(item,index) in preMatMatchPointIsFinish" :key="index" :type="item" @click="preMatchPointClick(index)" circle>
-                        </el-button>
+                        <el-tooltip v-for="(item,index) in preMatMatchPointIsFinish" :key="index" :content="prePointInfoTips(index)" placement="bottom" effect="light">
+                            <el-button icon="el-icon-timer"  :type="item" circle>
+                            </el-button>
+                        </el-tooltip>
+                        
                     </div>
                 </div>
                 <div class="vtRight" ref="vtRightScrollRef">

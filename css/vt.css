@@ -323,8 +323,8 @@ body {
 
 /*页面内容区-预览区-卡片-卡片body-left-按钮*/
 #pre>.el-card>.el-card__body .vtLeft button {
-    height: 6vh;
-    width:6vh;
+    height: 4vh;
+    width:4vh;
     margin: 0%;
     padding: 0%;
     overflow: hidden;
@@ -332,33 +332,45 @@ body {
 
 /*页面内容区-预览区-卡片-卡片body-left-视频*/
 #pre>.el-card>.el-card__body .vtLeft video {
-    height: 28vh;
+    height: 33vh;
     width:100%;
 }
 
 /*页面内容区-预览区-卡片-卡片body-left-滑动条*/
 #pre>.el-card>.el-card__body .vtLeft .el-slider__runway {
-    height: 2vh;
+    height: 1vh;
     width:100%;
     margin: 0%;
 }
 
+/*页面内容区-预览区-卡片-卡片body-left-滑动条-圆形按钮触发框*/
+#pre>.el-card>.el-card__body .vtLeft .el-slider__runway .el-slider__button-wrapper {
+    height: 2vh;
+    width: 2vh;
+    top: -1vh;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-滑动条-圆形按钮*/
+#pre>.el-card>.el-card__body .vtLeft .el-slider__runway .el-slider__button {
+    height: 2vh;
+}
+
 /*页面内容区-预览区-卡片-卡片body-left-音频波形区*/
 #pre>.el-card>.el-card__body .vtLeft #preAudio>wave {
-    height: 30vh !important;
+    height: 33vh !important;
     width: 100% !important;
     overflow: hidden !important;
 }
 
 /*页面内容区-预览区-卡片-卡片body-left-图片*/
 #pre>.el-card>.el-card__body .vtLeft img {
-    height: 36vh;
+    height: 38vh;
     width:100%;
 }
 
 /*页面内容区-预览区-卡片-卡片body-left-控制区*/
 #pre>.el-card>.el-card__body .vtLeft .preContral {
-    height: 6vh;
+    height: 5vh;
     width: 100%;
     overflow: hidden;
     text-align: center;
@@ -366,13 +378,13 @@ body {
 
 /*页面内容区-预览区-卡片-卡片body-left-控制区-输入框*/
 #pre>.el-card>.el-card__body .vtLeft .preContral .el-input {
-    height: 6vh;
+    height: 4vh;
     width:20%;
 }
 
 /*页面内容区-预览区-卡片-卡片body-left-控制区-输入区*/
 #pre>.el-card>.el-card__body .vtLeft .preContral input {
-    height: 6vh;
+    height: 4vh;
     width:100%;
     margin: 0%;
     padding: 0%;
@@ -380,10 +392,11 @@ body {
 
 /*页面内容区-预览区-卡片-卡片body-left-点位信息区*/
 #pre>.el-card>.el-card__body .vtLeft .prePointInfo {
-    height: 6vh;
+    height: 4vh;
     width: 100%;
     border: solid 1px #ebeef5;
     border-radius: 10px;
+    font-size: 0;
     overflow: hidden;
 }
 

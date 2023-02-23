@@ -43,7 +43,7 @@ var store = new Vuex.Store({
         //当前打点列表
         prePointedList: [],
         //卡点变速时长
-        freePointSecond:0,
+        preFreePointSecond:0,
         //信息-------------------------------------------
         // 当前信息展示类型,素材文件或素材
         infoType: '',
