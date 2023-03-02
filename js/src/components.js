@@ -320,6 +320,9 @@ const preComponent = Vue.extend({
                 this.preAudioWavesurfer.on('finish', () => {
                     this.prePlay()
                 })
+                this.preAudioWavesurfer.on('audioprocess', () => {
+                    this.prePlayScheduleValue  = this.preAudioWavesurfer.getCurrentTime().toFixed(3)
+                })
                 this.preAudioWavesurfer.load(this.$getMatFileUrl(this.matFileInfo['matfile_full_path']))
             })
 
@@ -343,10 +346,6 @@ const preComponent = Vue.extend({
                 this.$vtNotify('error', '错误', '失败, 打点应该大等于2个')
                 return
             }
-            if (this.preMatMatchInfo && this.prePointedListSorted.length != this.preMatMatchInfo[1].split(',').length) {
-                this.$vtNotify('error', '错误', '失败，打点个数不匹配')
-                return
-            }
             //轨道素材入点
             var tmpTrackMatInPointTime = 0
             //轨道素材点位列表
@@ -362,7 +361,7 @@ const preComponent = Vue.extend({
             } else {
                 //自由点
                 tmpTrackMatInPointTime = parseFloat(this.vtPrTimeLineSecond)
-                tmpTrackMatPointList = this.prePointedListSorted.map(v=>v['pointSecond'])
+                tmpTrackMatPointList = this.prePointedListSorted.map(v => v['pointSecond'])
             }
             var tmpPointType = this.prePointedListSorted[0]['type']
             for (let point_ind in this.prePointedListSorted) {
@@ -426,9 +425,13 @@ const preComponent = Vue.extend({
                             })
 
                         }
-                    } 
+                    }
                     //提交操作到pr
                     else {
+                        if (this.preMatMatchInfo && this.prePointedListSorted.length != this.preMatMatchInfo[1].split(',').length) {
+                            this.$vtNotify('error', '错误', '失败，打点个数不匹配')
+                            return
+                        }
                         var curType = {
                             '视频': '视频,音频',
                             '图片': '视频',
@@ -535,6 +538,7 @@ const preComponent = Vue.extend({
             if (mediaType == '音频') {
                 if (this.prePlayStatus == 1) {
                     //播放
+                    this.preAudioWavesurfer.setPlaybackRate(this.prePlaySpeedValue)
                     this.preAudioWavesurfer.play()
 
                 } else {
@@ -546,6 +550,7 @@ const preComponent = Vue.extend({
             if (mediaType == '视频') {
                 if (this.prePlayStatus == 1) {
                     //播放
+                    this.$refs.preVideoRef.playbackRate = this.prePlaySpeedValue
                     this.$refs.preVideoRef.play()
 
                 } else {
@@ -579,7 +584,7 @@ const preComponent = Vue.extend({
                     var tmpList = item[0].split(',').map(v => parseFloat(v))
                     var tmpStartTime = Math.min(...tmpList)
                     var tmpEndTime = Math.max(...tmpList)
-                    if (this.vtPrTimeLineSecond <= tmpEndTime && this.vtPrTimeLineSecond >= tmpStartTime) {
+                    if (this.vtPrTimeLineSecond < tmpEndTime && this.vtPrTimeLineSecond >= tmpStartTime) {
                         this.preMatMatchInfo = item
                         return
                     }
@@ -624,7 +629,7 @@ const preComponent = Vue.extend({
                 var tmpPointBef = Math.max(...tmpFilterPointList)
             }
 
-            if (tmpTime - tmpPointBef < 0.1 ) {
+            if (tmpTime - tmpPointBef < 0.1) {
                 this.$vtNotify('error', '错误', '失败，打点间隔必须大于0.1s')
                 return
             }
@@ -697,15 +702,15 @@ const preComponent = Vue.extend({
                 var tmpList = item[0].split(',').map(v => parseFloat(v))
                 var tmpStartTime = Math.min(...tmpList)
                 var tmpEndTime = Math.max(...tmpList)
-                if (this.vtPrTimeLineSecond <= tmpEndTime && this.vtPrTimeLineSecond >= tmpStartTime) {
+                if (this.vtPrTimeLineSecond < tmpEndTime && this.vtPrTimeLineSecond >= tmpStartTime) {
                     this.preCursorOnTrackMat = item
                     return
                 }
             }
             this.preCursorOnTrackMat = null
         },
-        //滑块改变进度
-        preSliderValueChangeClick(val) {
+        //改变视频，音频进度
+        preScheduleValueChange(val) {
             if (this.matFileTableCurrentRow['type'] == '视频') {
                 this.preVideoSliderValue = val / this.$refs.preVideoRef.duration * 100
             } else if (this.matFileTableCurrentRow['type'] == '音频') {
@@ -717,8 +722,8 @@ const preComponent = Vue.extend({
             }
         },
         //打点标志提示
-        prePointInfoTips(index){
-            return this.preMatMatchInfo?this.preMatMatchInfo[0].split(',')[index]:''
+        prePointInfoTips(index) {
+            return this.preMatMatchInfo ? this.preMatMatchInfo[1].split(',')[index] : ''
 
         }
 
@@ -744,12 +749,17 @@ const preComponent = Vue.extend({
         //视频进度滑动条值
         preVideoSliderValueCompute: {
             set(value) {
+                if(!this.$refs.preVideoRef.duration){
+                    return 
+                }
                 //计算出了视频时长，在执行
+                var tmpValue = Math.floor(value * 10 * this.$refs.preVideoRef.duration) / 1000
                 if (this.preVideoSliderValueUpdateFlag && !(this.$refs.preVideoRef.duration != this.$refs.preVideoRef.duration)) {
-                    this.$refs.preVideoRef.currentTime = Math.floor(value * 10 * this.$refs.preVideoRef.duration) / 1000
+                    this.$refs.preVideoRef.currentTime = tmpValue
                 } else {
                     this.preVideoSliderValueUpdateFlag = true
                 }
+                this.prePlayScheduleValue = tmpValue
                 this.preVideoSliderValue = value
             },
             get() {
@@ -822,7 +832,11 @@ const preComponent = Vue.extend({
             //当前待匹配素材信息
             preMatMatchInfo: null,
             //pr光标停留的素材
-            preCursorOnTrackMat: null
+            preCursorOnTrackMat: null,
+            //播放速度
+            prePlaySpeedValue: 1,
+            //播放进度
+            prePlayScheduleValue: 0
 
 
 
@@ -1118,6 +1132,76 @@ const matComponent = Vue.extend({
             this.matRClickMenuStyle.bottom = String(innerHeight - event.clientY) + 'px'
             this.matRClickMenuStyle.right = String(innerWidth - event.clientX) + 'px'
             this.matRClickMenuStyle.display = 'block'
+        },
+        //素材批量提交
+        matBatchCommit(){
+            var tmpPointTypeList = ['','success']
+            var tmpPointIndex = 0
+            //初始化第一个素材点
+            var tmpPointList = []
+            var tmpMatInfoList = this.$store.state.matInfo['point_info'].split(',')
+            for (var i in tmpMatInfoList){
+                if (i == tmpMatInfoList.length - 1){
+                    tmpPointIndex = 1-tmpPointIndex
+                    tmpPointList.push({
+                        'pointSecond': parseFloat(tmpMatInfoList[i]),
+                        'type': tmpPointTypeList[tmpPointIndex]
+                    })
+                }else{
+                    tmpPointList.push({
+                        'pointSecond': parseFloat(tmpMatInfoList[i]),
+                        'type': tmpPointTypeList[tmpPointIndex]
+                    })
+                }
+            }
+            //获取所有素材点
+            this.$axiosAsyncExec(
+                '/vt/getMatPointViaMatFile', {
+                    'matFileId': this.matFileTableCurrentRow['id']
+                }, (res) => {
+                    while(true){
+                        //当前点列表最后一个点
+                        var tmpLastPointValue = tmpPointList[tmpPointList.length-1]['pointSecond']
+                        for(var tmpThePointInfo of res){
+                            var tmpThePointInfoList = tmpThePointInfo['point_info'].split(',')
+                            if(tmpLastPointValue == parseFloat(tmpThePointInfoList[0])){
+                                for (var i in tmpThePointInfoList){
+                                    if (i == 0){
+
+                                    }
+                                    else if (i == tmpThePointInfoList.length - 1){
+                                        tmpPointIndex = 1-tmpPointIndex
+                                        tmpPointList.push({
+                                            'pointSecond': parseFloat(tmpThePointInfoList[i]),
+                                            'type': tmpPointTypeList[tmpPointIndex]
+                                        })
+                                    }else{
+                                        tmpPointList.push({
+                                            'pointSecond': parseFloat(tmpThePointInfoList[i]),
+                                            'type': tmpPointTypeList[tmpPointIndex]
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                        break
+                    }
+
+                    this.$store.state.prePointedList = tmpPointList
+                    this.preSave(true)
+                })
+
+
+        },
+        //删除当前所有素材
+        matDelAll(){
+            this.$axiosAsyncExec(
+                '/vt/matDelAll', {
+                    'matFileId': this.matFileTableCurrentRow['id']
+                }, (res) => {
+                    this.matUpdateList()
+                    this.$vtNotify('success', '提示', '删除所有素材成功')
+                })
         }
 
     },
@@ -1259,12 +1343,12 @@ const vtComponent = Vue.extend({
                             this.$jsxExec('insertTrackMats', trackMatInfoArgs.sort().map(v => v[1])
                                 .join('|')
                                 .replace(/\\/g, '\\\\'), (data) => {
-
+                                    this.$vtNotify('success', '提示', '重做成功')
                                 })
+                        }else{
+                            this.$vtNotify('success', '提示', '重做成功')
                         }
                     })
-
-                    this.$vtNotify('success', '提示', '重做成功')
                 })
 
 

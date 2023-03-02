@@ -215,7 +215,13 @@
                         </el-button>
                         <el-input v-model="preTimeLeftValue" resize="none">
                         </el-input>
+                        <!-- 播放速度 -->
+                        <el-input v-model="prePlaySpeedValue" resize="none">
+                        </el-input>
                         <el-button :icon="prePlayIco" @click="prePlay" style="vertical-align: top;" circle></el-button>
+                        <!-- 进度条值 -->
+                        <el-input v-model="prePlayScheduleValue" @change="preScheduleValueChange" resize="none" >
+                        </el-input>
                         <el-input v-model="preTimeRightValue" resize="none">
                         </el-input>
                         <el-button icon="el-icon-d-arrow-right" @click="preTimeRight" style="float:right" circle>
@@ -232,7 +238,7 @@
                 <div class="vtRight" ref="vtRightScrollRef">
                     <el-tag style="display: block;" :key="index" v-for="(item,index) in prePointedListSorted" :type="item.type" closable :disable-transitions="false"
                         @close="preDelPoint(item)"
-                        @click="preSliderValueChangeClick(item.pointSecond)">
+                        @click="preScheduleValueChange(item.pointSecond)">
                         {{item.pointSecond}}
                     </el-tag>
                 </div>
@@ -281,7 +287,9 @@
             <!-- 素材右键菜单 -->
             <el-card class="box-card" id="matRClickMenu" :style="matRClickMenuStyle">
                 <el-button size="medium" @click="matManageTags">标签管理</el-button>
+                <el-button size="medium" @click="matBatchCommit">批量提交</el-button>
                 <el-button size="medium" @click="matDelMat">删除</el-button>
+                <el-button size="medium" @click="matDelAll">全部删除</el-button>
             </el-card>
 
 

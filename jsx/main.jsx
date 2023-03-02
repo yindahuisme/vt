@@ -62,6 +62,10 @@ function insertTrackMats(args) {
     for (var item_index = 0; item_index < tmpMatInfoLists.length; item_index++) {
         var tmpMatInfo = tmpMatInfoLists[item_index]
         var tmpMatInfoList = tmpMatInfo.split('#')
+        //对所有时间向下帧数取整，避免素材在轨道上的间隙
+        //一帧间隔
+        var tmpPerFrame = app.project.activeSequence.timebase/254016000000
+
         //待插入project_item
         var target_project_item = null
         //待插入轨道名
@@ -134,7 +138,7 @@ function insertTrackMats(args) {
         var tmpTrack = getTrackByName(trackName)
         //clip开始结束
         var tmpSpeedStart = inPointTime
-        var tmpSpeedEnd = inPointTime + app.project.activeSequence.timebase/254016000000
+        var tmpSpeedEnd = inPointTime + tmpPerFrame
         // 生成临时名
         var tmpClipName = target_project_item.name.replace('\.', '_') + '_片段' + curTimeStamp
         //插入素材到轨道
