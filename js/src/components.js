@@ -291,7 +291,7 @@ const preComponent = Vue.extend({
     template: document.getElementById('preTemplate').innerHTML,
     mounted() {
         //初始化
-
+        this.$store.state.preComponentInstance = this
 
         //开启定时器，更新项目指针当前时间
         setInterval(this.updatePrTimeLineSecond, 500)
@@ -975,7 +975,9 @@ const matComponent = Vue.extend({
             // 素材文件-表格当前选项
             'matFileTableCurrentRow',
             // 素材-表格当前选项
-            'matTableCurrentRow'
+            'matTableCurrentRow',
+            // 预览组件实例
+            'preComponentInstance'
         ]),
         //素材列表项右键菜单style
         matRClickMenuStyle: {
@@ -1188,7 +1190,7 @@ const matComponent = Vue.extend({
                     }
 
                     this.$store.state.prePointedList = tmpPointList
-                    this.preSave(true)
+                    this.preComponentInstance.preSave(true)
                 })
 
 

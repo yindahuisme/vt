@@ -8,6 +8,8 @@ var store = new Vuex.Store({
         axiosInstance: axios.create({
             baseURL: 'http://localhost:9999'
         }),
+        //预览组件实例
+        preComponentInstance : null,
         //素材文件--------------------------------------------
         //素材文件表格当前选项,信息
         matFileTableCurrentRow: null,
