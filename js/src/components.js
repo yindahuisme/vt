@@ -425,9 +425,18 @@ const preComponent = Vue.extend({
                             })
 
                         }
+
+                        if (this.$store.state.infoType == '素材') {
+                            //素材只保存第一段
+                            break
+                        }
                     }
                     //提交操作到pr
                     else {
+                        if (this.preCurTrackValue == '') {
+                            this.$vtNotify('error', '错误', '失败, 没有选择当前轨道')
+                            return
+                        }
                         if (this.preMatMatchInfo && this.prePointedListSorted.length != this.preMatMatchInfo[1].split(',').length) {
                             this.$vtNotify('error', '错误', '失败，打点个数不匹配')
                             return
@@ -482,10 +491,7 @@ const preComponent = Vue.extend({
                     }
                     tmpPointTimeList = [point['pointSecond']]
 
-                    if (this.$store.state.infoType == '素材') {
-                        //素材只保留第一段
-                        break
-                    }
+                    
                 }
             }
 
@@ -1162,11 +1168,14 @@ const matComponent = Vue.extend({
                     'matFileId': this.matFileTableCurrentRow['id']
                 }, (res) => {
                     while(true){
+                        //是否成功接龙
+                        var isPushed = false
                         //当前点列表最后一个点
                         var tmpLastPointValue = tmpPointList[tmpPointList.length-1]['pointSecond']
                         for(var tmpThePointInfo of res){
                             var tmpThePointInfoList = tmpThePointInfo['point_info'].split(',')
                             if(tmpLastPointValue == parseFloat(tmpThePointInfoList[0])){
+                                isPushed = true
                                 for (var i in tmpThePointInfoList){
                                     if (i == 0){
 
@@ -1186,7 +1195,10 @@ const matComponent = Vue.extend({
                                 }
                             }
                         }
-                        break
+
+                        if (!isPushed){
+                            break
+                        }
                     }
 
                     this.$store.state.prePointedList = tmpPointList
