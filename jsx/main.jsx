@@ -99,6 +99,13 @@ function insertTrackMats(args) {
             //待匹配时长
             var tmpMatchDuration = parseFloat(matPointList[i + 1]) - parseFloat(matPointList[i])
 
+            //如果当前轨道提交音频,阻止音频变速
+            if (trackName.split(' ')[0] == '音频'){
+                tmpMinValue = Math.min(tmpMatchDuration,tmpPointDuration)
+                tmpMatchDuration = tmpMinValue
+                tmpPointDuration = tmpMinValue
+            }
+
             //第二段加速倍率
             var tmp2Speed = freePointSpeed
             //第二段匹配时长
@@ -141,19 +148,25 @@ function insertTrackMats(args) {
         var tmpSpeedEnd = inPointTime + tmpPerFrame
         // 生成临时名
         var tmpClipName = target_project_item.name.replace('\.', '_') + '_片段' + curTimeStamp
+        //将素材插入点对齐帧尾
+        var tmpInTime = inTime%tmpPerFrame==0 ? inTime : inTime - inTime%tmpPerFrame + tmpPerFrame
         //插入素材到轨道
         var tmpIsAudio = trackName.split(' ')[0] == '视频' ? 0 : 1
         var tmpIsVideo = trackName.split(' ')[0] == '视频' ? 1 : 0
         var tmpClip = target_project_item.createSubClip(tmpClipName, tmpSpeedStart, tmpSpeedEnd, 0, tmpIsVideo, tmpIsAudio)
-        tmpTrack.overwriteClip(tmpClip, inTime)
+        tmpTrack.overwriteClip(tmpClip, tmpInTime)
         //变速
-        getQeTrackItemByName(trackName, tmpClipName).setSpeed(pointSpeed, '', false, false, false)
+        var tmpQeTrackItem = getQeTrackItemByName(trackName, tmpClipName)
+        while(parseFloat(tmpQeTrackItem.speed).toFixed(3) != pointSpeed.toFixed(3)){
+        tmpQeTrackItem.setSpeed(pointSpeed, '', false, false, false)
+            }
         //适应屏幕
-        getQeTrackItemByName(trackName, tmpClipName).setScaleToFrameSize(true)
+        //适应屏幕
+        tmpQeTrackItem.setScaleToFrameSize(true)
         //拉升
         var tmpTrackItem = getTrackItemByName(trackName, tmpClipName)
         var tmpEndTime = new Time()
-        tmpEndTime.seconds = inTime + matchDuration
+        tmpEndTime.seconds = (inTime  +  matchDuration) - (inTime  +  matchDuration)%tmpPerFrame +tmpPerFrame*0.9
         try {
             tmpTrackItem.end = tmpEndTime
         } catch (e) {

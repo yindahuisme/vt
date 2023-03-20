@@ -77,7 +77,7 @@ const matFileComponent = Vue.extend({
             return this.$axiosAsyncExec(
                     '/vt/getSqlMenuOptions', {}, (res) => {
                         this.matFileSqlMenuOptions = res
-                        this.matFileSqlMenuCurOption = this.matFileSqlMenuOptions[0]['label']
+                        this.matFileSqlMenuCurOption = '默认'
                     }
                 )
                 .then(
@@ -731,6 +731,23 @@ const preComponent = Vue.extend({
         prePointInfoTips(index) {
             return this.preMatMatchInfo ? this.preMatMatchInfo[1].split(',')[index] : ''
 
+        },
+        //生成图片点位
+        preImgGeneratePoint(){
+            if(parseFloat(this.preImgPointValue)<0.1){
+                this.$vtNotify('error', '错误', '点位间隔必须大于0.1s')
+                return
+            }
+
+            var tmpPrePointedList = [{
+                'pointSecond': 0,
+                'type': ''
+            }]
+            tmpPrePointedList.push({
+                'pointSecond': parseFloat(this.preImgPointValue).toFixed(3),
+                'type': 'success'
+            })
+            this.prePointedList = tmpPrePointedList
         }
 
     },
@@ -842,8 +859,9 @@ const preComponent = Vue.extend({
             //播放速度
             prePlaySpeedValue: 1,
             //播放进度
-            prePlayScheduleValue: 0
-
+            prePlayScheduleValue: 0,
+            //图片待生成间隔长度值
+            preImgPointValue:'0'
 
 
         }

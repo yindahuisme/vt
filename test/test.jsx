@@ -134,6 +134,20 @@ app.project.activeSequence.videoTracks[0].insertClip(target_project_item,1)
 
 
 
-if(pointSpeed<1){
-    getQeTrackItemByName(trackName, tmpClipName).setEndPosition(1)
-    }
+var tmpClip = getTrackItemByName(trackName, tmpClipName)
+        var tmpTrackItem = clip.projectItem.getVideoTrackItem(tmpClip);
+        tmpTrackItem.enableTimeRemapping()
+         for (var i = 0; i < tmpClip.components.numItems; i++) {
+                    var tmpComponent = tmpClip.components[i]
+                    $.write(tmpComponent.displayName)
+                    if (tmpComponent.displayName == "Time Remapping") {
+                        
+                        for (var j = 0; j < tmpComponent.properties.numItems; j++) {
+                        var tmpProperty = tmpComponent.properties[j];
+                        if (tmpProperty.displayName == "Speed") {
+                            tmpProperty.setValue(pointSpeed*100)
+                        }
+                    }
+                
+                    }
+                }

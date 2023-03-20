@@ -6,7 +6,7 @@ var store = new Vuex.Store({
         csInterface: new CSInterface(),
         //axios 实例
         axiosInstance: axios.create({
-            baseURL: 'http://localhost:9999'
+            baseURL: 'http://localhost:8811'
         }),
         //预览组件实例
         preComponentInstance : null,

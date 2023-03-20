@@ -292,6 +292,7 @@ body {
 #pre>.el-card>.el-card__body .vtUp>.el-input {
     padding: 0% !important;
     width:10%;
+    vertical-align: top;
 }
 
 /*页面内容区-预览区-卡片-卡片body-up-下拉输入框*/
@@ -364,8 +365,33 @@ body {
 
 /*页面内容区-预览区-卡片-卡片body-left-图片*/
 #pre>.el-card>.el-card__body .vtLeft img {
-    height: 37vh;
+    height: 33vh;
     width:100%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-输入框父标签*/
+#pre>.el-card>.el-card__body .vtLeft .el-input {
+    width:30%;
+
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-输入框*/
+#pre>.el-card>.el-card__body .vtLeft input {
+    height: 4vh;
+    width:100%;
+
+    padding: 0vh 0% 0vh 0%;
+}
+
+/*页面内容区-预览区-卡片-卡片body-left-提交按钮*/
+#pre>.el-card>.el-card__body .vtLeft button {
+    height: 4vh;
+    width:30%;
+
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
 }
 
 /*页面内容区-预览区-卡片-卡片body-left-控制区*/

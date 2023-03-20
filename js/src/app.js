@@ -10,12 +10,13 @@ new Vue({
         //弹出提示信息
         Vue.prototype.$vtNotify = function(type, title, message) {
             this.$notify({
-                title,message,type,duration:1000
+                title,message,type,duration:500
             })
 
         }
         //封装adobe cep桥接方法
         Vue.prototype.$jsxExec = async function (funcName, funcArgs, callBack) {
+            console.log(`pr脚本函数名：${funcName},参数：${funcArgs}`)
             this.$store.state.vtAsyncTaskNum += 1
             var tmpFuncArgs = funcName + '("' + funcArgs + '")'
             //预处理返回结果，如果结果异常，发送通知
@@ -31,6 +32,7 @@ new Vue({
         }
         //封装axios异步请求
         Vue.prototype.$axiosAsyncExec = async function (path, body, callBack) {
+            console.log(`请求接口：${path},body：${body}`)
             this.$store.state.vtAsyncTaskNum += 1
             await this.$store.state.axiosInstance.post(path, body)
                 .then((res)=>{

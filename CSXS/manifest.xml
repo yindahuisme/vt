@@ -39,7 +39,7 @@
                 </Lifecycle>
                 <UI>
                     <Type>Panel</Type>
-                    <Menu>my_test</Menu>
+                    <Menu>vt</Menu>
                     <Geometry>
                         <Size>
                             <Height>580</Height>
