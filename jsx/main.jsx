@@ -80,6 +80,8 @@ function insertTrackMats(args) {
         var freePointSpeed = parseFloat(tmpMatInfoList[4])
         //当前毫秒时间戳
         var curTimeStamp = tmpMatInfoList[5]
+        //特效控件
+        var effectsComponents = tmpMatInfoList[6].split(',')
 
         // 加载素材文件到项目中
         getProjectByPath(file_path)
@@ -154,24 +156,69 @@ function insertTrackMats(args) {
         var tmpIsAudio = trackName.split(' ')[0] == '视频' ? 0 : 1
         var tmpIsVideo = trackName.split(' ')[0] == '视频' ? 1 : 0
         var tmpClip = target_project_item.createSubClip(tmpClipName, tmpSpeedStart, tmpSpeedEnd, 0, tmpIsVideo, tmpIsAudio)
-        tmpTrack.overwriteClip(tmpClip, tmpInTime)
+        //插入当前轨道最后一个clip的结束时间+1帧
+        try{
+        var lastClipEndSeconds = tmpTrack.clips[tmpTrack.clips.numItems - 1].end.seconds+tmpPerFrame
+        }catch(e){
+            var lastClipEndSeconds = 0
+            }
+        tmpTrack.overwriteClip(tmpClip, lastClipEndSeconds)
         //变速
         var tmpQeTrackItem = getQeTrackItemByName(trackName, tmpClipName)
         while(parseFloat(tmpQeTrackItem.speed).toFixed(3) != pointSpeed.toFixed(3)){
         tmpQeTrackItem.setSpeed(pointSpeed, '', false, false, false)
             }
         //适应屏幕
-        //适应屏幕
         tmpQeTrackItem.setScaleToFrameSize(true)
         //拉升
         var tmpTrackItem = getTrackItemByName(trackName, tmpClipName)
         var tmpEndTime = new Time()
-        tmpEndTime.seconds = (inTime  +  matchDuration) - (inTime  +  matchDuration)%tmpPerFrame +tmpPerFrame*0.9
+        tmpEndTime.seconds = lastClipEndSeconds -tmpInTime + (inTime  +  matchDuration) - (inTime  +  matchDuration)%tmpPerFrame +tmpPerFrame*0.9
         try {
             tmpTrackItem.end = tmpEndTime
         } catch (e) {
             //效果达到，但是会报错，捕获
         }
+        //特效,只在匀速时启用
+        if(effectsComponents[0] != '' && tmp2Speed == 0){
+            for(var index = 0; index < effectsComponents.length; index++){
+            var tmpComponentArgs = effectsComponents[index].split('-')
+            if(tmpComponentArgs[0]=='缩放'){
+                for(var i = 0; i < tmpTrackItem.components.numItems; i++){
+                    if(tmpTrackItem.components[i].displayName=='运动'){
+                        var tmpMotionComponentScale = tmpTrackItem.components[i].properties[1]
+                        tmpMotionComponentScale.setTimeVarying(true)
+                        tmpMotionComponentScale.addKey(tmpTrackItem.inPoint.seconds)
+                        tmpMotionComponentScale.setValueAtKey(tmpTrackItem.inPoint.seconds,parseFloat(tmpComponentArgs[1]))
+                        tmpMotionComponentScale.addKey(tmpTrackItem.inPoint.seconds+matchDuration)
+                        tmpMotionComponentScale.setValueAtKey(tmpTrackItem.inPoint.seconds+matchDuration,parseFloat(tmpComponentArgs[2]))
+                    }
+                }
+            }
+            if(tmpComponentArgs[0]=='混合模式'){
+                for(var i = 0; i < tmpTrackItem.components.numItems; i++){
+                    if(tmpTrackItem.components[i].displayName=='不透明度'){
+                        var tmpBlendTypeDict = {
+                            '正常':18,
+                            '滤色':22,
+                            '变暗':3,
+                            '差值':5,
+                            '色相':10
+                        } 
+                        tmpTrackItem.components[i].properties[1].setValue(tmpBlendTypeDict[tmpComponentArgs[1]])
+                    }
+                }
+            }
+        }
+        }
+        //移动clip到目标位置
+        var tmpFrameOffset = ((tmpInTime-lastClipEndSeconds)/tmpPerFrame).toFixed(0)
+        if (tmpFrameOffset>0){
+            tmpQeTrackItem.move('0.'+tmpFrameOffset.toString(),false,false)
+        }else{
+            tmpQeTrackItem.move('-0.'+Math.abs(tmpFrameOffset).toString(),false,false)
+        }
+        
     }
 
     function getProjectByPath(file_path) {

@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS vt.`vt_project`(
    `point_info` VARCHAR(2560) NOT NULL,-- 打点位置
    `matfile_full_path` VARCHAR(256) NOT NULL,-- 素材文件路径
    `match_point` VARCHAR(2560) NOT NULL,-- 匹配点位
-   `free_point_second` decimal(16,3) NOT NULL,-- 卡点变速时长（秒）
-   `create_time` VARCHAR(32) NOT NULL-- 创建时间，格式（yyyy-MM-dd hh:mm:ss）
+   `free_point_speed` decimal(16,3) NOT NULL,-- 卡点变速时长（秒）
+   `effects` VARCHAR(1024) NOT NULL,-- 特效，例如：缩放-100-120
+   `create_time` VARCHAR(32) NOT NULL-- 创建时间戳
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

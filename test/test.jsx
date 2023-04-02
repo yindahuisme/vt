@@ -151,3 +151,7 @@ var tmpClip = getTrackItemByName(trackName, tmpClipName)
                 
                     }
                 }
+
+
+
+                app.project.activeSequence.videoTracks[0].clips[0].components[0].properties[1].getValue()

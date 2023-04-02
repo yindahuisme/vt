@@ -476,7 +476,8 @@ const preComponent = Vue.extend({
                             }
                         )
                         //开始插入轨道素材
-                        var tmpPrInsertArgs = `${this.preCurTrackValue}#${tmpTrackMatchInfo.join(',')}#${tmpPointTimeList.join(',')}#${this.$store.state.matFileInfo['matfile_full_path']}#${this.preFreePointSpeed}#${tmpCurMilTimeStamp}`
+                        var tmpEffects = ''
+                        var tmpPrInsertArgs = `${this.preCurTrackValue}#${tmpTrackMatchInfo.join(',')}#${tmpPointTimeList.join(',')}#${this.$store.state.matFileInfo['matfile_full_path']}#${this.preFreePointSpeed}#${tmpCurMilTimeStamp}#${tmpEffects}`
                         this.$jsxExec('insertTrackMats', tmpPrInsertArgs.replace(/\\/g, '\\\\'), (data) => {
 
                         })
@@ -1367,12 +1368,12 @@ const vtComponent = Vue.extend({
                     for (let key in this.$store.state.preTrackMatInfo) {
                         var val = this.$store.state.preTrackMatInfo[key]
                         for (let item of val) {
-                            trackMatInfoArgs.push([item[3], `${key}#${item[0]}#${item[1]}#${item[2]}#${item[4]}#${item[3]}`])
+                            trackMatInfoArgs.push([item[3], `${key}#${item[0]}#${item[1]}#${item[2]}#${item[4]}#${item[3]}#${item[5]}`])
                         }
                     }
                     this.$jsxExec('cleanProject', '', (data) => {
                         if (trackMatInfoArgs.length != 0) {
-                            this.$jsxExec('insertTrackMats', trackMatInfoArgs.sort().map(v => v[1])
+                            this.$jsxExec('insertTrackMats', trackMatInfoArgs.sort((a,b)=>parseFloat(a)-parseFloat(b)).map(v => v[1])
                                 .join('|')
                                 .replace(/\\/g, '\\\\'), (data) => {
                                     this.$vtNotify('success', '提示', '重做成功')
