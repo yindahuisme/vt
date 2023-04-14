@@ -384,7 +384,7 @@ body {
 }
 
 /*页面内容区-预览区-卡片-卡片body-left-提交按钮*/
-#pre>.el-card>.el-card__body .vtLeft button {
+#pre>.el-card>.el-card__body .vtLeft button[title=提交] {
     height: 4vh;
     width:30%;
 

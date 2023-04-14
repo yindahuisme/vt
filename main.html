@@ -206,7 +206,7 @@
                         <img :src="matFileInfo['matfile_full_path'].replace('\\','/')" />
                         <el-input v-model="preImgPointValue" resize="none">
                         </el-input>
-                        <el-button type="success" @click="preImgGeneratePoint">生成点位</el-button>
+                        <el-button title="提交" type="success" @click="preImgGeneratePoint">生成点位</el-button>
                     </div>
                     <div class="preContral"
                         v-if="matFileTableCurrentRow.type == '视频' || matFileTableCurrentRow.type == '音频'">

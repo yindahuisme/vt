@@ -7,6 +7,7 @@
 # 4.打开adobe tool工具（任务栏第三个页签），全屏，输入导出视频命令
 # 5.启动后端
 # 6.打开pr音乐背景项目(任务栏第四个页签)，全屏,不要动默认布局
+# 7.打开me(任务栏第五个页签)，全屏
 # 脚本处理
 import time, os
 import pyautogui
@@ -17,23 +18,31 @@ import json
 # 获取目录的所有子音乐文件的绝对路径
 def get_all_music_files(path):
     files = []
+    proccessedFiles = []
     for dirpath, dirnames, filenames in os.walk(path):
         for filename in filenames:
+            if filename.endswith('vocals.wav'):
+                proccessedFiles.append(os.path.abspath(os.path.join(dirpath, filename)))
             if filename.endswith('.mp3'):
                 files.append(os.path.abspath(os.path.join(dirpath, filename)))
-    return files
+    return (files,proccessedFiles)
 
 if __name__ == "__main__":
     # 找到待处理的音乐，获取路径
     basePath = 'D:\\vt_data\\matFilePath\\音乐背景\\'
-    musicPathList = get_all_music_files(basePath+'图库\\')
-
+    musicPathList = get_all_music_files(basePath+'图库\\')[0]
     # 遍历音乐路径
     for musicPath in musicPathList:
         # 画面基调
         baseStyle = musicPath.split('\\')[-2]
         # 歌曲文件名
         musicFileName = musicPath.split('\\')[-1]
+        tmpMusicName = musicFileName.split('-')[0].strip()
+        # 不重复生成
+        proccessedMusicPathList = get_all_music_files(basePath+'歌曲\\')[1]
+        proccessedMusicPathList=list(map(lambda x:x.split('\\')[-2].split('-')[0].strip(),proccessedMusicPathList))
+        if tmpMusicName in proccessedMusicPathList:
+            continue
         # 点击人声分离软件，选择音乐，填入路径，开始处理，等待
         # 点击人声分离软件
         pyautogui.moveTo(91,751, duration=0.5)
@@ -41,10 +50,10 @@ if __name__ == "__main__":
         # 点击选择音乐文件
         pyautogui.moveTo(266,350, duration=0.5)
         pyautogui.click()
-        time.sleep(1)
+        time.sleep(3)
         # 输入音乐路径,确定
         targetMusicPath = f'{basePath}歌曲\\'
-        proccessedMusicPath = f'{targetMusicPath}{musicFileName.split(".")[0]}\\'
+        proccessedMusicPath = f'{targetMusicPath}{musicFileName.rsplit(".", 1)[0]}\\'
         if os.path.exists(proccessedMusicPath):
             shutil.rmtree(proccessedMusicPath, ignore_errors=True)
         pyperclip.copy(musicPath)
@@ -57,9 +66,10 @@ if __name__ == "__main__":
             time.sleep(1)
             if os.path.isfile(accompanimentMusicPath):
                 break
+        time.sleep(3)
         # 移动伴奏，原曲音乐文件
         shutil.move(accompanimentMusicPath, targetMusicPath + '音乐背景伴奏.wav')
-        shutil.move(musicPath, targetMusicPath + '音乐背景原声.mp3')
+        shutil.copy(musicPath, targetMusicPath + '音乐背景原声.mp3')
         # 请求后端，生成项目数据
         url = "http://127.0.0.1:8811/vt/auto/songBGV"
         headers = {"Content-Type": "application/json"}
@@ -95,11 +105,15 @@ if __name__ == "__main__":
         # 开始导出视频
         pyautogui.moveTo(815,77, duration=0.5)
         pyautogui.click()
+        # 点击me
+        pyautogui.moveTo(244,760, duration=0.5)
+        pyautogui.click()
         # 等待视频导出完成
         while True:
-            time.sleep(1)
-            if os.path.isfile(targetVedioPath):
+            time.sleep(3)
+            if pyautogui.pixel(1302, 117)==(92,42,42):
                 break
+        time.sleep(5)
         # 上传视频
         # 点击浏览器
         pyautogui.moveTo(130,755, duration=0.5)
@@ -107,7 +121,7 @@ if __name__ == "__main__":
         # 点击开始上传视频
         pyautogui.moveTo(548,291, duration=0.5)
         pyautogui.click()
-        time.sleep(1)
+        time.sleep(3)
         pyperclip.copy(targetVedioPath)
         pyautogui.hotkey('ctrl', 'v')
         # 确认
@@ -127,10 +141,11 @@ if __name__ == "__main__":
         pyautogui.click()
         time.sleep(1)
         # 填写标题
-        tmpMusicName = musicFileName.split('-')[0].strip()
+        # 歌曲名长度限制在10个字符内
+        tmpMusicNameLimit = tmpMusicName[:10]
         pyautogui.moveTo(641,344, duration=0.5)
         pyautogui.click()
-        pyperclip.copy(f'《{tmpMusicName}》歌曲伴奏成品')
+        pyperclip.copy(f'《{tmpMusicNameLimit}》成品')
         pyautogui.hotkey('ctrl', 'v')
         # 填写简介
         pyautogui.moveTo(662,370, duration=0.5)
@@ -139,7 +154,9 @@ if __name__ == "__main__":
         pyautogui.hotkey('ctrl', 'v')
         # 填写关键字
         tmpKeyDict = {
-            '3d卡通-爱情':f'{tmpMusicName} 3d 彩带 气球 阳光 湖 花朵 粉色 爱心 天空 伴奏 歌曲 蝴蝶 爱情 甜蜜 温馨 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演'
+            '3d卡通-甜蜜爱情':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 彩带 气球 阳光 湖 花朵 粉色 爱心 天空 伴奏 歌曲 蝴蝶 爱情 甜蜜 温馨'
+            ,'3d卡通-伤感爱情':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 桥 笔 信 街道 下雨 失落 压抑 失恋 爱情 黑暗 天空 草地 海边 背影 玫瑰 玻璃杯'
+            ,'3d卡通-励志':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 足球 山 励志 气势 夕阳 阳光 奔跑 海边 正能量 希望 拼搏 '
         }
         pyautogui.moveTo(667,409, duration=0.5)
         pyautogui.click()
@@ -167,6 +184,7 @@ if __name__ == "__main__":
         # 点击重做
         pyautogui.moveTo(645,136, duration=0.5)
         pyautogui.click()
+    print('处理完成')
 
 
 
