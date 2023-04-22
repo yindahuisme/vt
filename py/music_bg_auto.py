@@ -3,11 +3,11 @@
 # 前提：
 # 1.寻找音乐，分类放到画面基调目录下
 # 2.打开音乐人声分离软件(任务栏第一个页签)，紧贴画面左上角
-# 3.打开edge浏览器(任务栏第二个页签)，全屏，点到上传素材页面,页内缩放33%
+# 3.打开edge dev浏览器(任务栏第二个页签)，全屏，点到上传素材页面,页内缩放33%
 # 4.打开adobe tool工具（任务栏第三个页签），全屏，输入导出视频命令
-# 5.启动后端
-# 6.打开pr音乐背景项目(任务栏第四个页签)，全屏,不要动默认布局
-# 7.打开me(任务栏第五个页签)，全屏
+# 5.打开pr音乐背景项目(任务栏第四个页签)，全屏,不要动默认布局
+# 6.打开me(任务栏第五个页签)，全屏
+# 7.启动后端
 # 脚本处理
 import time, os
 import pyautogui
@@ -37,13 +37,14 @@ if __name__ == "__main__":
         baseStyle = musicPath.split('\\')[-2]
         # 歌曲文件名
         musicFileName = musicPath.split('\\')[-1]
+        # 歌曲名
         tmpMusicName = musicFileName.split('-')[0].strip()
+        with open('proccessedSongList.txt', 'r',encoding='utf-8') as f:
+            # 读取已处理歌曲列表
+            proccessedMusicPathList = f.read().split('\n')
         # 不重复生成
-        proccessedMusicPathList = get_all_music_files(basePath+'歌曲\\')[1]
-        proccessedMusicPathList=list(map(lambda x:x.split('\\')[-2].split('-')[0].strip(),proccessedMusicPathList))
-        if tmpMusicName in proccessedMusicPathList:
+        if f'{baseStyle}##{tmpMusicName}' in proccessedMusicPathList:
             continue
-        # 点击人声分离软件，选择音乐，填入路径，开始处理，等待
         # 点击人声分离软件
         pyautogui.moveTo(91,751, duration=0.5)
         pyautogui.click()
@@ -69,6 +70,7 @@ if __name__ == "__main__":
         time.sleep(3)
         # 移动伴奏，原曲音乐文件
         shutil.move(accompanimentMusicPath, targetMusicPath + '音乐背景伴奏.wav')
+        shutil.rmtree(proccessedMusicPath, ignore_errors=True)
         shutil.copy(musicPath, targetMusicPath + '音乐背景原声.mp3')
         # 请求后端，生成项目数据
         url = "http://127.0.0.1:8811/vt/auto/songBGV"
@@ -171,6 +173,10 @@ if __name__ == "__main__":
         pyautogui.moveTo(680,540, duration=0.5)
         pyautogui.click()
         time.sleep(3)
+        # 更新状态
+        with open('proccessedSongList.txt', 'a+',encoding='utf-8') as f:
+            # 追加：风格##歌曲名
+            f.write(baseStyle+'##'+tmpMusicName+'\n')
         # 刷新当前页面
         pyautogui.moveTo(70,66, duration=0.5)
         pyautogui.click()
