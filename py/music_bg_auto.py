@@ -5,9 +5,9 @@
 # 2.打开音乐人声分离软件(任务栏第一个页签)，紧贴画面左上角
 # 3.打开edge dev浏览器(任务栏第二个页签)，全屏，点到上传素材页面,页内缩放33%
 # 4.打开adobe tool工具（任务栏第三个页签），全屏，输入导出视频命令
-# 5.打开pr音乐背景项目(任务栏第四个页签)，全屏,不要动默认布局
-# 6.打开me(任务栏第五个页签)，全屏
-# 7.启动后端
+# 5.打开me(任务栏第四个页签)，全屏
+# 6.启动后端
+# 7.打开pr音乐背景项目(任务栏第八个页签，且保证为最后一个页签)，全屏,不要动默认布局
 # 脚本处理
 import time, os
 import pyautogui
@@ -108,9 +108,10 @@ if __name__ == "__main__":
         pyautogui.moveTo(815,77, duration=0.5)
         pyautogui.click()
         # 点击me
-        pyautogui.moveTo(244,760, duration=0.5)
+        pyautogui.moveTo(200,750, duration=0.5)
         pyautogui.click()
         # 等待视频导出完成
+        time.sleep(10)
         while True:
             time.sleep(3)
             if pyautogui.pixel(1302, 117)==(92,42,42):
@@ -123,12 +124,13 @@ if __name__ == "__main__":
         # 点击开始上传视频
         pyautogui.moveTo(548,291, duration=0.5)
         pyautogui.click()
-        time.sleep(3)
+        time.sleep(7)
         pyperclip.copy(targetVedioPath)
         pyautogui.hotkey('ctrl', 'v')
         # 确认
         pyautogui.moveTo(774,600, duration=0.5)
         pyautogui.click()
+        time.sleep(3)
         # 开始上传
         pyautogui.moveTo(684,416, duration=0.5)
         pyautogui.click()
@@ -159,7 +161,10 @@ if __name__ == "__main__":
             '3d卡通-甜蜜爱情':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 彩带 气球 阳光 湖 花朵 粉色 爱心 天空 伴奏 歌曲 蝴蝶 爱情 甜蜜 温馨'
             ,'3d卡通-伤感爱情':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 桥 笔 信 街道 下雨 失落 压抑 失恋 爱情 黑暗 天空 草地 海边 背影 玫瑰 玻璃杯'
             ,'3d卡通-励志':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 足球 山 励志 气势 夕阳 阳光 奔跑 海边 正能量 希望 拼搏 '
-        }
+            ,'艳丽卡通-校园青春':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 校园 青春 风景 爱情 活力 回忆 甜蜜 卡通 教室 自行车 夜色 窗户 天空 牵手 学习 公路'
+            ,'漫画-甜蜜爱情':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 牵手 动漫 卡通 爱情 花朵 艳丽 草地 蝴蝶 浪漫 女孩 自行车 菊花 麦穗 爱心 玻璃瓶 温馨 青春 田野 风景'
+            ,'抽象漫画-儿童':f'{tmpMusicNameLimit} 3d 配乐成品 led大屏幕 led视频 粒子 歌曲背景 表演 牵手 动漫 卡通 儿童 草地 玩耍 欢快 玩具 郊游 唯美 阳光 微笑 儿歌'
+}
         pyautogui.moveTo(667,409, duration=0.5)
         pyautogui.click()
         pyperclip.copy(tmpKeyDict[baseStyle])
