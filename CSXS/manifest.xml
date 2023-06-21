@@ -12,7 +12,7 @@
             <Host Name="ILST" Version="19.0" />
             <Host Name="PHSP" Version="16.0" />
             <Host Name="PHXS" Version="16.0" />
-            <Host Name="PPRO" Version="15.0" />
+            <Host Name="PPRO" Version="23.0" />
             <Host Name="PRLD" Version="4.0" />
             <Host Name="AEFT" Version="13.0" />
             <Host Name="DEMO" Version="1.0" />

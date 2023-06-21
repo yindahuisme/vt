@@ -17,10 +17,11 @@ def remove_whitespace(directory):
         if os.path.isdir(filepath):
             remove_whitespace(filepath)
 
-        # 如果是文件，则去掉文件名中的空格
+        # 如果是文件，则去掉文件名中的空格,点
         elif os.path.isfile(filepath):
             # 去掉文件名中的空格
             new_filename = filename.replace(" ", "")
+            new_filename = new_filename.replace('.', '', new_filename.count('.') - 1)
             if new_filename != filename:
                 new_filepath = os.path.join(directory, new_filename)
                 # 如果新文件名已经存在，则覆盖已有的文件

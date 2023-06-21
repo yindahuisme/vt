@@ -156,6 +156,19 @@ function insertTrackMats(args) {
         var tmpIsAudio = trackName.split(' ')[0] == '视频' ? 0 : 1
         var tmpIsVideo = trackName.split(' ')[0] == '视频' ? 1 : 0
         var tmpClip = target_project_item.createSubClip(tmpClipName, tmpSpeedStart, tmpSpeedEnd, 0, tmpIsVideo, tmpIsAudio)
+        var clipBin=null
+        var projectitem = app.project.rootItem.children
+        for (var i = 0; i < projectitem.length; i++) {
+            var tmp_item = projectitem[i]
+           if (tmp_item.name=='clip_bin') {
+            clipBin=tmp_item
+           }
+            }
+        if (!clipBin){
+            clipBin = app.project.rootItem.createBin('clip_bin')
+        }
+        tmpClip.moveBin(clipBin)
+        
         //插入当前轨道最后一个clip的结束时间+1帧
         try{
         var lastClipEndSeconds = tmpTrack.clips[tmpTrack.clips.numItems - 1].end.seconds+tmpPerFrame
@@ -222,9 +235,9 @@ function insertTrackMats(args) {
     }
 
     function getProjectByPath(file_path) {
-        var project_items = app.project.rootItem.children
-        for (var i = 0; i < project_items.length; i++) {
-            var tmp_item = project_items[i]
+        var projectitem = app.project.rootItem.children
+        for (var i = 0; i < projectitem.length; i++) {
+            var tmp_item = projectitem[i]
             if (file_path == tmp_item.getMediaPath() && tmp_item.name.split('\.').length == 2) {
                 target_project_item = tmp_item
             }
