@@ -32,7 +32,7 @@ if __name__ == "__main__":
         # 作品文件名
         vedioFileName = vedioPath.split('\\')[-1]
         # 作品名
-        tmpVedioName = vedioFileName.split('-')[0].strip()
+        tmpVedioName = vedioFileName.split('###')[0].strip()
         with open('proccessedVedioList.txt', 'r',encoding='utf-8') as f:
             # 读取已处理作品列表
             proccessedVedioPathList = f.read().split('\n')
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         # 点击浏览器
         while True:
             time.sleep(1)
-            if pyautogui.pixel(47, 47)==(247,247,247):
+            if pyautogui.pixel(100,120)==(51,58,62):
                 print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:切换浏览器页面 完成\n')
                 break 
             else:
@@ -60,6 +60,8 @@ if __name__ == "__main__":
                 print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:点击选择视频按钮 完成\n')
                 time.sleep(1)
                 break
+            else:
+                pyautogui.click()
         pyperclip.copy(vedioPath)
         pyautogui.hotkey('ctrl', 'v')
         # 确认
@@ -70,6 +72,8 @@ if __name__ == "__main__":
             if pyautogui.pixel(58, 456)==(248,249,250):
                 print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:点击确认视频按钮 完成\n')
                 break
+            else:
+                pyautogui.click()
         # 开始上传
         pyautogui.moveTo(684,375, duration=0.5)
         pyautogui.click()
@@ -89,9 +93,11 @@ if __name__ == "__main__":
             if pyautogui.pixel(250,250)==(133,139,143):
                 print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:填写信息窗口打开完成\n')
                 break
+            else:
+                pyautogui.click()
         # 填写标题
         # 歌曲名长度限制在10个字符内
-        tmpVedioNameLimit = tmpVedioName.split('###')[0][:18]
+        tmpVedioNameLimit = vedioFileName.split('###')[0][:18]
         pyautogui.moveTo(615,338, duration=0.5)
         pyautogui.tripleClick()
         pyperclip.copy(tmpVedioNameLimit)
@@ -105,7 +111,7 @@ if __name__ == "__main__":
         pyautogui.moveTo(667,400, duration=0.5)
         pyautogui.click()
         tmpFixedKeyWords='粒子 动态背景 动图 led 大屏 舞台 '
-        pyperclip.copy(tmpFixedKeyWords+tmpVedioName.split('###')[1].replace('-',' '))
+        pyperclip.copy(tmpFixedKeyWords+vedioFileName.split('###')[1].replace('-',' '))
         pyautogui.hotkey('ctrl', 'v')
         # 填写价格
         pyautogui.moveTo(805,344, duration=0.5)
@@ -113,8 +119,9 @@ if __name__ == "__main__":
         pyperclip.copy(f'49')
         pyautogui.hotkey('ctrl', 'v')
         # 勾选视频循环
-        pyautogui.moveTo(820,320, duration=0.5)
-        pyautogui.click()
+        if str(tmpVedioName).__contains__('可循环'):
+            pyautogui.moveTo(820,320, duration=0.5)
+            pyautogui.click()
         # 提交
         pyautogui.moveTo(680,536, duration=0.5)
         pyautogui.click()
@@ -123,14 +130,11 @@ if __name__ == "__main__":
             if pyautogui.pixel(250, 250)!=(133,139,143):
                 print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:填写信息完成,已提交\n')
                 break
+            else:
+                pyautogui.click()
         # 刷新当前页面
         pyautogui.moveTo(73,54, duration=0.5)
         pyautogui.click()
-        while True:
-            time.sleep(1)
-            if pyautogui.pixel(250, 250)!=(133,139,143):
-                print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:填写信息完成,已提交\n')
-                break
         # 更新状态
         with open('proccessedVedioList.txt', 'a+',encoding='utf-8') as f:
             # 追加

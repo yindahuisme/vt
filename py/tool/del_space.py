@@ -34,3 +34,4 @@ directory = "D:\\vt_data\\matFilePath"
 
 # 调用 remove_whitespace() 函数
 remove_whitespace(directory)
+print('删除空格完成')

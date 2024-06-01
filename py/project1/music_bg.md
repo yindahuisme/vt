@@ -22,3 +22,6 @@
 
 new bing找歌prompt:
 我有一个歌曲背景视频，是关于甜蜜爱情的，请结合歌词内容和歌曲的创作背景给我列举50首中文名歌曲匹配这个视频内容，列出歌曲名和相关歌词内容，歌曲的选择要求是：热门，经典，ktv，流行。注意，排除掉那些小众歌曲，思考一下在回答
+
+I want to create some static beauty with stable diffusio, please help me to write 10 groups of prompt words in English, write in English:
+
