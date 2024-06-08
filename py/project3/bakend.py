@@ -6,6 +6,7 @@ import base64
 import shutil
 import random
 import pyautogui
+import os
 
 def save_base64_image(base64_image, file_path):
     with open(file_path, "wb") as f:
@@ -21,8 +22,17 @@ if __name__ == "__main__":
     while True:
         time.sleep(10)
         print(f'({author})阶段开始------------------------------------------------------------')
+        # 清理项目
+        url = "http://127.0.0.1:8811/vt/auto/clearMusicProject"
+        requests.get(url)
+        time.sleep(3)
+        # pr重做
+        
         # 清空目录
-        shutil.rmtree(base_path + 'auto\\')
+        auto_path = base_path + 'auto\\'
+        if os.path.exists(auto_path):
+            shutil.rmtree(auto_path)
+        os.makedirs(auto_path)
         # 拉取作者最早一个主题数据
         conn = pymysql.connect(host="118.25.84.13", user="root", password="y13440113283", database="yindahu")
         cursor = conn.cursor()
@@ -39,6 +49,7 @@ if __name__ == "__main__":
         	where author = '{author}'
         	and is_finish = 0
         	and item_type = '歌曲名' 
+            )
         ''')
         cursor.close()
         conn.close()
@@ -51,18 +62,26 @@ if __name__ == "__main__":
         key_words = ''
         # 初始化
         for row in cursor.fetchall():
-            title = row['content_title']
-            if row['item_type'] == '歌曲名':
-                music_name_list.append(row['item_value'])
-            if row['item_type'] == '关键字':
-                key_words = row['item_value']
-            if row['item_type'] == '图片base64':
-                save_base64_image(row['item_value'], base_path + f'auto\\{time.time_ns()}.jpg')
+            title = row[0]
+            if row[1] == '歌曲名':
+                music_name_list.append(row[2])
+            if row[1] == '关键字':
+                key_words = row[2]
+            if row[1] == '图片base64':
+                save_base64_image(row[2], auto_path + f'{time.time_ns()}.jpg')
                 time.sleep(0.1)
-            if row['item_type'] == '粒子特效':
-                shutil.copy(base_path + row['item_value'] + '.mp4', base_path + 'auto\\')
+            if row[1] == '粒子特效':
+                shutil.copy(base_path + row[2] + '.mp4', auto_path)
         if len(music_name_list) == 0 or title == '' or key_words == '':
             raise RuntimeError('拉下的数据有问题，请检查')
+        
+        # 同步素材文件
+        url = "http://127.0.0.1:8811/vt/syncMatFileMetaData"
+        headers = {"Content-Type": "application/json"}
+        data = {
+        }
+        requests.post(url, headers=headers, data=json.dumps(data))
+        time.sleep(3)
 
         for music_name in music_name_list:
             tmp_music_name = music_name.split('##')[0]
@@ -233,10 +252,6 @@ if __name__ == "__main__":
             # 刷新当前页面
             pyautogui.moveTo(144,94, duration=0.5)
             pyautogui.click()
-            # 清理项目
-            url = "http://127.0.0.1:8811/vt/auto/clearMusicProject"
-            requests.get(url)
-            time.sleep(3)
             # 点击pr
             pyautogui.moveTo(627,2131, duration=0.5)
             pyautogui.click()
