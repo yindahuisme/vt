@@ -81,8 +81,8 @@ if __name__ == "__main__":
     },
     "点击上传视频":{
         "点位":(2340,876),
-        "验证点位":(500,500),
-        "验证颜色":(255, 255, 255),
+        "验证点位":(159,983),
+        "验证颜色":(240, 240, 240),
         "验证等待秒":3
     },
     "三击上传视频确认输入框":{
@@ -96,7 +96,7 @@ if __name__ == "__main__":
         "验证等待秒":1
     },
     "验证视频上传成功，点位不等于":{
-        "验证点位":(1190,1330),
+        "验证点位":(2360,1000),
         "验证颜色":(254, 254, 254)
     },
     "点击填写信息":{
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     }
     while True:
         time.sleep(10)
-        print(f'({author})阶段开始------------------------------------------------------------')
+        print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:({author})阶段开始------------------------------------------------------------')
         # 清理项目
         url = "http://127.0.0.1:8811/vt/auto/clearMusicProject"
         requests.get(url)
@@ -141,10 +141,14 @@ if __name__ == "__main__":
         # pr点击重做------------------------------------------------------------
         process_point("点击pr")
         process_point("点击pr重做")
+        # 移开pr焦点以删除素材文件
+        process_point("点击浏览器")
         # 清空目录
         auto_path = base_path + 'auto\\'
-        if os.path.exists(auto_path):
-            shutil.rmtree(auto_path)
+        while os.path.exists(auto_path):
+            os.system(f'DEL /F /A /Q \\\\?\\{auto_path}')
+            os.system(f'RD /S /Q \\\\?\\{auto_path}')
+            time.sleep(1)
         os.makedirs(auto_path)
         # 拉取作者最早一个主题数据
         conn = pymysql.connect(host="118.25.84.13", user="root", password="y13440113283", database="yindahu")
@@ -203,6 +207,7 @@ if __name__ == "__main__":
         time.sleep(3)
 
         for music_name in music_name_list:
+            print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:开始创作 {music_name}')
             tmp_music_name = music_name.split('##')[0]
             tmp_music_seconds = int(music_name.split('##')[1]) + random.randint(50, 60)
 
@@ -217,6 +222,7 @@ if __name__ == "__main__":
             requests.post(url, headers=headers, data=json.dumps(data))
             time.sleep(3)
             # 再次点击pr重做--------------------------------------------------
+            process_point("点击pr")
             process_point("点击pr重做")
             # 生成视频
             targetVedioPath = 'D:\\vt_data\\pr_project\\音乐背景_1.mp4'

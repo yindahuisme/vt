@@ -312,22 +312,24 @@ if __name__ == "__main__":
                             st.session_state[f"is_edit_mode"] = True
                             st.session_state[f"is_{node_id}_edit_mode"] = True
                             st.session_state["index"] = 0
-                        else:
-                            st.error(f"只能同时编辑一个主题，请先提交其他编辑")
-                    if st.session_state.__contains__(f"is_{node_id}_edit_mode") and st.session_state[f"is_{node_id}_edit_mode"]:
-                        edit_record = {
+
+                            st.session_state["edit_record"] = {
                                 "author": author,
                                 "submit_time": submit_time,
                                 "content_title": content_title
                             }
+                            print(st.session_state["edit_record"])
+                        else:
+                            st.error(f"只能同时编辑一个主题，请先提交其他编辑")
+                    if st.session_state.__contains__(f"is_{node_id}_edit_mode") and st.session_state[f"is_{node_id}_edit_mode"]:
                         if not st.session_state.__contains__('key_words'):
                             cursor.execute(f"""
                                 SELECT item_type,
                                         item_value 
                                 FROM yindahu.music_vedio_item 
-                                WHERE author = '{edit_record['author']}' 
-                                AND submit_time = '{edit_record['submit_time']}' 
-                                AND content_title = '{edit_record['content_title']}' 
+                                WHERE author = '{st.session_state["edit_record"]['author']}' 
+                                AND submit_time = '{st.session_state["edit_record"]['submit_time']}' 
+                                AND content_title = '{st.session_state["edit_record"]['content_title']}' 
                                 AND item_type in ('图片base64','关键字')
                                 order by case when item_type = '关键字' then 1 else 2 end asc
                                 """)
@@ -337,9 +339,9 @@ if __name__ == "__main__":
                             cursor.execute(f"""
                                 SELECT GROUP_CONCAT(item_value SEPARATOR ',')  
                                 FROM yindahu.music_vedio_item 
-                                WHERE author = '{edit_record['author']}' 
-                                AND submit_time = '{edit_record['submit_time']}' 
-                                AND content_title = '{edit_record['content_title']}' 
+                                WHERE author = '{st.session_state["edit_record"]['author']}' 
+                                AND submit_time = '{st.session_state["edit_record"]['submit_time']}' 
+                                AND content_title = '{st.session_state["edit_record"]['content_title']}' 
                                 AND item_type = '歌曲名'
                                 and is_finish = 0
                                 """)
@@ -383,15 +385,17 @@ if __name__ == "__main__":
                                 st.error(f"该主题的图片被删完了，提交失败")
                             else:
                                 update_record(
-                                    edit_record["author"],
-                                    edit_record["submit_time"],
-                                    edit_record["content_title"],
+                                    st.session_state["edit_record"]["author"],
+                                    st.session_state["edit_record"]["submit_time"],
+                                    st.session_state["edit_record"]["content_title"],
                                     st.session_state[f"key_words"],
                                     st.session_state[f"edit_unfinished_music_list"].split(','),
                                     st.session_state[f"pic_base64_list"]
                                 )
                                 st.session_state[f"is_{node_id}_edit_mode"] = False
                                 st.session_state[f"is_edit_mode"] = False
+                                # 重置编辑初始化标志位
+                                del st.session_state["key_words"]
                                 st.experimental_rerun()
                 st.divider()
         conn.close()
