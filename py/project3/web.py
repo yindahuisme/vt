@@ -318,7 +318,6 @@ if __name__ == "__main__":
                                 "submit_time": submit_time,
                                 "content_title": content_title
                             }
-                            print(st.session_state["edit_record"])
                         else:
                             st.error(f"只能同时编辑一个主题，请先提交其他编辑")
                     if st.session_state.__contains__(f"is_{node_id}_edit_mode") and st.session_state[f"is_{node_id}_edit_mode"]:

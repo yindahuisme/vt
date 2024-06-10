@@ -53,37 +53,37 @@ if __name__ == "__main__":
         "点位":(510,2110),
         "验证点位":(1764,371),
         "验证颜色":(103, 194, 58),
-        "验证等待秒":3
+        "验证等待秒":1
     },
     "点击pr重做":{
         "点位":(1794,244),
         "验证点位":(1764,371),
         "验证颜色":(103, 194, 58),
-        "验证等待秒":3
+        "验证等待秒":1
     },
     "点击pr导出页面":{
         "点位":(324,122),
         "验证点位":(3788,1972),
         "验证颜色":(20, 115, 230),
-        "验证等待秒":3
+        "验证等待秒":1
     },
     "点击pr导出":{
         "点位":(3788,1972),
         "验证点位":(1750,1134),
         "验证颜色":(255, 255, 255),
-        "验证等待秒":3
+        "验证等待秒":1
     },
     "点击浏览器":{
         "点位":(420,2100),
         "验证点位":(500,500),
         "验证颜色":(254, 254, 254),
-        "验证等待秒":3
+        "验证等待秒":1
     },
     "点击上传视频":{
         "点位":(2340,876),
         "验证点位":(159,983),
         "验证颜色":(240, 240, 240),
-        "验证等待秒":3
+        "验证等待秒":1
     },
     "三击上传视频确认输入框":{
         "点位":(600,960),
@@ -95,15 +95,11 @@ if __name__ == "__main__":
         "验证颜色":(254, 254, 254),
         "验证等待秒":1
     },
-    "验证视频上传成功，点位不等于":{
-        "验证点位":(2360,1000),
-        "验证颜色":(254, 254, 254)
-    },
     "点击填写信息":{
         "点位":(1174,1194),
         "验证点位":(500,500),
         "验证颜色":(110, 110, 110),
-        "验证等待秒":3
+        "验证等待秒":1
     },
     "三击标题输入框":{
         "点位":(1730,517),
@@ -125,7 +121,7 @@ if __name__ == "__main__":
         "点位":(1880,1700),
         "验证点位":(500,500),
         "验证颜色":(254, 254, 254),
-        "验证等待秒":3
+        "验证等待秒":1
     },
     "点击浏览器刷新":{
         "点位":(143,100)
@@ -207,7 +203,7 @@ if __name__ == "__main__":
         time.sleep(3)
 
         for music_name in music_name_list:
-            print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:开始创作 {music_name}')
+            print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:开始创作 {title}-{music_name}')
             tmp_music_name = music_name.split('##')[0]
             tmp_music_seconds = int(music_name.split('##')[1]) + random.randint(50, 60)
 
@@ -249,13 +245,6 @@ if __name__ == "__main__":
                 pyautogui.hotkey('ctrl', 'v')
                 process_point("点击上传视频确认")
             process_point("点击上传视频确认", repair_fun = tmp_confirm_fun)
-            # 等待上传完成
-            while True:
-                time.sleep(1)
-                tmpColor= auto_point_dict["验证视频上传成功，点位不等于"]["验证点位"]
-                if  tmpColor != auto_point_dict["验证视频上传成功，点位不等于"]["验证颜色"]:
-                    print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:上传视频完成\n')
-                    break
                 
             # 点击填写信息
             process_point("点击填写信息")
@@ -287,11 +276,12 @@ if __name__ == "__main__":
             cursor.execute(f'''
             update yindahu.music_vedio_item 
             set is_finish = 1
-            where A.author = '{author}'
-            and A.item_type = '歌曲名' 
-            and A.item_value = '{music_name}' 
-            and A.submit_time = '{submit_time}'
+            where author = '{author}'
+            and item_type = '歌曲名' 
+            and item_value = '{music_name}' 
+            and submit_time = '{submit_time}'
             ''')
+            conn.commit()
             cursor.close()
             conn.close()
             # 刷新当前页面
