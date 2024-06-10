@@ -311,6 +311,7 @@ if __name__ == "__main__":
                         if not st.session_state.__contains__("is_edit_mode") or st.session_state[f"is_edit_mode"] == False:
                             st.session_state[f"is_edit_mode"] = True
                             st.session_state[f"is_{node_id}_edit_mode"] = True
+                            st.session_state["index"] = 0
                         else:
                             st.error(f"只能同时编辑一个主题，请先提交其他编辑")
                     if st.session_state.__contains__(f"is_{node_id}_edit_mode") and st.session_state[f"is_{node_id}_edit_mode"]:
@@ -360,6 +361,9 @@ if __name__ == "__main__":
                                 st.experimental_rerun()
                         with img_col3:
                             st.write(f"{st.session_state['index']+1}/{len(st.session_state[f'pic_base64_list'])}")
+                            if st.button(f"新增", key=f"img_col3_button"):
+                                st.session_state[f"pic_base64_list"].append("")
+                                st.experimental_rerun()
                         with img_col4:
                             if st.button(f"删除", key=f"img_col4_button"):
                                 st.session_state[f"pic_base64_list"][st.session_state["index"]] = ""

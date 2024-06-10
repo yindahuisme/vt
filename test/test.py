@@ -1,16 +1,21 @@
 # streamlit run "c:\Program Files (x86)\Common Files\Adobe\CEP\extensions\vt\test\test.py"
-import streamlit as st
-import threading
+# import streamlit as st
+# import threading
 
-def main():
-    st.write("Hello, World!")
+# def main():
+#     st.write("Hello, World!")
 
-    def sub_thread():
+#     def sub_thread():
         
-        st.sidebar.success("子线程已完成")
+#         st.sidebar.success("子线程已完成")
 
-    t = threading.Thread(target=sub_thread)
-    t.start()
+#     t = threading.Thread(target=sub_thread)
+#     t.start()
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
+
+def fun(a,b):
+    print(a+b)
+
+fun(*(1,2))
