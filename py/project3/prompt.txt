@@ -46,3 +46,32 @@ json格式输出：
 "文生图提示词": "情侣手牵手漫步海边夕阳下"
 请根据上面描述生成图片
 
+
+获取酷我web页歌单歌曲
+// 获取所有歌曲元素，假设每个歌曲元素包含 song_name 和 song_time 类
+const songElements = document.querySelectorAll('.song_name.flex_c, .song_time');
+
+// 定义一个空字符串用于存储结果
+let result = '';
+
+// 遍历所有歌曲元素，每隔两个元素取一次，分别取歌名和时长
+for (let i = 0; i< songElements.length; i += 2) {
+  const songName = songElements[i].textContent.trim(); // 获取歌名并去除前后空格
+  const songTime = songElements[i + 1].textContent; // 获取时长
+
+  // 过滤掉歌名中的中英文括号及内容
+  const filteredSongName = songName.replace(/[\uff08\uff09\(\)]/g, '');
+
+  // 将时长转换为秒数
+  const [minute, second] = songTime.split(':');
+  const totalSecond = parseInt(minute) * 60 + parseInt(second);
+
+  // 增加判断条件，仅输出时长大于1分钟的歌曲
+  if (totalSecond > 60) {
+    // 按照指定格式拼接结果
+    result += `${filteredSongName}##${totalSecond},`;
+  }
+}
+
+// 去掉最后的逗号并输出结果
+console.log(result.slice(0, -1));

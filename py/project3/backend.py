@@ -42,7 +42,37 @@ def process_point(point_name , repair_fun = None):
                 else: 
                     repair_fun()
 
+def pass_fun():
+    pass
+
 if __name__ == "__main__":
+    # 删除
+    conn = pymysql.connect(host="118.25.84.13", user="root", password="y13440113283", database="yindahu")
+    cursor = conn.cursor()
+    cursor.execute(f'''
+		drop table if exists yindahu.music_vedio_item_distinct;
+    ''')
+    cursor.execute(f'''
+		create table yindahu.music_vedio_item_distinct as
+        SELECT author, submit_time, content_title, item_type, item_value, max(is_finish) as is_finish 
+        FROM yindahu.music_vedio_item
+        WHERE item_type = '歌曲名'
+    	group by author, submit_time, content_title, item_type, item_value
+    	having count(*) > 1;
+    ''')
+    cursor.execute(f'''
+    	DELETE FROM yindahu.music_vedio_item
+		WHERE (author, submit_time, content_title, item_type, item_value) IN (
+    	SELECT author, submit_time, content_title, item_type, item_value from yindahu.music_vedio_item_distinct);
+    ''')
+    cursor.execute(f'''
+    	insert into yindahu.music_vedio_item
+    	select * from  yindahu.music_vedio_item_distinct;
+    ''')
+    conn.commit()
+    cursor.close()
+    conn.close()
+
     # 项目根目录
     base_path = 'D:\\vt_data\\matFilePath\\音乐背景\\图库\\'
     # 作者
@@ -136,7 +166,7 @@ if __name__ == "__main__":
         time.sleep(3)
         # pr点击重做------------------------------------------------------------
         process_point("点击pr")
-        process_point("点击pr重做")
+        process_point("点击pr重做", repair_fun= pass_fun)
         # 移开pr焦点以删除素材文件
         process_point("点击浏览器")
         # 清空目录
@@ -205,7 +235,7 @@ if __name__ == "__main__":
         for music_name in music_name_list:
             print(f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}:开始创作 {title}-{music_name}')
             tmp_music_name = music_name.split('##')[0]
-            tmp_music_seconds = int(music_name.split('##')[1]) + random.randint(50, 60)
+            tmp_music_seconds = int(music_name.split('##')[1]) + 3
 
             # 请求后端，生成项目数据
             url = "http://127.0.0.1:8811/vt/auto/new_songBGV"
@@ -219,7 +249,7 @@ if __name__ == "__main__":
             time.sleep(3)
             # 再次点击pr重做--------------------------------------------------
             process_point("点击pr")
-            process_point("点击pr重做")
+            process_point("点击pr重做", repair_fun= pass_fun)
             # 生成视频
             targetVedioPath = 'D:\\vt_data\\pr_project\\音乐背景_1.mp4'
             if os.path.exists(targetVedioPath):
@@ -250,7 +280,7 @@ if __name__ == "__main__":
             process_point("点击填写信息")
             # 填写标题
             # 歌曲名长度限制在10个字符内
-            tmpMusicNameLimit = music_name[:10]
+            tmpMusicNameLimit = tmp_music_name[:10]
             process_point("三击标题输入框")
             pyperclip.copy(f'音乐背景《{tmpMusicNameLimit}》成品')
             pyautogui.hotkey('ctrl', 'v')
